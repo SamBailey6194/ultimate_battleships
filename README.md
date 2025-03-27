@@ -8,12 +8,6 @@
 
 The decision to make this website is due to the user stories found [here](userstory.md).
 
-### Wireframes
-
-From the user stories you can see the wireframes that were mocked up below.
-
-![CLI Wireframe](assets/readmeimgs/wireframe.png)
-
 ### Logic Flow Chart
 
 From the User Stories and wireframes a logic flow chart was mocked up to help know what the code needs to do, e.g. where error messages need to be, where loops need to be, when to end the program, etc. You can see the flow chart below.
