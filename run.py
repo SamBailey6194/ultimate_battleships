@@ -54,12 +54,15 @@ def user_creation():
     Allows a first time visitor to create a login so they can
     save a game start and register a score on the leaderboard
     """
+    user_logins_worksheet = SHEET.worksheet("userlogins")
+
     def username_create():
         """
         Username creation for first time user
         """
         create_username = str(input("Create Username: "))
         check_username(create_username)
+        save_user(create_username)
 
     def password_create():
         """
@@ -67,6 +70,13 @@ def user_creation():
         """
         create_password = str(input("Create Password: "))
         check_password(create_password)
+        save_user(create_password)
+
+    def save_user(data):
+        """
+        Add username and password to google worksheet
+        """
+        user_logins_worksheet.insert_row(data)
 
     def check_username(data):
         """
