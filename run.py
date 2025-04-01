@@ -34,7 +34,7 @@ def intro():
     if login_option == "Y":
         login()
     elif login_option == "N":
-        user_create()
+        user_creation()
     elif login_option != "Y" or "N":
         print("Please enter Y or N\n")
         intro()
@@ -49,69 +49,85 @@ def login():
     ask_password = str(input("Passowrd: "))
 
 
-def user_create():
+def user_creation():
     """
     Allows a first time visitor to create a login so they can
     save a game start and register a score on the leaderboard
     """
-    create_username = str(input("Create Username: "))
-    print()
-    create_password = str(input("Create Password: "))
+    def username_create():
+        """
+        Username creation for first time user
+        """
+        create_username = str(input("Create Username: "))
+        check_username(create_username)
 
-    check_username(create_username)
-    check_password(create_password)
+    def password_create():
+        """
+        Password creation for first time user
+        """
+        create_password = str(input("Create Password: "))
+        check_password(create_password)
 
-
-def check_username(data):
-    """
-    Checks username meets criteria
-    """
-    flag = 0
-    while True:
-        if (len(data) >= 8):
-            flag = 1
-            break
-        elif not re.search(r"\s", data):
-            flag = 1
-            break
+    def check_username(data):
+        """
+        Checks username meets criteria
+        """
+        if (len(data) > 8):
+            print(f"{data} must be less than 8 characters long\n")
+            username_create()
+        elif re.search("[A-Z]", data) is None:
+            print("Username must contain 1 uppercase character\n")
+            username_create()
+        elif re.search("[a-z]", data) is None:
+            print("Username must contain 1 lowercase character\n")
+            username_create()
+        elif re.search(r"\s", data):
+            print("Username can't have any spaces\n")
+            username_create()
+        elif re.match("[a-z A-Z]", data):
+            print(f"{data} is a valid username\n")
         else:
-            flag = 0
-            print(f"Valid {data}")
-            break
-    if flag == 1:
-        print(f"Not a valid {data}")
+            print(f"{data} is an invalid username\n")
+            username_create()
 
-
-def check_password(data):
-    """
-    Checks password meets criteria
-    """
-    flag = 0
-    while True:
+    def check_password(data):
+        """
+        Checks password meets criteria
+        """
         if (len(data) <= 8):
-            flag = -1
-            break
-        elif not re.search("[a-z]", data):
-            flag = -1
-            break
-        elif not re.search("[A-Z]", data):
-            flag = -1
-            break
-        elif not re.search("[0-9]", data):
-            flag = -1
-            break
-        elif not re.search("[_@$]", data):
-            flag = -1
-            break
-        elif not re.search(r"\s", data):
-            flag = -1
-            break
+            print(f"{data} must be at least 8 characters long\n")
+            password_create()
+        elif re.search("[A-Z]", data) is None:
+            print("Password must contain 1 uppercase character\n")
+            password_create()
+        elif re.search("[a-z]", data) is None:
+            print("Password must contain 1 lowercase character\n")
+            password_create()
+        elif re.search(r"[\d]", data) is None:
+            print("Password must contain 1 number\n")
+            password_create()
+        elif re.search(r"[_!@#$£%&]", data) is None:
+            print("Password must contain 1 special character\n")
+            password_create()
+        elif re.search(r"\s", data):
+            print("Password can't have any spaces\n")
+            password_create()
+        elif re.match(r"[a-z A-Z 0-9 _!@#$£%&]{8}", data):
+            print(f"{data} is a valid password\n")
         else:
-            flag = 0
-            print(f"Valid {data}")
-            break
-    if flag == -1:
-        print(f"Not a valid {data}")
+            print(f"{data} is an invalid password\n")
+            password_create()
+    print("Username requirements:")
+    print("Contain at least 1 uppercase and lowercase character")
+    print("No spaces allowed\n")
+    username_create()
+    print("Password requirements:")
+    print("8 characters long")
+    print("Contain at least 1 uppercase and lowercase character")
+    print("Contain at least 1 number")
+    print("Contain 1 special character")
+    print("No spaces allowed\n")
+    password_create()
 
 
 print("Welcome to Ultimate Battleships!\n")
