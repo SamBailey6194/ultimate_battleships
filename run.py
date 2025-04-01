@@ -76,7 +76,7 @@ def user_creation():
         """
         Add username and password to google worksheet
         """
-        user_logins_worksheet.insert_row(data)
+        user_logins_worksheet.append_row(data)
 
     def check_username(data):
         """
