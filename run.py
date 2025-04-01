@@ -4,6 +4,7 @@ import colorama
 import gspread
 from google.oauth2.service_account import Credentials
 import re
+import bcrypt
 
 # Giving python access to google sheet
 SCOPE = [
@@ -60,23 +61,29 @@ def user_creation():
         """
         Username creation for first time user
         """
-        create_username = str(input("Create Username: "))
-        check_username(create_username)
-        save_user(create_username)
+        username = str(input("Create Username: "))
+        check_username(username)
+        user_logins_worksheet.append_row([username])
+        print(f"Welcome {username}, please now create a password\n")
 
     def password_create():
         """
         Password creation for first time user
         """
-        create_password = str(input("Create Password: "))
-        check_password(create_password)
-        save_user(create_password)
+        password = str(input("Create Password: "))
+        check_password(password)
+        encrypt_password(password)
+        column = 2
+        last_row = len(user_logins_worksheet.get_all_values())
+        user_logins_worksheet.update_cell(last_row + 1, column, [password])
 
-    def save_user(data):
+    def encrypt_password(data):
         """
-        Add username and password to google worksheet
+        Using bcrypt to hash and salt the password to safely store it
         """
-        user_logins_worksheet.append_row(data)
+        byte_pwd = data.encode("utf-8")
+        salt = bcrypt.gensalt()
+        bcrypt.hashpw(byte_pwd, salt)
 
     def check_username(data):
         """
@@ -138,6 +145,7 @@ def user_creation():
     print("Contain 1 special character")
     print("No spaces allowed\n")
     password_create()
+    print("You can login next time. Enjoy the game.\n")
 
 
 print("Welcome to Ultimate Battleships!\n")
