@@ -63,8 +63,7 @@ def user_creation():
         """
         username = str(input("Create Username: "))
         check_username(username)
-        user_logins_worksheet.append_row([username])
-        print(f"Welcome {username}, please now create a password\n")
+        return username
 
     def password_create():
         """
@@ -72,25 +71,24 @@ def user_creation():
         """
         password = str(input("Create Password: "))
         check_password(password)
-        encrypt_password(password)
-        column = 2
-        last_row = len(user_logins_worksheet.get_all_values())
-        user_logins_worksheet.update_cell(last_row + 1, column, [password])
+        return password
 
     def encrypt_password(data):
         """
-        Using bcrypt to hash and salt the password to safely store it
+        Using bcrypt to hash and salt the password to safely store it.
+        While converting the hash to a string so Google Sheets can read it.
         """
         byte_pwd = data.encode("utf-8")
         salt = bcrypt.gensalt()
-        bcrypt.hashpw(byte_pwd, salt)
+        hashed = bcrypt.hashpw(byte_pwd, salt)
+        return hashed.decode("utf-8")
 
     def check_username(data):
         """
         Checks username meets criteria
         """
-        if (len(data) > 8):
-            print(f"{data} must be less than 8 characters long\n")
+        if (len(data) >= 8):
+            print(f"{data} must be no more than 8 characters long\n")
             username_create()
         elif re.search("[A-Z]", data) is None:
             print("Username must contain 1 uppercase character\n")
@@ -134,17 +132,26 @@ def user_creation():
         else:
             print(f"{data} is an invalid password\n")
             password_create()
+    
+    def save_user(username, password):
+        """
+        Save username created in Google Sheets
+        """
+        hashed_pw = encrypt_password(password)
+        user_logins_worksheet.append_row([username, hashed_pw])
+
     print("Username requirements:")
     print("Contain at least 1 uppercase and lowercase character")
     print("No spaces allowed\n")
-    username_create()
+    username = username_create()
     print("Password requirements:")
     print("8 characters long")
     print("Contain at least 1 uppercase and lowercase character")
     print("Contain at least 1 number")
     print("Contain 1 special character")
     print("No spaces allowed\n")
-    password_create()
+    password = password_create()
+    save_user(username, password)
     print("You can login next time. Enjoy the game.\n")
 
 

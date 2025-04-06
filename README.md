@@ -38,7 +38,7 @@ The
 
 ### Fixed Bugs
 
-- aksjhdfga
+- In user_create the password and username weren't being stored in Google Sheets properly as there was no return within username_create and password_create
 
 ### Unfixed Bugs
 
