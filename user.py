@@ -32,7 +32,7 @@ def user_choice():
         user_login()
     elif login_option == "N":
         user_creation()
-    elif login_option != "Y" or "N":
+    else:
         print("Please enter Y or N\n")
         user_choice()
 
@@ -81,7 +81,6 @@ def check_username(data):
     Checks username meets criteria and if it already exists
     """
     usernames = user_logins_worksheet.col_values(1)
-    user_string = " ".join(map(str, usernames))
     if (len(data) >= 8):
         print(f"{data} must be no more than 8 characters long\n")
         username_create()
@@ -96,8 +95,8 @@ def check_username(data):
         username_create()
     elif re.match("[a-z A-Z]", data):
         print(f"{data} is a valid username\n")
-    elif data in user_string:
-        print(f"{data} already exists.")
+    elif data in usernames:
+        print(f"{data} is already in use, please create a new one")
         username_create()
     else:
         print(f"{data} is an invalid username\n")
