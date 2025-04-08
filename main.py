@@ -33,5 +33,12 @@ before they hit all of yours.\n
     user.user_choice()
 
 
-print("Welcome to Ultimate Battleships!\n")
-intro()
+def main():
+    """
+    Run all program functions
+    """
+    print("Welcome to Ultimate Battleships!\n")
+    intro()
+
+
+main()
