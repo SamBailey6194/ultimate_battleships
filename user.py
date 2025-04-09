@@ -81,26 +81,27 @@ def check_username(data):
     Checks username meets criteria and if it already exists
     """
     usernames = user_logins_worksheet.col_values(1)
-    if (len(data) >= 8):
+    if data in usernames:
+        print(f"{data} is already in use, please create a new one")
+        return False
+    elif (len(data) >= 8):
         print(f"{data} must be no more than 8 characters long\n")
-        username_create()
+        return False
     elif re.search("[A-Z]", data) is None:
         print("Username must contain 1 uppercase character\n")
-        username_create()
+        return False
     elif re.search("[a-z]", data) is None:
         print("Username must contain 1 lowercase character\n")
-        username_create()
+        return False
     elif re.search(r"\s", data):
         print("Username can't have any spaces\n")
-        username_create()
-    elif re.match("[a-z A-Z]", data):
+        return False
+    elif re.fullmatch("[a-zA-Z]+", data):
         print(f"{data} is a valid username\n")
-    elif data in usernames:
-        print(f"{data} is already in use, please create a new one")
-        username_create()
+        return True
     else:
         print(f"{data} is an invalid username\n")
-        username_create()
+        return False
 
 
 def check_password(data):
@@ -109,27 +110,28 @@ def check_password(data):
     """
     if (len(data) <= 8):
         print(f"{data} must be at least 8 characters long\n")
-        password_create()
+        return False
     elif re.search("[A-Z]", data) is None:
         print("Password must contain 1 uppercase character\n")
-        password_create()
+        return False
     elif re.search("[a-z]", data) is None:
         print("Password must contain 1 lowercase character\n")
-        password_create()
+        return False
     elif re.search(r"[\d]", data) is None:
         print("Password must contain 1 number\n")
-        password_create()
-    elif re.search(r"[_!@#$£%&]", data) is None:
+        return False
+    elif re.search(r"[!@#$£%^&*_-+=:;<>,.?~]", data) is None:
         print("Password must contain 1 special character\n")
-        password_create()
+        return False
     elif re.search(r"\s", data):
         print("Password can't have any spaces\n")
-        password_create()
-    elif re.match(r"[a-z A-Z 0-9 _!@#$£%&]{8}", data):
+        return False
+    elif re.fullmatch(r"[a-zA-Z0-9!@#$£%^&*_-+=:;<>,.?~]{8,}+", data):
         print(f"{data} is a valid password\n")
+        return True
     else:
         print(f"{data} is an invalid password\n")
-        password_create()
+        return False
 
 
 def save_user(username, password):
@@ -144,18 +146,20 @@ def username_create():
     """
     Username creation for first time user
     """
-    username = str(input("Create Username: "))
-    check_username(username)
-    return username
+    while True:
+        username = str(input("Create Username: "))
+        if check_username(username):
+            return username
 
 
 def password_create():
     """
     Password creation for first time user
     """
-    password = str(input("Create Password: "))
-    check_password(password)
-    return password
+    while True:
+        password = str(input("Create Password: "))
+        if check_password(password):
+            return password
 
 
 def user_creation():
@@ -163,18 +167,24 @@ def user_creation():
     Allows a first time visitor to create a login so they can
     save a game start and register a score on the leaderboard
     """
+    print("-" * 35)
     print("""Username requirements:
     Contain at least 1 uppercase and lowercase character
     No spaces allowed
         """)
+    print("-" * 35)
     username = username_create()
+    print("-" * 35)
     print("""Password requirements:
     8 characters long
     Contain at least 1 uppercase and lowercase character
     Contain at least 1 number
     Contain 1 special character
-    No spaces allowed\n
+    No spaces allowed
           """)
+    print("-" * 35)
     password = password_create()
     save_user(username, password)
+    print("-" * 35)
     print("You can login next time. Enjoy the game.\n")
+    print("-" * 35)

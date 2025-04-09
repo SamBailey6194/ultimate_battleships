@@ -24,13 +24,15 @@ def intro():
     Allow user to create a user name or access a previous
     saved game stored in the google sheet
     """
+    print("-" * 35)
     print("""Battleships is a strategy guessing game for two players.
 This program allows you to play against a computer to practice.
 Once the game starts you will be able to pick a point to hit on
 the computers board.
 The aim of the game is to hit all of the computers battleships
-before they hit all of yours.\n
+before they hit all of yours.
           """)
+    print("-" * 35)
     user.user_choice()
 
 
@@ -64,14 +66,16 @@ class Board:
         Asks user which board size they would like to go with and
         then generates the board
         """
+        print("-" * 35)
         print("""Now you are logged in. You can play the game.
 First though you need to select what size board you want to play on.
 All options are a square grid. Each size has a different amount of battleships
 to place. Your options are as follows:\n
             1 = 5x5 with 4 battleships
             2 = 10x10 with 8 battleships
-            3 = 15x15 with 12 battleships\n
+            3 = 15x15 with 12 battleships
           """)
+        print("-" * 35)
         while True:
             try:
                 self.size = int(input("""Please enter 1, 2 or 3 depending on
