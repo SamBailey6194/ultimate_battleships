@@ -46,7 +46,7 @@ def login_credentials(username, password):
         if user["Username"] == username:
             encrypt_pw = user["Password"].encode()
             if bcrypt.checkpw(password.encode(), encrypt_pw):
-                print("Welcome back to Ultimate Battleships!")
+                print(f"{user} welcome back to Ultimate Battleships!")
                 return "Login successful"
     print("Invalid login credentials, please enter correct details.")
     user_choice()

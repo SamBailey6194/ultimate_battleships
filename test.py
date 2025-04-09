@@ -163,6 +163,32 @@ def computer_board(user_size, user_ships):
     return pc_board
 
 
+def update_board(user, board, row, col):
+    """
+    Function to update board that has been attacked
+    """
+    if board.grid == "M" or "H":
+        print(f"{user} you have already shot here, please pick a new spot.")
+        return True
+    elif board.grid[row][col] == ".":
+        print(f"""{user} missed! Try again next time. Still {board.num_ships}
+left to hit
+            """)
+        board.grid[row][col] = "M"
+        return True
+    elif board.grid[row][col] == "S":
+        print(f"""{user} Hit! Well done. Just {board.num_ships-1} left to
+destroy.
+            """)
+        board.grid[row][col] = "H"
+        return True
+    else:
+        print("""Remember: The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+                """)
+        return False
+
+
 def shots_fired(board):
     """
     This asks for user to fire their shots
@@ -178,36 +204,61 @@ Please bear that in mind when entering rows and columns.
           H = Hit
           M = Miss
         """)
-    ships_hit = 0
-    while ships_hit < board.num_ships:
-        row = int(input("Enter row: \n"))
-        col = int(input("Enter col: \n"))
-        if board.grid[row][col] == ".":
-            print(f"""You missed! Try again next time. Still {board.num_ships}
-left to hit
-                """)
-            board.grid[row][col] = "M"
-            board.display_board(show_ships=False)
-        elif board.grid[row][col] == "S":
-            print(f"""You Hit! Well done. Just {board.num_ships-1} left to
-destroy.
-                """)
-            board.grid[row][col] = "H"
-            board.display_board(show_ships=False)
-        elif ships_hit == board.num_ships:
-            print("Congratulations you win!")
-            board.display_board(show_ships=True)
-        else:
+    user = "Sam"
+    while True:
+        try:
+            row = int(input("Enter row: \n"))
+            col = int(input("Enter col: \n"))
+            if board.grid[row][col] == ".":
+                update_board(user, board, row, col)
+                board.display_board(show_ships=True)
+                return True
+        except (ValueError, IndexError):
             print("""Remember: The top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
                 """)
-            board.display_board(show_ships=False)
+
+
+def computer_shots(board):
+    """
+    Generates random shots by computer
+    """
+    row = random_point(board.size)
+    col = random_point(board.size)
+    update_board("Computer", board, row, col)
+    board.display_board(show_ships=False)
 
 
 def main():
     user = user_board()
     computer = computer_board(user.size, user.num_ships)
-    shots_fired(computer)
+    user_ships_hit = 0
+    computer_ships_hit = 0
+    user_ships = user_ships_hit < user.num_ships
+    computer_ships = computer_ships_hit < computer.num_ships
+
+    while user_ships and computer_ships:
+        shots_fired(computer)
+        if any("H" in row for row in computer.grid):
+            computer_ships_hit += 1
+
+        computer_shots(user)
+        if any("H" in row for row in user.grid):
+            user_ships_hit += 1
+
+        print("-" * 35)
+        print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
+        print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
+
+        if computer_ships_hit == computer.num_ships:
+            print("Sam, you win!!!! You beat the computer.")
+            break
+        elif user_ships_hit == user.num_ships:
+            print("Computer wins!!! Unlucky Sam, maybe next time.")
+            break
+        else:
+            print("No one has won yet. Keep playing")
+            print("-" * 35)
 
 
 main()
