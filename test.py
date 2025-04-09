@@ -88,8 +88,9 @@ The top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
         """)
     print("-" * 35)
+    board = Board()
     ships_placed = 0
-    while ships_placed < Board.num_ships:
+    while ships_placed < board.num_ships:
         try:
             row = int(input("Enter row: \n"))
             col = int(input("Enter col: \n"))
@@ -113,6 +114,7 @@ def user_board():
     my_board = Board()
     my_board.board_size()
     place_ships(my_board)
+    print(my_board)
     return my_board
 
 
@@ -131,7 +133,7 @@ def computer_board():
         if pc_board.grid[row][col] == ".":
             pc_board.grid[row][col] = "@"
             pc_ships_placed += 1
-
+    print(pc_board)
     return pc_board
 
 

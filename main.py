@@ -43,11 +43,12 @@ class Board:
     while generates a random guess for the computer.
     """
 
-    def __init__(self, height, width, size, num_ships):
+    def __init__(self, height=0, width=0, size=0, num_ships=0):
         self.height = height
         self.width = width
         self.size = size
         self.num_ships = num_ships
+        self.grid = []
 
     def board_creation(self, height, width):
         """
@@ -60,11 +61,31 @@ class Board:
         for i in range(height):
             clear_grid = " ".join(grid)
             print(clear_grid)
+        return clear_grid
+
+    def validate_board_size(self, data):
+        """
+        Validates board size input by user
+        """
+        if data == 1:
+            self.height, self.width, self.num_ships = 5, 5, 4
+        elif data == 2:
+            self.height, self.width, self.num_ships = 10, 10, 8
+        elif data == 3:
+            self.height, self.width, self.num_ships = 15, 15, 12
+        else:
+            print("""Invalid option please pick a valid option of
+1, 2 or 3.
+                """)
+            return False
+        self.grid = self.board_creation(self.height, self.width)
+        return True
 
     def board_size(self):
         """
         Asks user which board size they would like to go with and
-        then generates the board
+        then generates the board and the number of ships for each
+        size board.
         """
         print("-" * 35)
         print("""Now you are logged in. You can play the game.
@@ -76,30 +97,12 @@ to place. Your options are as follows:\n
             3 = 15x15 with 12 battleships
           """)
         print("-" * 35)
-        while True:
-            try:
-                self.size = int(input("""Please enter 1, 2 or 3 depending on
-the size board you would like to play on: \n"""))
-            except ValueError:
-                print("Invalid input. Please enter a valid option of 1, 2, 3.")
-                continue
 
-            if self.size == 1:
-                self.board_creation(5, 5)
-                self.num_ships = 4
+        while True:
+            self.size = int(input("""Please enter 1, 2 or 3 depending on
+the size board you would like to play on: \n"""))
+            if self.validate_board_size(self.size):
                 break
-            elif self.size == 2:
-                self.board_creation(10, 10)
-                self.num_ships = 8
-                break
-            elif self.size == 3:
-                self.board_creation(15, 15)
-                self.num_ships = 12
-                break
-            else:
-                print("""Invalid option please pick a valid option of
-1, 2 or 3.
-                      """)
 
 
 def main():
@@ -108,8 +111,8 @@ def main():
     """
     print("Welcome to Ultimate Battleships!\n")
     intro()
-    my_board = Board(0, 0, 0, 0)
-    my_board.board_size()
+    board = Board()
+    board.board_size()
 
 
 main()
