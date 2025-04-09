@@ -1,3 +1,6 @@
+from random import randint
+
+
 class Board:
     """
     Main board class. Allows user to set board size, place ships,
@@ -5,11 +8,12 @@ class Board:
     while generates a random guess for the computer.
     """
 
-    def __init__(self, height, width, size, num_ships):
+    def __init__(self, height=0, width=0, size=0, num_ships=0):
         self.height = height
         self.width = width
         self.size = size
         self.num_ships = num_ships
+        self.grid = []
 
     def board_creation(self, height, width):
         """
@@ -24,30 +28,23 @@ class Board:
             print(clear_grid)
         return clear_grid
 
-    def place_ships(self, user_board):
+    def validate_board_size(self, data):
         """
-        Allows user to place their ships where they choose too
+        Validates board size input by user
         """
-        print("-" * 35)
-        print("""Now you have chosen the size board you want to play
-on. Please place your ships. Each ship takes up one space.
-The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-            """)
-        print("-" * 35)
-        for i in range(self.num_ships):
-            while True:
-                row = int(input("Enter row: \n"))
-                col = int(input("Enter col: \n"))
-                place = row, col
-                placement = user_board[row][col]
-
-                if placement == ".":
-                    place
-                else:
-                    print("""Ship already palced there, please select another
-place.
-                        """)
+        if data == 1:
+            self.height, self.width, self.num_ships = 5, 5, 4
+        elif data == 2:
+            self.height, self.width, self.num_ships = 10, 10, 8
+        elif data == 3:
+            self.height, self.width, self.num_ships = 15, 15, 12
+        else:
+            print("""Invalid option please pick a valid option of
+1, 2 or 3.
+                """)
+            return False
+        self.grid = self.board_creation(self.height, self.width)
+        return True
 
     def board_size(self):
         """
@@ -65,31 +62,84 @@ to place. Your options are as follows:\n
             3 = 15x15 with 12 battleships
           """)
         print("-" * 35)
+
         while True:
-            try:
-                self.size = int(input("""Please enter 1, 2 or 3 depending on
+            self.size = int(input("""Please enter 1, 2 or 3 depending on
 the size board you would like to play on: \n"""))
-            except ValueError:
-                print("Invalid input. Please enter a valid option of 1, 2, 3.")
-                continue
-
-            if self.size == 1:
-                self.num_ships = 4
-                self.place_ships(self.board_creation(5, 5))
+            if self.validate_board_size(self.size):
                 break
-            elif self.size == 2:
-                self.num_ships = 8
-                self.place_ships(self.board_creation(10, 10))
-                break
-            elif self.size == 3:
-                self.num_ships = 12
-                self.place_ships(self.board_creation(15, 15))
-                break
-            else:
-                print("""Invalid option please pick a valid option of
-1, 2 or 3.
-                      """)
 
 
-my_board = Board(0, 0, 0, 0)
-my_board.board_size()
+def random_point(size):
+    """
+    Helper method to generate random integer between 0 and board size
+    """
+    return randint(0, size-1)
+
+
+def place_ships(board):
+    """
+    Allows user to place their ships where they choose too
+    """
+    print("-" * 35)
+    print("""Now you have chosen the size board you want to play
+on. Please place your ships. Each ship takes up one space.
+The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+        """)
+    print("-" * 35)
+    ships_placed = 0
+    while ships_placed < Board.num_ships:
+        try:
+            row = int(input("Enter row: \n"))
+            col = int(input("Enter col: \n"))
+            if Board.grid[row][col] == ".":
+                Board.grid[row][col] == "@"
+                ships_placed += 1
+            elif Board.grid[row][col] == "@":
+                print("""Ship already palced there, please select another
+place.
+                    """)
+        except (ValueError, IndexError):
+            print("""Remember: The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+                """)
+
+
+def user_board():
+    """
+    User board is generated blank to allow user to place their ships
+    """
+    my_board = Board()
+    my_board.board_size()
+    place_ships(my_board)
+    return my_board
+
+
+def computer_board():
+    """
+    Generates a board with random placement of ships
+    """
+    pc_board = Board(user_board.height, user_board.width, user_board.size,
+                     user_board.num_ships)
+    pc_board.grid = pc_board.board_creation(pc_board.height, pc_board.width)
+
+    pc_ships_placed = 0
+    while pc_ships_placed < pc_board.num_ships:
+        row = random_point(pc_board.width)
+        col = random_point(pc_board.height)
+        if pc_board.grid[row][col] == ".":
+            pc_board.grid[row][col] = "@"
+            pc_ships_placed += 1
+
+    return pc_board
+
+
+def main():
+    print("Your final board: \n")
+    user_board()
+    print("Computer's board: \n")
+    computer_board()
+
+
+main()
