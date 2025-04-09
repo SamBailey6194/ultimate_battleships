@@ -97,6 +97,7 @@ def place_ships(board):
 on. Please place your ships. Each ship takes up one space.
 The top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
+S = Ship placement.
         """)
     print("-" * 35)
     ships_placed = 0
@@ -162,9 +163,51 @@ def computer_board(user_size, user_ships):
     return pc_board
 
 
+def shots_fired(board):
+    """
+    This asks for user to fire their shots
+    """
+    print("-" * 35)
+    print("""Below you can enter the coordinates you would like to hit.
+Please remember the top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+        """)
+    print("-" * 35)
+    print("""Key:
+          S = Ship
+          H = Hit
+          M = Miss
+        """)
+    ships_hit = 0
+    while ships_hit < board.num_ships:
+        row = int(input("Enter row: \n"))
+        col = int(input("Enter col: \n"))
+        if board.grid[row][col] == ".":
+            print(f"""You missed! Try again next time. Still {board.num_ships}
+left to hit
+                """)
+            board.grid[row][col] = "M"
+            board.display_board(show_ships=False)
+        elif board.grid[row][col] == "S":
+            print(f"""You Hit! Well done. Just {board.num_ships-1} left to
+destroy.
+                """)
+            board.grid[row][col] = "H"
+            board.display_board(show_ships=False)
+        elif ships_hit == board.num_ships:
+            print("Congratulations you win!")
+            board.display_board(show_ships=True)
+        else:
+            print("""Remember: The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+                """)
+            board.display_board(show_ships=False)
+
+
 def main():
     user = user_board()
-    computer_board(user.size, user.num_ships)
+    computer = computer_board(user.size, user.num_ships)
+    shots_fired(computer)
 
 
 main()
