@@ -204,29 +204,55 @@ Please bear that in mind when entering rows and columns.
           H = Hit
           M = Miss
         """)
-    user = "Sam"
+#     while True:
+#         try:
+#             row = int(input("Enter row: \n"))
+#             col = int(input("Enter col: \n"))
+#             if board.grid[row][col] == ".":
+#                 update_board(row, col)
+#                 return True
+#         except (ValueError, IndexError):
+#             print("""Remember: The top left corner is row: 0, col: 0.
+# Please bear that in mind when entering rows and columns.
+#                 """)
     while True:
         try:
-            row = int(input("Enter row: \n"))
-            col = int(input("Enter col: \n"))
-            if board.grid[row][col] == ".":
-                update_board(user, board, row, col)
-                board.display_board(show_ships=True)
+            if board == "user":
+                row = int(input("Enter row: \n"))
+                col = int(input("Enter col: \n"))
+                update_board("Player", board, row, col)
+                return True
+            elif board == "computer":
+                row = random_point(board.size)
+                col = random_point(board.size)
+                update_board("Computer", board, row, col)
                 return True
         except (ValueError, IndexError):
             print("""Remember: The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
+    Please bear that in mind when entering rows and columns.
                 """)
 
 
-def computer_shots(board):
-    """
-    Generates random shots by computer
-    """
-    row = random_point(board.size)
-    col = random_point(board.size)
-    update_board("Computer", board, row, col)
-    board.display_board(show_ships=False)
+# def computer_shots(board):
+#     """
+#     Generates random shots by computer
+#     """
+#     while True:
+#         try:
+#             if board == "user":
+#                 row = int(input("Enter row: \n"))
+#                 col = int(input("Enter col: \n"))
+#                 update_board("Player", board, row, col)
+#                 return True
+#             elif board == "computer":
+#                 row = random_point(board.size)
+#                 col = random_point(board.size)
+#                 update_board("Computer", board, row, col)
+#                 return True
+#         except (ValueError, IndexError):
+#             print("""Remember: The top left corner is row: 0, col: 0.
+# Please bear that in mind when entering rows and columns.
+#                 """)
 
 
 def main():
@@ -242,7 +268,7 @@ def main():
         if any("H" in row for row in computer.grid):
             computer_ships_hit += 1
 
-        computer_shots(user)
+        shots_fired(user)
         if any("H" in row for row in user.grid):
             user_ships_hit += 1
 
