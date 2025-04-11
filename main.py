@@ -207,4 +207,6 @@ def main():
     computer_board(user.size, user.num_ships)
 
 
-main()
+# Checks to see if code is being used as a module or main program
+if __name__ == "__main()__":
+    main()

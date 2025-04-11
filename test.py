@@ -1,6 +1,13 @@
 from random import randint
 
 
+def random_point(size):
+    """
+    Helper method to generate random integer between 0 and board size
+    """
+    return randint(0, size-1)
+
+
 class Board:
     """
     Main board class. Allows user to set board size, place ships,
@@ -81,210 +88,251 @@ the size board you would like to play on: \n"""))
         return size
 
 
-def random_point(size):
+class Game:
     """
-    Helper method to generate random integer between 0 and board size
+    Class that runs the game, allowing user to place ships, randomly generates
+    a computers board and then asks user to guess while randomly generating
+    computers guesses and checks for hits and misses.
     """
-    return randint(0, size-1)
 
+    def __init__(self):
+        pass
 
-def place_ships(board):
-    """
-    Allows user to place their ships where they choose too
-    """
-    print("-" * 35)
-    print("""Now you have chosen the size board you want to play
-on. Please place your ships. Each ship takes up one space.
-The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-S = Ship placement.
-        """)
-    print("-" * 35)
-    ships_placed = 0
+    def place_ships(self, board):
+        """
+        Allows user to place their ships where they choose too
+        """
+        print("-" * 35)
+        print("""Now you have chosen the size board you want to play
+    on. Please place your ships. Each ship takes up one space.
+    The top left corner is row: 0, col: 0.
+    Please bear that in mind when entering rows and columns.
+    S = Ship placement.
+            """)
+        print("-" * 35)
+        ships_placed = 0
 
-    while ships_placed < board.num_ships:
-        try:
-            row = int(input("Enter row: \n"))
-            col = int(input("Enter col: \n"))
+        while ships_placed < board.num_ships:
+            try:
+                row = int(input("Enter row: \n"))
+                col = int(input("Enter col: \n"))
+                if board.grid[row][col] == ".":
+                    board.grid[row][col] = "S"
+                    ships_placed += 1
+                    print(f"Ship placed at {row}, {col}")
+                    board.display_board(show_ships=True)
+                elif board.grid[row][col] == "S":
+                    print("""Ship already palced there, please select another
+    place.
+                        """)
+            except (ValueError, IndexError):
+                print("""Remember: The top left corner is row: 0, col: 0.
+    Please bear that in mind when entering rows and columns.
+                    """)
+
+    def random_ship_placement(self, board):
+        """
+        Places the ships randomly on the board
+        """
+        ships_placed = 0
+
+        while ships_placed < board.num_ships:
+            row = random_point(board.size)
+            col = random_point(board.size)
             if board.grid[row][col] == ".":
                 board.grid[row][col] = "S"
                 ships_placed += 1
-                print(f"Ship placed at {row}, {col}")
-                board.display_board(show_ships=True)
-            elif board.grid[row][col] == "S":
-                print("""Ship already palced there, please select another
-place.
-                    """)
-        except (ValueError, IndexError):
+
+        return board
+
+    def user_board(self):
+        """
+        User board is generated blank to allow user to place their ships
+        """
+        my_board = Board()
+        my_board.board_size()
+        self.place_ships(my_board)
+        print("-" * 35)
+        print("Your final board \n")
+        my_board.display_board(show_ships=True)
+        return my_board
+
+    def computer_board(self, user_size, user_ships):
+        """
+        Generates a board with random placement of ships
+        """
+        pc_board = Board(size=user_size, num_ships=user_ships)
+        pc_board.board_creation()
+        self.random_ship_placement(pc_board)
+        print("-" * 35)
+        print("Computer's board \n")
+        pc_board.display_board(show_ships=False)
+        return pc_board
+
+    def update_board(self, user, board, row, col):
+        """
+        Function to update board that has been attacked
+        """
+        if board.grid[row][col] == "M" or "H":
+            print(f"""{user} you have already shot here, please
+pick a new spot.
+                  """)
+            return True
+        elif board.grid[row][col] == ".":
+            print(f"""{user} missed! Try again next time. Still
+{board.num_ships} left to hit
+                """)
+            board.grid[row][col] = "M"
+            return True
+        elif board.grid[row][col] == "S":
+            print(f"""{user} Hit! Well done. Just {board.num_ships-1} left to
+destroy.
+                  """)
+            board.grid[row][col] = "H"
+            return True
+        else:
             print("""Remember: The top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
-                """)
+                    """)
+            return False
 
-
-def random_ship_placement(board):
-    """
-    Places the ships randomly on the board
-    """
-    ships_placed = 0
-
-    while ships_placed < board.num_ships:
-        row = random_point(board.size)
-        col = random_point(board.size)
-        if board.grid[row][col] == ".":
-            board.grid[row][col] = "S"
-            ships_placed += 1
-
-    return board
-
-
-def user_board():
-    """
-    User board is generated blank to allow user to place their ships
-    """
-    my_board = Board()
-    my_board.board_size()
-    place_ships(my_board)
-    print("-" * 35)
-    print("Your final board \n")
-    my_board.display_board(show_ships=True)
-    return my_board
-
-
-def computer_board(user_size, user_ships):
-    """
-    Generates a board with random placement of ships
-    """
-    pc_board = Board(size=user_size, num_ships=user_ships)
-    pc_board.board_creation()
-    random_ship_placement(pc_board)
-    print("-" * 35)
-    print("Computer's board \n")
-    pc_board.display_board(show_ships=False)
-    return pc_board
-
-
-def update_board(user, board, row, col):
-    """
-    Function to update board that has been attacked
-    """
-    if board.grid == "M" or "H":
-        print(f"{user} you have already shot here, please pick a new spot.")
-        return True
-    elif board.grid[row][col] == ".":
-        print(f"""{user} missed! Try again next time. Still {board.num_ships}
-left to hit
-            """)
-        board.grid[row][col] = "M"
-        return True
-    elif board.grid[row][col] == "S":
-        print(f"""{user} Hit! Well done. Just {board.num_ships-1} left to
-destroy.
-            """)
-        board.grid[row][col] = "H"
-        return True
-    else:
-        print("""Remember: The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-                """)
-        return False
-
-
-def shots_fired(board):
-    """
-    This asks for user to fire their shots
-    """
-    print("-" * 35)
-    print("""Below you can enter the coordinates you would like to hit.
+    def shots_fired(self, player, board):
+        """
+        This asks for user to fire their shots
+        """
+        print("-" * 35)
+        print("""Below you can enter the coordinates you would like to hit.
 Please remember the top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
-        """)
-    print("-" * 35)
-    print("""Key:
-          S = Ship
-          H = Hit
-          M = Miss
-        """)
-#     while True:
-#         try:
-#             row = int(input("Enter row: \n"))
-#             col = int(input("Enter col: \n"))
-#             if board.grid[row][col] == ".":
-#                 update_board(row, col)
-#                 return True
-#         except (ValueError, IndexError):
-#             print("""Remember: The top left corner is row: 0, col: 0.
-# Please bear that in mind when entering rows and columns.
-#                 """)
-    while True:
-        try:
-            if board == "user":
-                row = int(input("Enter row: \n"))
-                col = int(input("Enter col: \n"))
-                update_board("Player", board, row, col)
-                return True
-            elif board == "computer":
-                row = random_point(board.size)
-                col = random_point(board.size)
-                update_board("Computer", board, row, col)
-                return True
-        except (ValueError, IndexError):
-            print("""Remember: The top left corner is row: 0, col: 0.
-    Please bear that in mind when entering rows and columns.
-                """)
+            """)
+        print("-" * 35)
+        print("""Key:
+            S = Ship
+            H = Hit
+            M = Miss
+            """)
+    #     while True:
+    #         try:
+    #             row = int(input("Enter row: \n"))
+    #             col = int(input("Enter col: \n"))
+    #             if board.grid[row][col] == ".":
+    #                 update_board(row, col)
+    #                 return True
+    #         except (ValueError, IndexError):
+    #             print("""Remember: The top left corner is row: 0, col: 0.
+    # Please bear that in mind when entering rows and columns.
+    #                 """)
+        if player == "user":
+            while True:
+                try:
+                    row = int(input("Enter row: \n"))
+                    col = int(input("Enter col: \n"))
+                    self.update_board("Player", board, row, col)
+                    Board.display_board(show_ships=True)
+                    break
+                except (ValueError, IndexError):
+                    print("""Remember: The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+                    """)
+        elif player == "computer":
+            while True:
+                try:
+                    row = random_point(board.size)
+                    col = random_point(board.size)
+                    self.update_board("Computer", board, row, col)
+                    Board.display_board(show_ships=False)
+                    break
+                except (ValueError, IndexError):
+                    print("""Remember: The top left corner is row: 0, col: 0.
+Please bear that in mind when entering rows and columns.
+                    """)
 
+    # def computer_shots(board):
+    #     """
+    #     Generates random shots by computer
+    #     """
+    #     while True:
+    #         try:
+    #             if board == "user":
+    #                 row = int(input("Enter row: \n"))
+    #                 col = int(input("Enter col: \n"))
+    #                 update_board("Player", board, row, col)
+    #                 return True
+    #             elif board == "computer":
+    #                 row = random_point(board.size)
+    #                 col = random_point(board.size)
+    #                 update_board("Computer", board, row, col)
+    #                 return True
+    #         except (ValueError, IndexError):
+    #             print("""Remember: The top left corner is row: 0, col: 0.
+    # Please bear that in mind when entering rows and columns.
+    #                 """)
 
-# def computer_shots(board):
-#     """
-#     Generates random shots by computer
-#     """
-#     while True:
-#         try:
-#             if board == "user":
-#                 row = int(input("Enter row: \n"))
-#                 col = int(input("Enter col: \n"))
-#                 update_board("Player", board, row, col)
-#                 return True
-#             elif board == "computer":
-#                 row = random_point(board.size)
-#                 col = random_point(board.size)
-#                 update_board("Computer", board, row, col)
-#                 return True
-#         except (ValueError, IndexError):
-#             print("""Remember: The top left corner is row: 0, col: 0.
-# Please bear that in mind when entering rows and columns.
-#                 """)
+    def check_shots(self):
+        """
+        Starts the game and checks when the game finishes
+        """
+        user = self.user_board()
+        computer = self.computer_board(user.size, user.num_ships)
+        user_ships_hit = 0
+        computer_ships_hit = 0
+        user_ships = user_ships_hit < user.num_ships
+        computer_ships = computer_ships_hit < computer.num_ships
+
+        while user_ships and computer_ships:
+            self.shots_fired("user", computer)
+            if any("H" in row for row in computer.grid):
+                computer_ships_hit += 1
+
+            self.shots_fired("computer", user)
+            if any("H" in row for row in user.grid):
+                user_ships_hit += 1
+
+            print("-" * 35)
+            print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
+            print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
+
+            if computer_ships_hit == computer.num_ships:
+                print("Player, you win!!!! You beat the computer.")
+                break
+            elif user_ships_hit == user.num_ships:
+                print("Computer wins!!! Unlucky Sam, maybe next time.")
+                break
+            else:
+                print("No one has won yet. Keep playing")
+                print("-" * 35)
 
 
 def main():
-    user = user_board()
-    computer = computer_board(user.size, user.num_ships)
-    user_ships_hit = 0
-    computer_ships_hit = 0
-    user_ships = user_ships_hit < user.num_ships
-    computer_ships = computer_ships_hit < computer.num_ships
+    # user_ships_hit = 0
+    # computer_ships_hit = 0
+    # user_ships = user_ships_hit < user.num_ships
+    # computer_ships = computer_ships_hit < computer.num_ships
 
-    while user_ships and computer_ships:
-        shots_fired(computer)
-        if any("H" in row for row in computer.grid):
-            computer_ships_hit += 1
+    # while user_ships and computer_ships:
+    #     shots_fired("user")
+    #     if any("H" in row for row in computer.grid):
+    #         computer_ships_hit += 1
 
-        shots_fired(user)
-        if any("H" in row for row in user.grid):
-            user_ships_hit += 1
+    #     shots_fired("computer")
+    #     if any("H" in row for row in user.grid):
+    #         user_ships_hit += 1
 
-        print("-" * 35)
-        print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
-        print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
+    #     print("-" * 35)
+    #     print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
+    #     print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
 
-        if computer_ships_hit == computer.num_ships:
-            print("Sam, you win!!!! You beat the computer.")
-            break
-        elif user_ships_hit == user.num_ships:
-            print("Computer wins!!! Unlucky Sam, maybe next time.")
-            break
-        else:
-            print("No one has won yet. Keep playing")
-            print("-" * 35)
+    #     if computer_ships_hit == computer.num_ships:
+    #         print("Sam, you win!!!! You beat the computer.")
+    #         break
+    #     elif user_ships_hit == user.num_ships:
+    #         print("Computer wins!!! Unlucky Sam, maybe next time.")
+    #         break
+    #     else:
+    #         print("No one has won yet. Keep playing")
+    #         print("-" * 35)
+    game = Game()
+    game.check_shots()
 
 
 main()
