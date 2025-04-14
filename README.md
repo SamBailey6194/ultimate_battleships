@@ -39,6 +39,12 @@ The
 ### Fixed Bugs
 
 - In user_create the password and username weren't being stored in Google Sheets properly as there was no return within username_create and password_create
+- Username creation was duplicating usernames in database due to structure of if, elif check_username function, therefore restuctured to put the check for username already in database first
+- Board Creation was creating grid was to be 2D due to use of rows and cols, so coordinates were not being processed correctly, therefore changed the code to ensure the grid was being created as a 3D to allow proper use of coordinate selection
+- When user input coordinates for ship placement they had placed in already it wasn't looping back to ask for the coordinates again, added in if, elif statement to ensured it looped properly
+- When user input coordinates to shoot at have alreday been chosen it also wasn't looping, to loop had to amend the True and False returns in update_board
+- Command line was running too fast so hard to read. Therefore, used time module to allow slower processing of the print statements
+- After each shot the program is adding a hit to the user_ships_hits and computer_ships_hit if a ship has been hit previously, 
 
 ### Unfixed Bugs
 
