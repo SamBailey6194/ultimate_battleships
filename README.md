@@ -44,7 +44,9 @@ The
 - When user input coordinates for ship placement they had placed in already it wasn't looping back to ask for the coordinates again, added in if, elif statement to ensured it looped properly
 - When user input coordinates to shoot at have alreday been chosen it also wasn't looping, to loop had to amend the True and False returns in update_board
 - Command line was running too fast so hard to read. Therefore, used time module to allow slower processing of the print statements
-- After each shot the program is adding a hit to the user_ships_hits and computer_ships_hit if a ship has been hit previously, 
+- After each shot the program is adding a hit to the user_ships_hits and computer_ships_hit if a ship has been hit previously, added ships_hit to update_board function and added code to play_game function to check for any "H" on the board
+- Updated boards weren't printing to the terminal at all, updated play_game function to display_board in the correct space to allow it to be displayed
+- Update_board function printing the statement incorrectly when a ship is hit, needed to reorder the structure below the elif statements
 
 ### Unfixed Bugs
 

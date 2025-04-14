@@ -75,6 +75,9 @@ to place. Your options are as follows:\n
                 size = int(input("""Please enter 1, 2 or 3 depending on
 the size board you would like to play on: \n"""))
                 if self.validate_board_size(size):
+                    time.sleep(0.5)
+                    print("Generating board . . .")
+                    time.sleep(0.5)
                     self.display_board()
                     break
             except ValueError:
@@ -131,12 +134,16 @@ S = Ship placement.
 
         while ships_placed < board.num_ships:
             try:
+                print("-" * 35)
                 row = self.validate_coordinates(
                     "Enter row to place ship at: \n", board.size
                     )
+                print("-" * 35)
+                print("-" * 35)
                 col = self.validate_coordinates(
                     "Enter col to place ship at: \n", board.size
                     )
+                print("-" * 35)
                 if board.grid[row][col] == ".":
                     board.grid[row][col] = "S"
                     ships_placed += 1
@@ -194,24 +201,32 @@ Please bear that in mind when entering rows and columns.
         """
         Function to update board that has been attacked
         """
+        ships_hit = 0
         if board.grid[row][col] in ("M", "H"):
+            time.sleep(1)
             print(f"""{user} you have already shot here, please
 pick a new spot.
                   """)
             return False
         elif board.grid[row][col] == "S":
-            print(f"""{user} Hit! Well done. Just {board.num_ships-1} left to
-destroy.
-                  """)
             board.grid[row][col] = "H"
+            ships_hit += 1
+            ships = board.num_ships - sum(row.count("H") for row in board.grid)
+            time.sleep(1)
+            print(f"""{user} Hit! Well done. Just
+{ships} left to destroy.
+                  """, flush=True)
             return True
         elif board.grid[row][col] == ".":
+            ships = board.num_ships - sum(row.count("H") for row in board.grid)
+            time.sleep(1)
             print(f"""{user} missed! Try again next time. Still
-{board.num_ships} left to hit
-                """)
+{ships} left to hit
+                """, flush=True)
             board.grid[row][col] = "M"
             return True
         else:
+            time.sleep(1)
             print("""Remember: The top left corner is row: 0, col: 0.
 Please bear that in mind when entering rows and columns.
                     """)
@@ -221,32 +236,25 @@ Please bear that in mind when entering rows and columns.
         """
         This asks for user to fire their shots
         """
-        print("-" * 35)
-        print("""Below you can enter the coordinates you would like to hit.
-Please remember the top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-            """)
-        print("-" * 35)
-        print("""Key:
-            S = Ship
-            H = Hit
-            M = Miss
-            """)
         while True:
             if is_user:
+                print("-" * 35)
                 row = self.validate_coordinates(
                     "Enter row to shoot at: \n", target_board.size
                     )
+                print("-" * 35)
+                print("-" * 35)
                 col = self.validate_coordinates(
                     "Enter col to shoot at: \n", target_board.size
                     )
+                print("-" * 35)
             else:
                 row = self.random_point(target_board.size)
                 col = self.random_point(target_board.size)
             if self.update_board(player_name, target_board, row, col):
                 break
 
-    def check_shots(self):
+    def play_game(self):
         """
         Starts the game and checks when the game finishes
         """
@@ -261,19 +269,33 @@ Please bear that in mind when entering rows and columns.
         while user_ships and computer_ships:
             print("-" * 35)
             print("Time to take your shot! Fire!!!!!!")
-            time.sleep(1.5)
+            print("-" * 35)
             self.shots_fired("user", computer, is_user=True)
-            if any("H" in row for row in computer.grid):
-                computer_ships_hit += 1
+            computer_ships_hit = sum(row.count("H") for row in computer.grid)
+            time.sleep(1.5)
 
             print("-" * 35)
             print("Computer's turn, let's hope they miss!!!")
+            print("-" * 35)
             time.sleep(1.5)
             self.shots_fired("computer", user, is_user=False)
-            if any("H" in row for row in user.grid):
-                user_ships_hit += 1
+            user_ships_hit = sum(row.count("H") for row in user.grid)
 
             time.sleep(1.5)
+            print("-" * 35)
+            print("""Key:
+            S = Ship
+            H = Hit
+            M = Miss
+            """)
+            print("-" * 35)
+            print("User's board:")
+            user.display_board(show_ships=True)
+            print("-" * 35)
+            print("Computer's board:")
+            computer.display_board(show_ships=False)
+            print("-" * 35)
+            time.sleep(0.5)
             print("-" * 35)
             print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
             print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
@@ -291,7 +313,7 @@ Please bear that in mind when entering rows and columns.
 
 def main():
     game = Game()
-    game.check_shots()
+    game.play_game()
 
 
 main()
