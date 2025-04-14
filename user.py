@@ -60,7 +60,11 @@ def user_login():
     """
     username = str(input("Username: "))
     password = str(input("Password: "))
-    login_credentials(username, password)
+    result = login_credentials(username, password)
+    if result == "Login successful":
+        return username
+    else:
+        return None
 
 
 # Section that asks user to create login credentials and stores login
@@ -188,3 +192,12 @@ def user_creation():
     print("-" * 35)
     print("You can login next time. Enjoy the game.\n")
     print("-" * 35)
+    return username
+
+
+# def get_username():
+#     """
+#     Allows other python files to retrieve the username
+#     """
+#     username = user_login() or user_creation()
+#     return username
