@@ -1,21 +1,9 @@
 # Imported dependencies and modules
 import colorama
-import gspread
-from google.oauth2.service_account import Credentials
 import re
 import bcrypt
-
-# Giving python access to google sheet
-SCOPE = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive"
-    ]
-CREDS = Credentials.from_service_account_file('creds.json')
-SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open('ultimate_battleships')
-user_logins_worksheet = SHEET.worksheet("userlogins")
+# Giving access to google drive and google sheets
+from sheets import user_logins_worksheet
 
 
 # Section that asks user for login information and verifies login credentials
@@ -46,7 +34,6 @@ def login_credentials(username, password):
         if user["Username"] == username:
             encrypt_pw = user["Password"].encode()
             if bcrypt.checkpw(password.encode(), encrypt_pw):
-                print(f"{user} welcome back to Ultimate Battleships!")
                 return "Login successful"
     print("Invalid login credentials, please enter correct details.")
     user_choice()
@@ -62,6 +49,7 @@ def user_login():
     password = str(input("Password: "))
     result = login_credentials(username, password)
     if result == "Login successful":
+        print(f"Welcome back {username}! Time to play the game.")
         return username
     else:
         return None
@@ -190,14 +178,6 @@ def user_creation():
     password = password_create()
     save_user(username, password)
     print("-" * 35)
-    print("You can login next time. Enjoy the game.\n")
+    print("Login created. Please login now to enjoy the game.\n")
     print("-" * 35)
-    return username
-
-
-# def get_username():
-#     """
-#     Allows other python files to retrieve the username
-#     """
-#     username = user_login() or user_creation()
-#     return username
+    user_login()

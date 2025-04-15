@@ -1,38 +1,9 @@
 # Imported dependencies and modules
 from random import randint
 import colorama
-import gspread
-from google.oauth2.service_account import Credentials
 import time
 # Imported other python scripts
-import user as username
-
-# Giving python access to google sheet
-SCOPE = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive"
-    ]
-CREDS = Credentials.from_service_account_file('creds.json')
-SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open('ultimate_battleships')
-
-
-def intro():
-    """
-    Welcomes a new user who hasn't accessed the game before giving them
-    """
-    print("-" * 35)
-    print("""Battleships is a strategy guessing game for two players.
-This program allows you to play against a computer to practice.
-Once the game starts you will be able to pick a point to hit on
-the computers board.
-The aim of the game is to hit all of the computers battleships
-before they hit all of yours.
-          """)
-    print("-" * 35)
-    username.user_choice()
+from sheets import user_logins_worksheet, saved_games
 
 
 class Board:
@@ -41,7 +12,6 @@ class Board:
     generates a computers board, and allows user to make guesses,
     while generates a random guess for the computer.
     """
-
     def __init__(self, size=0, num_ships=0):
         self.size = size
         self.num_ships = num_ships
@@ -124,8 +94,21 @@ class Game:
     a computers board and then asks user to guess while randomly generating
     computers guesses and checks for hits and misses.
     """
-    def __init__(self):
-        pass
+    def __init__(self, ships_placed=0, ships_hit=0):
+        self.ships_placed = ships_placed
+        self.ships_hit = ships_hit
+        self.username = None
+
+    def fetch_username(self, username):
+        """
+        Fetches username from user login
+        """
+        usernames = user_logins_worksheet.col_values(1)
+        if username in usernames:
+            self.username = username
+            return self.username
+        else:
+            return "User not found"
 
     def random_point(self, size):
         """
@@ -163,9 +146,8 @@ Please bear that in mind when entering rows and columns.
 S = Ship placement.
             """)
         print("-" * 35)
-        ships_placed = 0
-
-        while ships_placed < board.num_ships:
+        self.ships_placed
+        while self.ships_placed < board.num_ships:
             try:
                 print("-" * 35)
                 row = self.validate_coordinates(
@@ -179,7 +161,7 @@ S = Ship placement.
                 print("-" * 35)
                 if board.grid[row][col] == ".":
                     board.grid[row][col] = "S"
-                    ships_placed += 1
+                    self.ships_placed += 1
                     print(f"Ship placed at {row}, {col}")
                     board.display_board(show_ships=True)
                 elif board.grid[row][col] == "S":
@@ -195,14 +177,13 @@ Please bear that in mind when entering rows and columns.
         """
         Places the ships randomly on the board
         """
-        ships_placed = 0
-
-        while ships_placed < board.num_ships:
+        self.ships_placed
+        while self.ships_placed < board.num_ships:
             row = self.random_point(board.size)
             col = self.random_point(board.size)
             if board.grid[row][col] == ".":
                 board.grid[row][col] = "S"
-                ships_placed += 1
+                self.ships_placed += 1
 
         return board
 
@@ -234,7 +215,7 @@ Please bear that in mind when entering rows and columns.
         """
         Function to update board that has been attacked
         """
-        ships_hit = 0
+        self.ships_hit
         if board.grid[row][col] in ("M", "H"):
             time.sleep(1)
             print(f"""{user} you have already shot here, please
@@ -243,7 +224,7 @@ pick a new spot.
             return False
         elif board.grid[row][col] == "S":
             board.grid[row][col] = "H"
-            ships_hit += 1
+            self.ships_hit += 1
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
             print(f"""{user} Hit! Well done. Just
@@ -287,85 +268,139 @@ Please bear that in mind when entering rows and columns.
             if self.update_board(player_name, target_board, row, col):
                 break
 
+    def hit_counter(self, grid):
+        """
+        Counts the hits for each shot a player takes
+        """
+        return sum(row.count("H") for row in grid)
+
+    def player_turn(self, opponent):
+        """
+        Player turn taken
+        """
+        player = self.fetch_username(self.username)
+        time.sleep(1.5)
+        print("-" * 35)
+        print("Time to take your shot! Fire!!!!!!")
+        print("-" * 35)
+        self.shots_fired(player, opponent, is_user=True)
+        time.sleep(1.5)
+
+    def computer_turn(self, opponent):
+        """
+        Computer turn taken
+        """
+        print("-" * 35)
+        print("Computer's turn, let's hope they miss!!!")
+        print("-" * 35)
+        time.sleep(1.5)
+        self.shots_fired("computer", opponent, is_user=False)
+
+    def update_game_status(
+            self, user, computer, user_ships_hits, computer_ships_hits
+            ):
+        """
+        Updates the game board after shots are taken
+        """
+        time.sleep(1.5)
+        print("-" * 35)
+        print("""Key:
+        S = Ship
+        H = Hit
+        M = Miss
+            """)
+        print("-" * 35)
+        print("User's board:")
+        computer.display_board(show_ships=True)
+        print("-" * 35)
+        print("Computer's board:")
+        user.display_board(show_ships=False)
+        print("-" * 35)
+        time.sleep(1)
+        print("-" * 35)
+        print(f"User hits: {computer_ships_hits}/{computer.num_ships}")
+        print(f"Computer hits: {user_ships_hits}/{user.num_ships}")
+        print("-" * 35)
+        time.sleep(1.5)
+
+    def game_over_check(
+            self, user_ships_hit, computer_ships_hit, total_ships
+            ):
+        """
+        Checks after shots taken if the game is over and congratulates winner
+        """
+        player = self.fetch_username(self.username)
+        user_hits = computer_ships_hit == total_ships
+        computer_hits = user_ships_hit == total_ships
+        if user_hits and computer_hits:
+            print("Both players took out each other. Game is a tie")
+            return True
+        elif computer_ships_hit == total_ships:
+            print(f"{player}, you win!!!! You beat the computer.")
+            return True
+        elif user_hits == total_ships:
+            print("Computer wins!!! Unlucky Sam, maybe next time.")
+            return True
+        else:
+            return False
+
+    def continue_game(self):
+        """
+        Continues game if no one has won yet
+        """
+        print("-" * 35)
+        print("""No winner yet. Game continues.
+Come on player you can win!!!
+                """)
+        print("-" * 35)
+
+    def save_game_state(
+            self, username, board_size, user_board, computer_board,
+            user_hits, computer_hits
+            ):
+        """
+        Prompts the user if they want to save the game or continue
+        """
+        username = self.fetch_username(self.username)
+        print(f"""{username} would you like to continue or save the game and
+              return later?
+              """)
+        save_continue = input("Please enter C for continue or S for save: \n")
+        save = saved_games
+        if save_continue == "C":
+            self.continue_game()
+        elif save_continue == "S":
+            save.append_row(
+                username, board_size, user_board, computer_board,
+                user_hits, computer_hits
+            )
+
     def play_game(self):
         """
         Starts the game and checks when the game finishes
         """
-        # player = username.get_username()
+        username = self.fetch_username(self.username)
         user = self.user_board()
         computer = self.computer_board(user.size, user.num_ships)
-        user_ships_hit = 0
-        computer_ships_hit = 0
         total_ships = user.num_ships
-        user_ships = user_ships_hit < total_ships
-        computer_ships = computer_ships_hit < total_ships
 
-        while user_ships and computer_ships:
-            time.sleep(1.5)
-            print("-" * 35)
-            print("Time to take your shot! Fire!!!!!!")
-            print("-" * 35)
-            self.shots_fired("player", computer, is_user=True)
-            computer_ships_hit = sum(row.count("H") for row in computer.grid)
-            time.sleep(1.5)
+        while True:
+            self.player_turn(computer)
+            computer_ships_hit = self.hit_counter(computer.grid)
 
-            print("-" * 35)
-            print("Computer's turn, let's hope they miss!!!")
-            print("-" * 35)
-            time.sleep(1.5)
-            self.shots_fired("computer", user, is_user=False)
-            user_ships_hit = sum(row.count("H") for row in user.grid)
+            self.computer_turn(user)
+            user_ships_hit = self.hit_counter(user.grid)
 
-            time.sleep(1.5)
-            print("-" * 35)
-            print("""Key:
-            S = Ship
-            H = Hit
-            M = Miss
-            """)
-            print("-" * 35)
-            print("User's board:")
-            user.display_board(show_ships=True)
-            print("-" * 35)
-            print("Computer's board:")
-            computer.display_board(show_ships=False)
-            print("-" * 35)
-            time.sleep(1)
-            print("-" * 35)
-            print(f"User hits: {computer_ships_hit}/{computer.num_ships}")
-            print(f"Computer hits: {user_ships_hit}/{user.num_ships}")
-            print("-" * 35)
-            time.sleep(1.5)
+            self.update_game_status(
+                user, computer, user_ships_hit, computer_ships_hit
+                )
 
-            user_ships_left = user_ships_hit == total_ships
-            computer_ships_left = computer_ships_hit == total_ships
-            if user_ships_left or computer_ships_left:
+            if self.game_over_check(
+                user_ships_hit, computer_ships_hit, total_ships
+                    ):
                 break
             else:
-                print("-" * 35)
-                print("""No winner yet. Game continues.
-Come on player you can win!!!
-                      """)
-                print("-" * 35)
-
-        if computer_ships_hit == total_ships and user_ships_hit == total_ships:
-            print("Both players took out each other. Game is a tie")
-        elif computer_ships_hit == total_ships:
-            print("Player, you win!!!! You beat the computer.")
-        else:
-            print("Computer wins!!! Unlucky Sam, maybe next time.")
-
-
-def main():
-    """
-    Run all program functions
-    """
-    print("Welcome to Ultimate Battleships!\n")
-    intro()
-    game = Game()
-    game.play_game()
-
-
-# Checks to see if code is being used as a module or main program
-if __name__ == "__main__":
-    main()
+                self.save_game_state(
+                    username, user.size, user, computer,
+                    computer_ships_hit, user_ships_hit
+                    )
