@@ -178,7 +178,7 @@ Please bear that in mind when entering rows and columns.
 
         return board
 
-    def user_board(self, user):
+    def user_board(self, player):
         """
         User board is generated blank to allow user to place their ships
         """
@@ -186,7 +186,7 @@ Please bear that in mind when entering rows and columns.
         my_board.board_size()
         self.place_ships(my_board)
         print("-" * 35)
-        print(f"{user} final board \n")
+        print(f"{player}'s final board \n")
         my_board.display_board(show_ships=True)
         return my_board
 
@@ -218,14 +218,14 @@ pick a new spot.
             self.ships_hit += 1
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{player} Hit! Well done. Just
+            print(f"""{player} Hit! Just
 {ships} left to destroy.
                   """, flush=True)
             return True
         elif board.grid[row][col] == ".":
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{player} missed! Try again next time. Still
+            print(f"""{player} missed! Still
 {ships} left to hit
                 """, flush=True)
             board.grid[row][col] = "M"
@@ -285,10 +285,10 @@ Please bear that in mind when entering rows and columns.
         print("Computer's turn, let's hope they miss!!!")
         print("-" * 35)
         time.sleep(1.5)
-        self.shots_fired("computer", opponent, is_user=False)
+        self.shots_fired("Computer", opponent, is_user=False)
 
     def update_game_status(
-            self, player, computer, user_ships_hits, computer_ships_hits
+            self, player, user, computer, user_ships_hits, computer_ships_hits
             ):
         """
         Updates the game board after shots are taken
@@ -301,16 +301,16 @@ Please bear that in mind when entering rows and columns.
         M = Miss
             """)
         print("-" * 35)
-        print(f"{player} board:")
-        computer.display_board(show_ships=True)
+        print(f"{player}'s board:")
+        user.display_board(show_ships=True)
         print("-" * 35)
         print("Computer's board:")
-        player.display_board(show_ships=False)
+        computer.display_board(show_ships=False)
         print("-" * 35)
         time.sleep(1)
         print("-" * 35)
         print(f"{player} hits: {computer_ships_hits}/{computer.num_ships}")
-        print(f"Computer hits: {user_ships_hits}/{player.num_ships}")
+        print(f"Computer hits: {user_ships_hits}/{user.num_ships}")
         print("-" * 35)
         time.sleep(1.5)
 
@@ -326,24 +326,30 @@ Please bear that in mind when entering rows and columns.
         if user_hits and computer_hits:
             print("Both players took out each other. Game is a tie")
             return True
-        elif computer_ships_hit == total_ships:
+        elif computer_ships_hit:
             print(f"{player}, you win!!!! You beat the computer.")
             return True
-        elif user_hits == total_ships:
+        elif user_hits:
             print(f"Computer wins!!! Unlucky {player}, maybe next time.")
             return True
         else:
             return False
 
-    def continue_game(self):
+    def continue_game(self, player):
         """
         Continues game if no one has won yet
         """
         print("-" * 35)
-        print("""No winner yet. Game continues.
-Come on player you can win!!!
+        print(f"""No winner yet. Game continues.
+Come on {player} you can win!!!
                 """)
         print("-" * 35)
+
+    def convert_board(self, board):
+        """
+        Converts board into a state that can be saved into Google Sheets
+        """
+        return "\n".join(["".join(row) for row in board.grid])
 
     def save_game_state(
             self, player, board_size, user_board, computer_board,
@@ -357,13 +363,21 @@ return later?
               """)
         save_continue = input("Please enter C for continue or S for save: \n")
         save = saved_games
-        if save_continue == "C":
-            self.continue_game()
-        elif save_continue == "S":
-            save.append_row([
-                    player, board_size, user_board, computer_board,
-                    user_hits, computer_hits
-                    ])
+        while True:
+            if save_continue not in ("C" or "S"):
+                print("Please enter 'C' or 'S'")
+                continue
+            elif save_continue == "C":
+                self.continue_game()
+                return True
+            elif save_continue == "S":
+                user_board_convert = self.convert_board(user_board)
+                computer_board_convert = self.convert_board(computer_board)
+                save.append_row([
+                        player, board_size, user_board_convert,
+                        computer_board_convert, user_hits, computer_hits
+                        ])
+                break
 
     def play_game(self):
         """
@@ -382,7 +396,7 @@ return later?
             user_ships_hit = self.hit_counter(user.grid)
 
             self.update_game_status(
-                player, computer, user_ships_hit, computer_ships_hit
+                player, user, computer, user_ships_hit, computer_ships_hit
                 )
 
             if self.game_over_check(
