@@ -28,14 +28,21 @@ def user_login():
     Allows user to login and access a previous game state
     or start a new game from scratch or access the leaderbaord.
     """
+    global username
     username = str(input("Username: "))
     password = str(input("Password: "))
     result = login_credentials(username, password)
     if result == "Login successful":
         print(f"Welcome back {username}! Time to play the game.")
-        return username
     else:
-        return None
+        username = None
+
+
+def fetch_username():
+    """
+    Allows username to be accessed in other files
+    """
+    return username
 
 
 # Section that asks user to create login credentials and stores login
@@ -190,13 +197,16 @@ def user_choice():
     Allows user to declare if they are a returning user or a new user
     Then takes them to login or user creation.
     """
-    print("Have you already got a login?")
-    login_option = input("If yes please enter Y, if no please enter N:\n")
+    while True:
+        print("Have you already got a login?")
+        login_option = input("If yes please enter Y, if no please enter N:\n")
 
-    if login_option == "Y":
-        user_login()
-    elif login_option == "N":
-        user_creation()
-    else:
-        print("Please enter Y or N\n")
-        user_choice()
+        if login_option not in ("Y" or "N"):
+            print("Please enter Y or N\n")
+            continue
+        elif login_option == "Y":
+            user_login()
+            break
+        elif login_option == "N":
+            user_creation()
+            break

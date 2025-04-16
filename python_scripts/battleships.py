@@ -3,7 +3,9 @@ from random import randint
 import colorama
 import time
 # Imported other python scripts
-from sheets import user_logins_worksheet, saved_games
+from user import fetch_username
+from sheets import saved_games
+from leaderboard import show_lb
 
 
 class Board:
@@ -99,17 +101,6 @@ class Game:
         self.ships_hit = ships_hit
         self.username = None
 
-    def fetch_username(self, username):
-        """
-        Fetches username from user login
-        """
-        usernames = user_logins_worksheet.col_values(1)
-        if username in usernames:
-            self.username = username
-            return self.username
-        else:
-            return "User not found"
-
     def random_point(self, size):
         """
         Helper method to generate random integer between 0 and board size
@@ -187,7 +178,7 @@ Please bear that in mind when entering rows and columns.
 
         return board
 
-    def user_board(self):
+    def user_board(self, user):
         """
         User board is generated blank to allow user to place their ships
         """
@@ -195,7 +186,7 @@ Please bear that in mind when entering rows and columns.
         my_board.board_size()
         self.place_ships(my_board)
         print("-" * 35)
-        print("Your final board \n")
+        print(f"{user} final board \n")
         my_board.display_board(show_ships=True)
         return my_board
 
@@ -211,14 +202,14 @@ Please bear that in mind when entering rows and columns.
         pc_board.display_board(show_ships=False)
         return pc_board
 
-    def update_board(self, user, board, row, col):
+    def update_board(self, player, board, row, col):
         """
         Function to update board that has been attacked
         """
         self.ships_hit
         if board.grid[row][col] in ("M", "H"):
             time.sleep(1)
-            print(f"""{user} you have already shot here, please
+            print(f"""{player} you have already shot here, please
 pick a new spot.
                   """)
             return False
@@ -227,14 +218,14 @@ pick a new spot.
             self.ships_hit += 1
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{user} Hit! Well done. Just
+            print(f"""{player} Hit! Well done. Just
 {ships} left to destroy.
                   """, flush=True)
             return True
         elif board.grid[row][col] == ".":
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{user} missed! Try again next time. Still
+            print(f"""{player} missed! Try again next time. Still
 {ships} left to hit
                 """, flush=True)
             board.grid[row][col] = "M"
@@ -278,7 +269,7 @@ Please bear that in mind when entering rows and columns.
         """
         Player turn taken
         """
-        player = self.fetch_username(self.username)
+        player = fetch_username()
         time.sleep(1.5)
         print("-" * 35)
         print("Time to take your shot! Fire!!!!!!")
@@ -297,7 +288,7 @@ Please bear that in mind when entering rows and columns.
         self.shots_fired("computer", opponent, is_user=False)
 
     def update_game_status(
-            self, user, computer, user_ships_hits, computer_ships_hits
+            self, player, computer, user_ships_hits, computer_ships_hits
             ):
         """
         Updates the game board after shots are taken
@@ -310,26 +301,26 @@ Please bear that in mind when entering rows and columns.
         M = Miss
             """)
         print("-" * 35)
-        print("User's board:")
+        print(f"{player} board:")
         computer.display_board(show_ships=True)
         print("-" * 35)
         print("Computer's board:")
-        user.display_board(show_ships=False)
+        player.display_board(show_ships=False)
         print("-" * 35)
         time.sleep(1)
         print("-" * 35)
-        print(f"User hits: {computer_ships_hits}/{computer.num_ships}")
-        print(f"Computer hits: {user_ships_hits}/{user.num_ships}")
+        print(f"{player} hits: {computer_ships_hits}/{computer.num_ships}")
+        print(f"Computer hits: {user_ships_hits}/{player.num_ships}")
         print("-" * 35)
         time.sleep(1.5)
 
     def game_over_check(
-            self, user_ships_hit, computer_ships_hit, total_ships
+            self, player, user_ships_hit, computer_ships_hit,
+            total_ships
             ):
         """
         Checks after shots taken if the game is over and congratulates winner
         """
-        player = self.fetch_username(self.username)
         user_hits = computer_ships_hit == total_ships
         computer_hits = user_ships_hit == total_ships
         if user_hits and computer_hits:
@@ -339,7 +330,7 @@ Please bear that in mind when entering rows and columns.
             print(f"{player}, you win!!!! You beat the computer.")
             return True
         elif user_hits == total_ships:
-            print("Computer wins!!! Unlucky Sam, maybe next time.")
+            print(f"Computer wins!!! Unlucky {player}, maybe next time.")
             return True
         else:
             return False
@@ -355,32 +346,31 @@ Come on player you can win!!!
         print("-" * 35)
 
     def save_game_state(
-            self, username, board_size, user_board, computer_board,
+            self, player, board_size, user_board, computer_board,
             user_hits, computer_hits
             ):
         """
         Prompts the user if they want to save the game or continue
         """
-        username = self.fetch_username(self.username)
-        print(f"""{username} would you like to continue or save the game and
-              return later?
+        print(f"""{player} would you like to continue or save the game and
+return later?
               """)
         save_continue = input("Please enter C for continue or S for save: \n")
         save = saved_games
         if save_continue == "C":
             self.continue_game()
         elif save_continue == "S":
-            save.append_row(
-                username, board_size, user_board, computer_board,
-                user_hits, computer_hits
-            )
+            save.append_row([
+                    player, board_size, user_board, computer_board,
+                    user_hits, computer_hits
+                    ])
 
     def play_game(self):
         """
         Starts the game and checks when the game finishes
         """
-        username = self.fetch_username(self.username)
-        user = self.user_board()
+        player = fetch_username()
+        user = self.user_board(player)
         computer = self.computer_board(user.size, user.num_ships)
         total_ships = user.num_ships
 
@@ -392,15 +382,20 @@ Come on player you can win!!!
             user_ships_hit = self.hit_counter(user.grid)
 
             self.update_game_status(
-                user, computer, user_ships_hit, computer_ships_hit
+                player, computer, user_ships_hit, computer_ships_hit
                 )
 
             if self.game_over_check(
-                user_ships_hit, computer_ships_hit, total_ships
+                player, user_ships_hit, computer_ships_hit, total_ships
                     ):
                 break
             else:
                 self.save_game_state(
-                    username, user.size, user, computer,
+                    player, user.size, user, computer,
                     computer_ships_hit, user_ships_hit
                     )
+
+        print("-" * 35)
+        print("See how you did on the leaderboard below")
+        print("-" * 35)
+        show_lb(user.size)

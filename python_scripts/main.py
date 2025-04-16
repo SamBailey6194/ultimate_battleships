@@ -3,6 +3,7 @@ import time
 # Imported other python scripts
 from user import user_choice
 from battleships import Game
+from leaderboard import search_lb
 
 
 def intro():
@@ -31,6 +32,14 @@ def main():
     intro()
     game = Game()
     game.play_game()
+    print("-" * 35)
+    print("""Can't see your score on the leaderboard you can search for it
+    using the serachbox below
+          """)
+    print("-" * 35)
+    print("-" * 35)
+    # search_lb()
+    print("-" * 35)
 
 
 # Checks to see if code is being used as a module or main program
