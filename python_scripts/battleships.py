@@ -2,6 +2,7 @@
 from random import randint
 import colorama
 import time
+import sys
 # Imported other python scripts
 from user import fetch_username
 from sheets import saved_games
@@ -326,10 +327,10 @@ Please bear that in mind when entering rows and columns.
         if user_hits and computer_hits:
             print("Both players took out each other. Game is a tie")
             return True
-        elif computer_ships_hit:
+        elif user_hits:
             print(f"{player}, you win!!!! You beat the computer.")
             return True
-        elif user_hits:
+        elif computer_hits:
             print(f"Computer wins!!! Unlucky {player}, maybe next time.")
             return True
         else:
@@ -349,7 +350,17 @@ Come on {player} you can win!!!
         """
         Converts board into a state that can be saved into Google Sheets
         """
-        return "\n".join(["".join(row) for row in board.grid])
+        return "\n".join([" ".join(row) for row in board.grid])
+
+    def exit_game(self, player):
+        """
+        Function that exits the game if player chose to save game instead
+        """
+        print("-" * 35)
+        print(f"""Thanks for playing {player}. Feel free to come back and
+              access the saved game
+              """)
+        print("-" * 35)
 
     def save_game_state(
             self, player, board_size, user_board, computer_board,
@@ -364,11 +375,11 @@ return later?
         save_continue = input("Please enter C for continue or S for save: \n")
         save = saved_games
         while True:
-            if save_continue not in ("C" or "S"):
+            if save_continue not in ("C", "S"):
                 print("Please enter 'C' or 'S'")
                 continue
             elif save_continue == "C":
-                self.continue_game()
+                self.continue_game(player)
                 return True
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
@@ -377,7 +388,18 @@ return later?
                         player, board_size, user_board_convert,
                         computer_board_convert, user_hits, computer_hits
                         ])
+                self.end_game(player)
                 break
+        sys.exit
+
+    def end_game(self, player, size):
+        """
+        Function that shows the leaderboard if game is over
+        """
+        print("-" * 35)
+        print(f"{player}, see how you did on the leaderboard below")
+        print("-" * 35)
+        show_lb(size)
 
     def play_game(self):
         """
@@ -409,7 +431,4 @@ return later?
                     computer_ships_hit, user_ships_hit
                     )
 
-        print("-" * 35)
-        print("See how you did on the leaderboard below")
-        print("-" * 35)
-        show_lb(user.size)
+        self.end_game(player, user.size)

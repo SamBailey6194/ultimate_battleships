@@ -201,7 +201,7 @@ def user_choice():
         print("Have you already got a login?")
         login_option = input("If yes please enter Y, if no please enter N:\n")
 
-        if login_option not in ("Y" or "N"):
+        if login_option not in ("Y", "N"):
             print("Please enter Y or N\n")
             continue
         elif login_option == "Y":
