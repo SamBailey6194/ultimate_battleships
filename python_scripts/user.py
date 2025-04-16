@@ -8,23 +8,6 @@ from sheets import user_logins_worksheet
 
 # Section that asks user for login information and verifies login credentials
 # with the database
-def user_choice():
-    """
-    Allows user to declare if they are a returning user or a new user
-    Then takes them to login or user creation.
-    """
-    print("Have you already got a login?")
-    login_option = input("If yes please enter Y, if no please enter N:\n")
-
-    if login_option == "Y":
-        user_login()
-    elif login_option == "N":
-        user_creation()
-    else:
-        print("Please enter Y or N\n")
-        user_choice()
-
-
 def login_credentials(username, password):
     """
     Verifying users login details with the google sheets database
@@ -154,10 +137,10 @@ def password_create():
             return password
 
 
-def user_creation():
+def username_requirements():
     """
-    Allows a first time visitor to create a login so they can
-    save a game start and register a score on the leaderboard
+    Refactoring user_creation and putting the text for username
+    requirements here
     """
     print("-" * 35)
     print("""Username requirements:
@@ -165,7 +148,13 @@ def user_creation():
     No spaces allowed
         """)
     print("-" * 35)
-    username = username_create()
+
+
+def password_requirements():
+    """
+    Refactoring user_creation and putting the text for password
+    requirements here
+    """
     print("-" * 35)
     print("""Password requirements:
     8 characters long
@@ -175,9 +164,39 @@ def user_creation():
     No spaces allowed
           """)
     print("-" * 35)
+
+
+def user_creation():
+    """
+    Allows a first time visitor to create a login so they can
+    save a game start and register a score on the leaderboard
+    """
+    username_requirements()
+    username = username_create()
+    password_requirements()
     password = password_create()
     save_user(username, password)
+    # Asks user to login once login credentials are correctly saved
     print("-" * 35)
     print("Login created. Please login now to enjoy the game.\n")
     print("-" * 35)
     user_login()
+
+
+# Code that asks user if they have a login and then accesses the relevant
+# functions above
+def user_choice():
+    """
+    Allows user to declare if they are a returning user or a new user
+    Then takes them to login or user creation.
+    """
+    print("Have you already got a login?")
+    login_option = input("If yes please enter Y, if no please enter N:\n")
+
+    if login_option == "Y":
+        user_login()
+    elif login_option == "N":
+        user_creation()
+    else:
+        print("Please enter Y or N\n")
+        user_choice()
