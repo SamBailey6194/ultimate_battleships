@@ -47,7 +47,10 @@ The
 - After each shot the program is adding a hit to the user_ships_hits and computer_ships_hit if a ship has been hit previously, added ships_hit to update_board function and added code to play_game function to check for any "H" on the board
 - Updated boards weren't printing to the terminal at all, updated play_game function to display_board in the correct space to allow it to be displayed
 - Update_board function printing the statement incorrectly when a ship is hit, needed to reorder the structure below the elif statements
-- Username being fetched from database, the user_choice function keeps being called everytime fetch_username is being called, therefore set the username input as a global variable and created a function in user.py that returned the username which was then imported into battleships.py
+- Username not accessed by other scripts:
+  - Username being fetched from database, the user_choice function keeps being called everytime fetch_username is being called, therefore set the username input as a global variable and created a function in user.py that returned the username which was then imported into battleships.py
+  - The above fix is not best practice, therefore adjusted user_login, user_creation and user_choice to properly return the correct information to allow the username to be accessed by other scripts
+  - To also double check the login_credentials there was a while loop added to the main function in main.py to check that the username had returned properly
 - Game state not saving when user requests to save it due to board not being JSON serializable, add function that converts the table into a string that is readable for google sheets
 - Game did not exit after user input's save option, sys.exit was missing () at the end
 

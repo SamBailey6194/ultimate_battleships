@@ -366,7 +366,7 @@ Come on {player} you can win!!!
         """
         print("-" * 35)
         print(f"""Thanks for playing {player}. Feel free to come back and
-              access the saved game
+access any saved games you have.
               """)
         print("-" * 35)
 
@@ -402,40 +402,6 @@ E to exit: \n""")
                 break
             elif save_continue == "E":
                 break
-        print("-" * 35)
-        print("""Exiting the game. If you would like to play again
-please run the program and log back in.""")
-        print("-" * 35)
+
+        self.exit_game(player)
         sys.exit()
-
-    def play_game(self, username):
-        """
-        Starts the game and checks when the game finishes
-        """
-        player = username
-        user = self.user_board(player)
-        computer = self.computer_board(user.size, user.num_ships)
-        total_ships = user.num_ships
-
-        while True:
-            self.player_turn(player, computer)
-            computer_ships_hit = self.hit_counter(computer.grid)
-
-            self.computer_turn(user)
-            user_ships_hit = self.hit_counter(user.grid)
-
-            self.update_game_status(
-                player, user, computer, user_ships_hit, computer_ships_hit
-                )
-
-            if self.game_over_check(
-                player, user_ships_hit, computer_ships_hit, total_ships
-                    ):
-                break
-            else:
-                self.save_game_state(
-                    player, user.size, user, computer,
-                    computer_ships_hit, user_ships_hit
-                    )
-
-        self.end_game(player, user.size)

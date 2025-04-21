@@ -19,15 +19,7 @@ def login_credentials(username, password):
             if bcrypt.checkpw(password.encode(), encrypt_pw):
                 return "Login successful"
     print("Invalid login credentials, please enter correct details.")
-    user_choice()
-    return "Invalid login credentials"
-
-
-def fetch_username(username):
-    """
-    Allows username to be accessed in other files
-    """
-    return username
+    return None
 
 
 def user_login():
@@ -40,9 +32,9 @@ def user_login():
     result = login_credentials(username, password)
     if result == "Login successful":
         print(f"Welcome back {username}! Time to play the game.")
-        fetch_username(username)
+        return username
     else:
-        username = None
+        return None
 
 
 # Section that asks user to create login credentials and stores login
@@ -183,30 +175,7 @@ def user_creation():
     password_requirements()
     password = password_create()
     save_user(username, password)
-    # Asks user to login once login credentials are correctly saved
     print("-" * 35)
-    print("Login created. Please login now to enjoy the game.\n")
+    print(f"Login created. Welcome {username}! Time to play the game.\n")
     print("-" * 35)
-    user_login()
-
-
-# Code that asks user if they have a login and then accesses the relevant
-# functions above
-def user_choice():
-    """
-    Allows user to declare if they are a returning user or a new user
-    Then takes them to login or user creation.
-    """
-    while True:
-        print("Have you already got a login?")
-        login_option = input("If yes please enter Y, if no please enter N:\n")
-
-        if login_option not in ("Y", "N"):
-            print("Please enter 'Y' or 'N' \n")
-            continue
-        elif login_option == "Y":
-            user_login()
-            break
-        elif login_option == "N":
-            user_creation()
-            break
+    return username
