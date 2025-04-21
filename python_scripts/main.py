@@ -40,7 +40,7 @@ def user_choice():
         print("Have you already got a login?")
         login_option = input("""If yes please enter 'Y',
 if no please enter 'N':\n
-                             """)
+                        """)
 
         if login_option not in ("Y", "N"):
             print("Please enter 'Y' or 'N' \n")
@@ -142,29 +142,6 @@ you would like to load: \n
         computer_board.num_ships = self.ship_hit_count(computer_grid)
 
         return user_board, computer_board, user_board.num_ships
-
-    def returning_user(self, player):
-        """
-        Asks user if they want to load any of their saved games
-        """
-        if user_choice() == user_login():
-            while True:
-                print("-" * 35)
-                print(f"""{player}, would you like to access any of your
-    saved games?
-                    """)
-                access_games = input("""If yes please enter Y,
-    if no please enter N:\n
-                            """)
-                print("-" * 35)
-
-                if access_games not in ("Y", "N"):
-                    print("Please enter 'Y' or 'N' \n")
-                    continue
-                elif access_games == "Y":
-                    self.access_saved_games(player)
-                elif access_games == "N":
-                    break
 
 
 def leaderboard_generation(player, size):
