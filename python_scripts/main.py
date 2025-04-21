@@ -1,7 +1,7 @@
 # Imported dependencies and modules
 import time
 # Imported other python scripts
-from user import user_choice
+from user import user_choice, fetch_username
 from battleships import Game
 from leaderboard import search_lb
 
@@ -21,7 +21,6 @@ before they hit all of yours.
           """)
     print("-" * 35)
     time.sleep(1.5)
-    user_choice()
 
 
 def main():
@@ -30,8 +29,10 @@ def main():
     """
     print("Welcome to Ultimate Battleships!\n")
     intro()
+    username = user_choice()
+    player = fetch_username(username)
     game = Game()
-    game.play_game()
+    game.play_game(player)
     print("-" * 35)
     print("""Can't see your score on the leaderboard you can search for it
     using the serachbox below

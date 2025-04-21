@@ -4,9 +4,8 @@ import colorama
 import time
 import sys
 # Imported other python scripts
-from user import fetch_username
-from sheets import saved_games
 from leaderboard import show_lb
+from sheets import saved_games
 
 
 class Board:
@@ -266,11 +265,11 @@ Please bear that in mind when entering rows and columns.
         """
         return sum(row.count("H") for row in grid)
 
-    def player_turn(self, opponent):
+    def player_turn(self, username, opponent):
         """
         Player turn taken
         """
-        player = fetch_username()
+        player = username
         time.sleep(1.5)
         print("-" * 35)
         print("Time to take your shot! Fire!!!!!!")
@@ -314,6 +313,15 @@ Please bear that in mind when entering rows and columns.
         print(f"Computer hits: {user_ships_hits}/{user.num_ships}")
         print("-" * 35)
         time.sleep(1.5)
+
+    def end_game(self, player, size):
+        """
+        Function that shows the leaderboard if game is over
+        """
+        print("-" * 35)
+        print(f"{player}, see how you did on the leaderboard below")
+        print("-" * 35)
+        show_lb(size)
 
     def game_over_check(
             self, player, user_ships_hit, computer_ships_hit,
@@ -371,12 +379,15 @@ Come on {player} you can win!!!
         """
         print(f"""{player} would you like to continue or save the game and
 return later?
+If you choose to save, the program will exit and you will have to run it
+again and log back in.
               """)
-        save_continue = input("Please enter C for continue or S for save: \n")
+        save_continue = input("""Please enter C for continue, S for save or
+E to exit: \n""")
         save = saved_games
         while True:
-            if save_continue not in ("C", "S"):
-                print("Please enter 'C' or 'S'")
+            if save_continue not in ("C", "S", "E"):
+                print("Please enter 'C', 'S' or 'E'")
                 continue
             elif save_continue == "C":
                 self.continue_game(player)
@@ -388,30 +399,26 @@ return later?
                         player, board_size, user_board_convert,
                         computer_board_convert, user_hits, computer_hits
                         ])
-                self.end_game(player)
                 break
-        sys.exit
-
-    def end_game(self, player, size):
-        """
-        Function that shows the leaderboard if game is over
-        """
+            elif save_continue == "E":
+                break
         print("-" * 35)
-        print(f"{player}, see how you did on the leaderboard below")
+        print("""Exiting the game. If you would like to play again
+please run the program and log back in.""")
         print("-" * 35)
-        show_lb(size)
+        sys.exit()
 
-    def play_game(self):
+    def play_game(self, username):
         """
         Starts the game and checks when the game finishes
         """
-        player = fetch_username()
+        player = username
         user = self.user_board(player)
         computer = self.computer_board(user.size, user.num_ships)
         total_ships = user.num_ships
 
         while True:
-            self.player_turn(computer)
+            self.player_turn(player, computer)
             computer_ships_hit = self.hit_counter(computer.grid)
 
             self.computer_turn(user)
