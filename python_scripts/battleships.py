@@ -4,7 +4,6 @@ import colorama
 import time
 import sys
 # Imported other python scripts
-from leaderboard import show_lb
 from sheets import saved_games
 
 
@@ -314,15 +313,6 @@ Please bear that in mind when entering rows and columns.
         print("-" * 35)
         time.sleep(1.5)
 
-    def end_game(self, player, size):
-        """
-        Function that shows the leaderboard if game is over
-        """
-        print("-" * 35)
-        print(f"{player}, see how you did on the leaderboard below")
-        print("-" * 35)
-        show_lb(size)
-
     def game_over_check(
             self, player, user_ships_hit, computer_ships_hit,
             total_ships
@@ -379,8 +369,8 @@ access any saved games you have.
         """
         print(f"""{player} would you like to continue or save the game and
 return later?
-If you choose to save, the program will exit and you will have to run it
-again and log back in.
+If you choose to save or exit, the program will exit and you will have to run
+it again and log back in.
               """)
         save_continue = input("""Please enter C for continue, S for save or
 E to exit: \n""")
