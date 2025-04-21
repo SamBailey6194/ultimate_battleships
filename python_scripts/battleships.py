@@ -205,6 +205,10 @@ Please bear that in mind when entering rows and columns.
         """
         Function to update board that has been attacked
         """
+        if not (0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])):
+            print(f"Invalid coordinates: ({row}, {col})")
+            return False
+
         self.ships_hit
         if board.grid[row][col] in ("M", "H"):
             time.sleep(1)

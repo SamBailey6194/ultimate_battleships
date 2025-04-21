@@ -9,7 +9,6 @@ from sheets import saved_games
 
 # Global variables for main.py
 game = Game()
-board = Board()
 lb = leaderboard
 save = saved_games
 
@@ -66,7 +65,8 @@ class Load_Games:
         """
         Converts board from google sheets back to a grid
         """
-        return [row.split(" ") for row in game_board.strip().split()]
+        grid = [row.split(" ") for row in game_board.strip().split("\n")]
+        return grid
 
     def load_saved_games(self, username):
         """
@@ -89,7 +89,10 @@ class Load_Games:
         """
         Helper function to check board size
         """
-        return Board(size=int(selected["Board Size"]))
+        size = int(selected["Board Size"])
+        board = Board(size=size)
+        board.grid = [["."] * size for _ in range(size)]
+        return board
 
     def access_saved_games(self, player):
         """
