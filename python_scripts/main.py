@@ -3,13 +3,13 @@ import time
 import sys
 # Imported other python scripts
 from user import user_login, user_creation
-import battleships
+from battleships import Board, Game
 import leaderboard
 from sheets import saved_games
 
 # Global variables for main.py
-game = battleships.Game()
-board = battleships.Board()
+game = Game()
+board = Board()
 lb = leaderboard
 save = saved_games
 
@@ -81,13 +81,15 @@ class Load_Games:
         """
         Helper function to allow locating ships and hits
         """
-        return sum(row.count("S") + row.count("H") for row in grid)
+        return sum(
+            row.count("S") + row.count("H") + row.count("M") for row in grid
+            )
 
     def board_size(self, selected):
         """
         Helper function to check board size
         """
-        return board(size=int(selected["Board Size"]))
+        return Board(size=int(selected["Board Size"]))
 
     def access_saved_games(self, player):
         """
@@ -152,11 +154,11 @@ def leaderboard_generation(player, size):
     print(f"{player}, see how you did on the leaderboard below")
     print("-" * 35)
     lb.show_lb(size)
-    print("-" * 35)
-    print("""Can't see your score on the leaderboard you can search for it
-using the serachbox below
-        """)
-    print("-" * 35)
+#     print("-" * 35)
+#     print("""Can't see your score on the leaderboard you can search for it
+# using the serachbox below
+#         """)
+#     print("-" * 35)
     # print("-" * 35)
     # lb.search_lb()
     # print("-" * 35)
