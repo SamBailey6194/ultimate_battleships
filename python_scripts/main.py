@@ -80,18 +80,6 @@ def leaderboard_generation(player, size):
     print("-" * 35)
 
 
-def play_again_option():
-    """
-    Allows user to tell the program if they want to play again or exit the game
-    """
-    play_or_exit = input(
-        "When you are done searching the leaderboard you can either play again"
-        " or exit.\n"
-        f"Please enter '{Fore.GREEN}P{Style.RESET_ALL}' to play again or"
-        f"'{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
-    )
-
-
 def play_game(
         player, user=None, computer=None, total_ships=None,
         computer_ships_hit=None, user_ships_hit=None
@@ -127,7 +115,39 @@ def play_game(
 
     lb.update_lb(player, user.size, computer_ships_hit, user_ships_hit)
     leaderboard_generation(player, user.size)
-    play_again_option()
+
+
+def exit_game(player):
+    """
+    Function that exits the game if player chose to save game instead
+    """
+    print("-" * 35)
+    print(
+        f"Thanks for playing {player}. Feel free to come back and access"
+        " any saved games you have."
+        )
+    print("-" * 35)
+
+
+def play_again_option(player):
+    """
+    Allows user to tell the program if they want to play again or exit the game
+    """
+    while True:
+        play_or_exit = input(
+            "When you are done searching the leaderboard you can either play"
+            " again or exit.\n"
+            f"Please enter '{Fore.GREEN}P{Style.RESET_ALL}' to play again or"
+            f"'{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
+        )
+        if play_or_exit not in ("P", "E"):
+            continue
+        elif play_or_exit == "P":
+            play_game(player)
+            continue
+        else:
+            exit_game(player)
+            sys.exit()
 
 
 class Load_Games:
@@ -299,8 +319,7 @@ def main():
         print("-" * 35)
         play_game(username)
 
-    game.exit_game(username)
-    sys.exit()
+    play_again_option(username)
 
 
 # Checks to see if code is being used as a module or main program

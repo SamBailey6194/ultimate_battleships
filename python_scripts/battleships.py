@@ -387,17 +387,6 @@ class Game:
             ",".join(row) for row in board.grid]
             )
 
-    def exit_game(self, player):
-        """
-        Function that exits the game if player chose to save game instead
-        """
-        print("-" * 35)
-        print(
-            f"Thanks for playing {player}. Feel free to come back and access"
-            " any saved games you have."
-            )
-        print("-" * 35)
-
     def save_game_state(
             self, player, board_size, num_ships, user_board, computer_board,
             user_hits, computer_hits
@@ -450,4 +439,4 @@ class Game:
             elif save_continue == "E":
                 break
 
-        play_again_option()
+        play_again_option(player)
