@@ -244,23 +244,34 @@ class Game:
 
     def shots_fired(self, player_name, target_board, is_user):
         """
-        This asks for user to fire their shots
+        This asks for user to fire their shots and takes a random
+        shot for the computer
         """
+        # Variables that help the random shots not include coordinates
+        # the computer has already shot at
+        size = target_board.size
+        coordinates = [
+            (row, col) for row in range(size) for col in range(size)
+            ]
+        available_coordinates = coordinates.copy()
+
         while True:
             if is_user:
                 print("-" * 35)
                 row = self.validate_coordinates(
-                    "Enter row to shoot at: \n", target_board.size
+                    "Enter row to shoot at: \n", size
                     )
                 print("-" * 35)
                 print("-" * 35)
                 col = self.validate_coordinates(
-                    "Enter col to shoot at: \n", target_board.size
+                    "Enter col to shoot at: \n", size
                     )
                 print("-" * 35)
             else:
-                row = self.random_point(target_board.size)
-                col = self.random_point(target_board.size)
+                row = self.random_point(available_coordinates)
+                col = self.random_point(available_coordinates)
+                shot = row, col
+                available_coordinates.remove(shot)
             if self.update_board(player_name, target_board, row, col):
                 break
 
