@@ -3,9 +3,9 @@ from random import randint, choice
 import colorama
 from colorama import Fore, Style
 import time
-import sys
 # Imported other python scripts
 from sheets import saved_games
+from main import play_again_option
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -450,5 +450,4 @@ class Game:
             elif save_continue == "E":
                 break
 
-        self.exit_game(player)
-        sys.exit()
+        play_again_option()

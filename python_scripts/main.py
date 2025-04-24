@@ -69,14 +69,27 @@ def leaderboard_generation(player, size):
     print("-" * 35)
     lb.show_lb(size)
     print("-" * 35)
-    # print(
-    #     "Can't see your score on the leaderboard you can search for it using"
-    #     "the serachbox below"
-    #     )
-    # print("-" * 35)
-    # print("-" * 35)
-    # lb.search_lb()
-    # print("-" * 35)
+    user_search = input(
+        "Can't see your score on the leaderboard you can search for it using\n"
+        " the serachbox below.\n"
+        "Type your username here to see where you stand:\n"
+        )
+    print("-" * 35)
+    print("-" * 35)
+    lb.search_lb(user_search, size)
+    print("-" * 35)
+
+
+def play_again_option():
+    """
+    Allows user to tell the program if they want to play again or exit the game
+    """
+    play_or_exit = input(
+        "When you are done searching the leaderboard you can either play again"
+        " or exit.\n"
+        f"Please enter '{Fore.GREEN}P{Style.RESET_ALL}' to play again or"
+        f"'{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
+    )
 
 
 def play_game(
@@ -114,6 +127,7 @@ def play_game(
 
     lb.update_lb(player, user.size, computer_ships_hit, user_ships_hit)
     leaderboard_generation(player, user.size)
+    play_again_option()
 
 
 class Load_Games:

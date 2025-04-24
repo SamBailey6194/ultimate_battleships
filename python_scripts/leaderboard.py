@@ -41,13 +41,13 @@ def lb_order(sorted_lb, size):
     else:
         title = "Leaderboard for Large Game (15x15)"
 
-    leaders = f"{Style.BRIGHT}{title}\n"
+    leaders = f"{Style.BRIGHT}{title}{Style.RESET_ALL}\n"
     leaders += "-" * 35 + "\n"
 
     # Add column headings
     leaders += (
         f"{Style.BRIGHT}Position | Username | User Score | Computer Score |"
-        f" Game Score\n"
+        f" Game Score\n{Style.RESET_ALL}"
         )
     leaders += "-" * 35 + "\n"
 
@@ -97,8 +97,29 @@ def show_lb(size):
         print("-" * 35)
 
 
-def search_lb(username, size, user_score, computer_score):
+def search_lb(username, size, user_score=None, computer_score=None):
     """
     Allows user to search the leaderboard for their name and scores
     """
-    aksjhldfega = "hjklaSDGFKUHJASDFGK"
+    if size == 5:
+        data = small_game_lb.get_all_records()
+    elif size == 10:
+        data = medium_game_lb.get_all_records()
+    elif size == 15:
+        data = big_game_lb.get_all_records()
+    else:
+        print("Game size not recognised.")
+        return
+
+    search = [
+        user_input for user_input in data
+        if user_input["Username"].strip().lower() == username.strip()
+    ]
+
+    if search:
+        sorted_search = sorted(
+            search, key=lambda x: x["Game Score"], reverse=True
+            )
+        print(lb_order(sorted_search, size))
+    else:
+        print(f"No entries found for {username} on {size}x{size} leaderbaord.")
