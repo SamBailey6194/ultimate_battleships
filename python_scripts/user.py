@@ -1,9 +1,13 @@
 # Imported dependencies and modules
 import colorama
+from colorama import Fore, Style
 import re
 import bcrypt
 # Giving access to google drive and google sheets
 from sheets import user_logins_worksheet
+
+# Initialise colorama
+colorama.init(autoreset=True)
 
 
 # Section that asks user for login information and verifies login credentials

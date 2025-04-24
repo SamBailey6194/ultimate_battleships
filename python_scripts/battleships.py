@@ -1,10 +1,14 @@
 # Imported dependencies and modules
 from random import randint, choice
 import colorama
+from colorama import Fore, Style
 import time
 import sys
 # Imported other python scripts
 from sheets import saved_games
+
+# Initialise colorama
+colorama.init(autoreset=True)
 
 
 class Board:
