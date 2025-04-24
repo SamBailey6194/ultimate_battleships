@@ -5,7 +5,6 @@ from colorama import Fore, Style
 import time
 # Imported other python scripts
 from sheets import saved_games
-from main import play_again_option
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -259,28 +258,30 @@ class Game:
         """
         # Variables that help the random shots not include coordinates
         # the computer has already shot at
-        size = target_board.size
-        coordinates = [
-            (row, col) for row in range(size) for col in range(size)
-            ]
-        available_coordinates = coordinates.copy()
+        # size = target_board.size
+        # coordinates = [
+        #     (row, col) for row in range(size) for col in range(size)
+        #     ]
+        # available_coordinates = coordinates.copy()
 
         while True:
             if is_user:
                 print("-" * 35)
                 row = self.validate_coordinates(
-                    "Enter row to shoot at: \n", size
+                    "Enter row to shoot at: \n", target_board.size
                     )
                 print("-" * 35)
                 print("-" * 35)
                 col = self.validate_coordinates(
-                    "Enter col to shoot at: \n", size
+                    "Enter col to shoot at: \n", target_board.size
                     )
                 print("-" * 35)
             else:
-                shot = self.random_coordinate(available_coordinates)
-                row, col = shot
-                available_coordinates.remove(shot)
+                # shot = self.random_coordinate(available_coordinates)
+                # row, col = shot
+                # available_coordinates.remove(shot)
+                row = self.random_point(target_board.size)
+                col = self.random_point(target_board.size)
             if self.update_board(player_name, target_board, row, col):
                 break
 
@@ -414,7 +415,6 @@ class Game:
                 continue
             elif save_continue == "C":
                 self.continue_game(player)
-                return True
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
                 computer_board_convert = self.convert_board(computer_board)
@@ -438,5 +438,3 @@ class Game:
                 break
             elif save_continue == "E":
                 break
-
-        play_again_option(player)

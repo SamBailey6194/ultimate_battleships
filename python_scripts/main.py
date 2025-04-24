@@ -112,6 +112,7 @@ def play_game(
                 player, user.size, total_ships, user, computer,
                 computer_ships_hit, user_ships_hit
                 )
+            break
 
     lb.update_lb(player, user.size, computer_ships_hit, user_ships_hit)
     leaderboard_generation(player, user.size)
