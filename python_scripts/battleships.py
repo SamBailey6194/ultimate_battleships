@@ -397,10 +397,10 @@ class Game:
         while True:
             save_continue = input(
                 f"{player} would you like to continue or save the game and"
-                " return later?\nIf you choose to save or exit, the program"
-                " will exit and you will have to run it again and log back"
+                " return later? \nIf you choose to save or exit, the program"
+                " will exit and you will \nhave to run it again and log back"
                 " in.\nPlease enter C for continue, S for save or E"
-                "to exit: \n"
+                " to exit: \n"
             )
 
             if save_continue not in ("C", "S", "E"):
