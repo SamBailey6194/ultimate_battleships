@@ -132,4 +132,4 @@ Below are my credits for where I got inspiration for some of the code.
 - Using the Love Sandwiches project I learnt how to use Google APIs and therefore used the steps to be able to use Google Sheets as my database
 - Code Institutes Battleships example introduced me to random and randint
 - Various stack overflow posts introduced me to sys and time module and how to use them both, there were too many to remember which ones were truly helpful
-- My mentor mentioned to me about colorama module
+- My mentor mentioned to me about colorama module and this video helped me understand it, [Colorama Guide](https://www.youtube.com/watch?v=u51Zjlnui4Y)

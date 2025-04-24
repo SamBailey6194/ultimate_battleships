@@ -1,4 +1,6 @@
 # Imported dependencies and modules
+import colorama
+from colorama import Fore, Style
 import time
 import sys
 # Imported other python scripts
@@ -6,6 +8,9 @@ from user import user_login, user_creation
 from battleships import Board, Game
 import leaderboard
 from sheets import saved_games
+
+# Initialise colorama
+colorama.init(autoreset=True)
 
 # Global variables for main.py
 game = Game()
@@ -39,11 +44,15 @@ def user_choice():
     while True:
         login_option = input(
             "Have you already got a login?\n"
-            "If yes please enter 'Y', if no please enter 'N':\n"
+            f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
+            f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
             ).strip()
 
         if login_option not in ("Y", "N"):
-            print("Please enter 'Y' or 'N' \n")
+            print(
+                f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
+                f" '{Fore.RED}N{Style.RESET_ALL}' \n"
+                  )
             continue
         elif login_option == "Y":
             return user_login()
@@ -218,7 +227,7 @@ def main():
     """
     Run all program functions
     """
-    print("Welcome to Ultimate Battleships!\n")
+    print(Style.BRIGHT + "Welcome to Ultimate Battleships!\n")
     intro()
 
     username = None
@@ -239,12 +248,16 @@ def main():
             access_games = input(
                 f"{username}, would you like to access any of your"
                 " saved games?\n"
-                "If yes please enter 'Y', if no please enter 'N':\n"
+                f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
+                f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
                 ).strip()
             print("-" * 35)
 
             if access_games not in ("Y", "N"):
-                print("Please enter 'Y' or 'N' \n")
+                print(
+                    f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
+                    f" '{Fore.RED}N{Style.RESET_ALL}' \n"
+                    )
                 continue
             elif access_games == "Y":
                 saved_game_data = loaded.access_saved_games(username)
