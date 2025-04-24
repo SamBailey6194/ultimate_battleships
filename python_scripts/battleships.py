@@ -218,7 +218,7 @@ class Game:
         if board.grid[row][col] in ("M", "H"):
             time.sleep(1)
             print(
-                f"{player} you have already shot here, pleasepick a new spot."
+                f"{player} you have already shot here, please pick a new spot."
                 )
             return False
         elif board.grid[row][col] == "S":
@@ -393,10 +393,23 @@ class Game:
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
                 computer_board_convert = self.convert_board(computer_board)
-                save.append_row([
-                        player, board_size, num_ships, user_board_convert,
-                        computer_board_convert, user_hits, computer_hits
-                        ])
+
+                username_row = None
+                for username, row in enumerate(save.get_all_values()):
+                    if row[0] == player:
+                        username_row = username + 1
+                        break
+
+                if username_row:
+                    save.update(f"A{username_row}:G{username_row}", [
+                        [player, board_size, num_ships, user_board_convert,
+                            computer_board_convert, user_hits, computer_hits]
+                    ])
+                else:
+                    save.append_row([
+                            player, board_size, num_ships, user_board_convert,
+                            computer_board_convert, user_hits, computer_hits
+                            ])
                 break
             elif save_continue == "E":
                 break

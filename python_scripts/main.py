@@ -70,7 +70,10 @@ def leaderboard_generation(player, size):
     # print("-" * 35)
 
 
-def play_game(player, user=None, computer=None, total_ships=None):
+def play_game(
+        player, user=None, computer=None, total_ships=None,
+        computer_ships_hit=None, user_ships_hit=None
+        ):
     """
     Starts or resumes the game and checks when the game finishes
     """
@@ -100,6 +103,7 @@ def play_game(player, user=None, computer=None, total_ships=None):
                 computer_ships_hit, user_ships_hit
                 )
 
+    lb.update_lb(player, user.size, computer_ships_hit, user_ships_hit)
     leaderboard_generation(player, user.size)
 
 
@@ -187,15 +191,15 @@ class Load_Games:
             user_selection["Computer Board"]
             )
 
-        # Rebuild user boards for selected game
+        # Rebuild user board for selected game
         user_board = self.board_size(user_selection)
         user_board.grid = user_grid
         user_board.num_ships = user_selection["Number of Ships"]
 
-        # Rebuild computer boards for selected game
-        computer_board = user_board
+        # Rebuild computer board for selected game
+        computer_board = self.board_size(user_selection)
         computer_board.grid = computer_grid
-        computer_board.num_ships = user_board.num_ships
+        computer_board.num_ships = user_selection["Number of Ships"]
 
         # Loaded board being displayed
         print(f"{player}'s board: {len(user_grid)}x{len(user_grid[0])}")
@@ -203,10 +207,13 @@ class Load_Games:
             print(" ".join(row))
 
         print(f"Computer board: {len(computer_grid)}x{len(computer_grid[0])}")
-        for row in user_grid:
+        for row in computer_grid:
             print(" ".join(row))
 
-        return user_board, computer_board, user_board.num_ships
+        return (
+            user_board, computer_board, user_board.num_ships, user_hits,
+            computer_hits
+            )
 
 
 def main():
@@ -234,7 +241,7 @@ def main():
             access_games = input(
                 f"{username}, would you like to access any of your"
                 " saved games?\n"
-                "If yes please enter Y, if no please enter N:\n"
+                "If yes please enter 'Y', if no please enter 'N':\n"
                 ).strip()
             print("-" * 35)
 
@@ -242,12 +249,17 @@ def main():
                 print("Please enter 'Y' or 'N' \n")
                 continue
             elif access_games == "Y":
+                saved_game_data = loaded.access_saved_games(username)
                 user_board, computer_board, total_ships = (
-                    loaded.access_saved_games(username)
-                    )
+                    saved_game_data[:3]
+                )
+                user_hits, computer_hits = (
+                    saved_game_data[3:5]
+                )
                 if user_board and computer_board:
                     play_game(
-                        username, user_board, computer_board, total_ships
+                        username, user_board, computer_board, total_ships,
+                        user_hits, computer_hits
                         )
                     break
             elif access_games == "N":
