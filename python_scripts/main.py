@@ -37,7 +37,6 @@ def user_choice():
     Then takes them to login or user creation.
     """
     while True:
-        print("Have you already got a login?")
         login_option = input(
             "Have you already got a login?\n"
             "If yes please enter 'Y', if no please enter 'N':\n"
@@ -50,6 +49,58 @@ def user_choice():
             return user_login()
         elif login_option == "N":
             return user_creation()
+
+
+def leaderboard_generation(player, size):
+    """
+    Function to show leaderboard and allow user to search leaderboard
+    """
+    print("-" * 35)
+    print(f"{player}, see how you did on the leaderboard below")
+    print("-" * 35)
+    lb.show_lb(size)
+    print("-" * 35)
+    # print(
+    #     "Can't see your score on the leaderboard you can search for it using"
+    #     "the serachbox below"
+    #     )
+    # print("-" * 35)
+    # print("-" * 35)
+    # lb.search_lb()
+    # print("-" * 35)
+
+
+def play_game(player, user=None, computer=None, total_ships=None):
+    """
+    Starts or resumes the game and checks when the game finishes
+    """
+    if not user or not computer:
+        user = game.user_board(player)
+        computer = game.computer_board(user.size, user.num_ships)
+        total_ships = user.num_ships
+
+    while True:
+        game.player_turn(player, computer)
+        computer_ships_hit = game.hit_counter(computer.grid)
+
+        game.computer_turn(user)
+        user_ships_hit = game.hit_counter(user.grid)
+
+        game.update_game_status(
+            player, user, computer, user_ships_hit, computer_ships_hit
+            )
+
+        if game.game_over_check(
+            player, user_ships_hit, computer_ships_hit, total_ships
+                ):
+            break
+        else:
+            game.save_game_state(
+                player, user.size, user, computer,
+                computer_ships_hit, user_ships_hit
+                )
+
+    leaderboard_generation(player, user.size)
 
 
 class Load_Games:
@@ -164,58 +215,6 @@ class Load_Games:
         return user_board, computer_board, user_board.num_ships
 
 
-def leaderboard_generation(player, size):
-    """
-    Function to show leaderboard and allow user to search leaderboard
-    """
-    print("-" * 35)
-    print(f"{player}, see how you did on the leaderboard below")
-    print("-" * 35)
-    lb.show_lb(size)
-    print("-" * 35)
-    # print(
-    #     "Can't see your score on the leaderboard you can search for it using"
-    #     "the serachbox below"
-    #     )
-    # print("-" * 35)
-    # print("-" * 35)
-    # lb.search_lb()
-    # print("-" * 35)
-
-
-def play_game(player, user=None, computer=None, total_ships=None):
-    """
-    Starts or resumes the game and checks when the game finishes
-    """
-    if not user or not computer:
-        user = game.user_board(player)
-        computer = game.computer_board(user.size, user.num_ships)
-        total_ships = user.num_ships
-
-    while True:
-        game.player_turn(player, computer)
-        computer_ships_hit = game.hit_counter(computer.grid)
-
-        game.computer_turn(user)
-        user_ships_hit = game.hit_counter(user.grid)
-
-        game.update_game_status(
-            player, user, computer, user_ships_hit, computer_ships_hit
-            )
-
-        if game.game_over_check(
-            player, user_ships_hit, computer_ships_hit, total_ships
-                ):
-            break
-        else:
-            game.save_game_state(
-                player, user.size, user, computer,
-                computer_ships_hit, user_ships_hit
-                )
-
-    leaderboard_generation(player, user.size)
-
-
 def main():
     """
     Run all program functions
@@ -232,32 +231,39 @@ def main():
             print("Login failed. Please try again.")
             print("-" * 35)
 
-    games_saved = Load_Games()
+    loaded = Load_Games()
+    games_saved = loaded.access_saved_games(username)
 
-    while True:
-        print("-" * 35)
-        access_games = input(
-            f"{username}, would you like to access any of your saved games?\n"
-            "If yes please enter Y, if no please enter N:\n"
-            ).strip()
-        print("-" * 35)
+    if games_saved:
+        while True:
+            print("-" * 35)
+            access_games = input(
+                f"{username}, would you like to access any of your"
+                " saved games?\n"
+                "If yes please enter Y, if no please enter N:\n"
+                ).strip()
+            print("-" * 35)
 
-        if access_games not in ("Y", "N"):
-            print("Please enter 'Y' or 'N' \n")
-            continue
-        elif access_games == "Y":
-            user_board, computer_board, total_ships = (
-                games_saved.access_saved_games(username)
-                )
-            if user_board and computer_board:
-                play_game(username, user_board, computer_board, total_ships)
+            if access_games not in ("Y", "N"):
+                print("Please enter 'Y' or 'N' \n")
+                continue
+            elif access_games == "Y":
+                user_board, computer_board, total_ships = (
+                    games_saved
+                    )
+                if user_board and computer_board:
+                    play_game(
+                        username, user_board, computer_board, total_ships
+                        )
+                    break
+            elif access_games == "N":
+                print("-" * 35)
+                print("Let's start a new game instead.")
+                print("-" * 35)
+                play_game(username)
                 break
-        elif access_games == "N":
-            print("-" * 35)
-            print("Let's start a new game instead.")
-            print("-" * 35)
-            play_game(username)
-            break
+    else:
+        play_game(username)
 
     game.exit_game(username)
     sys.exit()

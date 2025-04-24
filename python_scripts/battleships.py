@@ -65,7 +65,7 @@ class Board:
         print(
             "Now you are logged in. You can play the game.\n First though you"
             "need to select what size board you want to play on.\n All options"
-            "are a square grid.\n Each size has a different amount of"
+            " are a square grid.\n Each size has a different amount of"
             "battleships to place.\n Your options are as follows:\n"
             "- 1 = 5x5 with 4 battleships\n"
             "- 2 = 10x10 with 8 battleships\n"
@@ -374,10 +374,12 @@ class Game:
         """
         Prompts the user if they want to save the game or continue
         """
+        # Allows computer board to show where the ships are in the database
+        computer_board = Board.display_board(show_ships=True)
         save_continue = input(
             f"{player} would you like to continue or save the game and return"
-            " later?\n If you choose to save or exit, the program will exit and"
-            " you will have to run it again and log back in.\n"
+            " later?\n If you choose to save or exit, the program will exit"
+            " and you will have to run it again and log back in.\n"
             "Please enter C for continue, S for save or E to exit: \n")
         save = saved_games
         while True:
