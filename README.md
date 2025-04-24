@@ -54,9 +54,8 @@ The
 - Game state not saving when user requests to save it due to board not being JSON serializable, add function that converts the table into a string that is readable for google sheets
 - Game did not exit after user input's save option, sys.exit was missing () at the end
 - Unable to load previous game due to type error in board_size function, had to amend what was imported from battleships.py in main.py to allow use of Board class properly so the type could be located properly
-- Unable to track shots on loaded game from saved database due to the board was loading in as strings and not lists, therefore added list() to convert_board_to_grid and removed split() as the game was saved to google sheets without spaces separating the dots.
-- When logging in with a user that had no saved games it was still asking for user input to see if they wanted to load any saved games, 
-- Loaded in game was loading only 1 ship for the user left to hit . . .
+- When logging in with a user that had no saved games it was still asking for user input to see if they wanted to load any saved games, had to add show_ships=False parameters to convert_board and use that with the variable computer_board_convert
+- Loaded in game was loading only 1 ship for the user left to hit due to the computer's board being saved correctly, after correcting the saving of the computer board, then I needed to ensure the ships were hidden when the game was loaded back in by adding the show_ships=False to convert_board_to_grid in main.py
 - Password check function was misreading the re.search special character list, due to the positioning of symbols, had to reorder the symbols to ensure python read it correctly.
 
 ### Unfixed Bugs

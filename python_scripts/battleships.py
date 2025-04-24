@@ -64,9 +64,10 @@ class Board:
         print("-" * 35)
         print(
             "Now you are logged in. You can play the game.\n First though you"
-            "need to select what size board you want to play on.\n All options"
-            " are a square grid.\n Each size has a different amount of"
-            "battleships to place.\n Your options are as follows:\n"
+            " need to select what size board you want to play on.\n"
+            "All options are a square grid.\n"
+            "Each size has a different amount of"
+            " battleships to place.\n Your options are as follows:\n"
             "- 1 = 5x5 with 4 battleships\n"
             "- 2 = 10x10 with 8 battleships\n"
             "- 3 = 15x15 with 12 battleships\n")
@@ -350,11 +351,13 @@ class Game:
             )
         print("-" * 35)
 
-    def convert_board(self, board):
+    def convert_board(self, board, show_ships=False):
         """
         Converts board into a state that can be saved into Google Sheets
         """
-        return "\n".join([" ".join(row) for row in board.grid])
+        return "\n".join([
+            " ".join(cell for cell in row) for row in board.grid]
+            )
 
     def exit_game(self, player):
         """
@@ -374,8 +377,6 @@ class Game:
         """
         Prompts the user if they want to save the game or continue
         """
-        # Allows computer board to show where the ships are in the database
-        computer_board = Board.display_board(show_ships=True)
         save_continue = input(
             f"{player} would you like to continue or save the game and return"
             " later?\n If you choose to save or exit, the program will exit"
@@ -391,7 +392,9 @@ class Game:
                 return True
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
-                computer_board_convert = self.convert_board(computer_board)
+                computer_board_convert = self.convert_board(
+                    computer_board, show_ships=True
+                    )
                 save.append_row([
                         player, board_size, user_board_convert,
                         computer_board_convert, user_hits, computer_hits

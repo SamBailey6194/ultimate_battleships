@@ -114,18 +114,26 @@ class Load_Games:
     def __init__(self):
         pass
 
-    def convert_board_to_grid(self, game_board):
+    def convert_board_to_grid(self, game_board, show_ships=False):
         """
         Converts board from google sheets back to a grid
         """
         lines = [
             line for line in game_board.strip().split("\n") if line.strip()
             ]
-        grid = [list(row.strip()) for row in lines]
+        grid = [row.split().strip() for row in lines]
         max_len = max(len(row) for row in grid)
+
         for row in grid:
             if len(row) != max_len:
                 raise ValueError("Inconsistent row length in saved game grid.")
+
+        if show_ships:
+            for row in grid:
+                for i in range(len(row)):
+                    if row[i] == 'S':
+                        row[i] = '.'
+
         return grid
 
     def load_saved_games(self, username):
@@ -154,10 +162,9 @@ class Load_Games:
         board.grid = [["."] * size for _ in range(size)]
         return board
 
-    def access_saved_games(self, player):
+    def check_database(self, player):
         """
-        Loads the list of saved games associated with the username logged in
-        with
+        Check if the user has any saved games
         """
         games = self.load_saved_games(player)
 
@@ -166,6 +173,13 @@ class Load_Games:
             print(f"Currently no saved games for {player}")
             print("-" * 35)
             return
+
+    def access_saved_games(self, player):
+        """
+        Loads the list of saved games associated with the username logged in
+        with
+        """
+        games = self.load_saved_games(player)
 
         print("-" * 35)
         print(f"{player} saved games available:")
@@ -232,7 +246,7 @@ def main():
             print("-" * 35)
 
     loaded = Load_Games()
-    games_saved = loaded.access_saved_games(username)
+    games_saved = loaded.check_database(username)
 
     if games_saved:
         while True:
@@ -249,7 +263,7 @@ def main():
                 continue
             elif access_games == "Y":
                 user_board, computer_board, total_ships = (
-                    games_saved
+                    loaded.access_saved_games(username)
                     )
                 if user_board and computer_board:
                     play_game(
