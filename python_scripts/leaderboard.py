@@ -48,7 +48,7 @@ def lb_order(sorted_lb, size):
     for position, username in enumerate(sorted_lb, 1):
         leaders += (
             f"{position:<4} | {username['Username']:<8} | "
-            f" | {username['User Score']:<4} | {username['Computer Score']:<4}"
+            f" {username['User Score']:<4} | {username['Computer Score']:<4}"
             f" {username['Game Score']}\n"
         )
 

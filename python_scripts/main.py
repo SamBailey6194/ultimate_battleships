@@ -125,7 +125,7 @@ class Load_Games:
         lines = [
             line for line in game_board.strip().split("\n") if line.strip()
             ]
-        grid = [row.strip().split() for row in lines]
+        grid = [row.split(",") for row in lines]
         max_len = max(len(row) for row in grid)
 
         for row in grid:
@@ -203,12 +203,10 @@ class Load_Games:
 
         # Loaded board being displayed
         print(f"{player}'s board: {len(user_grid)}x{len(user_grid[0])}")
-        for row in user_grid:
-            print(" ".join(row))
+        user_board.display_board(show_ships=True)
 
         print(f"Computer board: {len(computer_grid)}x{len(computer_grid[0])}")
-        for row in computer_grid:
-            print(" ".join(row))
+        computer_board.display_board(show_ships=False)
 
         return (
             user_board, computer_board, user_board.num_ships, user_hits,

@@ -356,7 +356,7 @@ class Game:
         Converts board into a state that can be saved into Google Sheets
         """
         return "\n".join([
-            " , ".join(row) for row in board.grid]
+            ",".join(row) for row in board.grid]
             )
 
     def exit_game(self, player):

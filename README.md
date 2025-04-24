@@ -57,7 +57,8 @@ The
 - When logging in with a user that had no saved games it was still asking for user input to see if they wanted to load any saved games, had to create an instance of Load_Games as a variable and then call load_saved_games before the if, while and else statement, this then means if no saved game can be located with that username we go to play_game instead, if there is a saved game it asks if they want to load a saved game or not
 - Password check function was misreading the re.search special character list, due to the positioning of symbols, had to reorder the symbols to ensure python read it correctly.
 - Loaded in board was not looking user friendly, so used the " ".join to help make the board display nicely when loaded in.
-- Leaderboard was displaying twice and without a title or headings, so ensured the show_lb could only be called once by . . . and I added a leaders variable to lb_order that was appended too throughout to make the code neater and more manageable to read.
+- Leaderboard was displaying without a title or headings, so I added a leaders variable to lb_order that was appended too throughout to make the code neater and more manageable to read.
+- When asking user to decide if they wanted to save, continue or exit the program and the user made an invalid input it kept looping through the print statement becuase the input request wasn't in the while loop
 
 ### Unfixed Bugs
 
