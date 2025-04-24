@@ -24,24 +24,34 @@ def update_lb(username, size, user_score, computer_score):
             ])
 
 
-def lb_order(sorted_lb):
+def lb_order(sorted_lb, size):
     """
     Helper function to display leaderboards in readable way
     """
-    leaders = ""
+    if size == 5:
+        title = "Leaderboard for Small Game (5x5)"
+    elif size == 10:
+        title = "Leaderboard for Medium Game (10x10)"
+    else:
+        title = "Leaderboard for Large Game (15x15)"
+
+    leaders = f"{title}\n"
+    leaders += "-" * 35 + "\n"
+
+    # Add column headings
+    leaders += (
+        "Position | Username | User Score | Computer Score | Game Score\n"
+        )
+    leaders += "-" * 35 + "\n"
+
+    # Add leaderboard entries
     for position, username in enumerate(sorted_lb, 1):
-        if position == 2:
-            leaders += (
-                f"{position}. {username["Username"]} -"
-                f" {username["User Score"]} - {username["Computer Score"]} -"
-                f"{username["Game Score"]}"
-                )
-        else:
-            leaders += (
-                f"{position}. {username["Username"]} -"
-                f"{username["User Score"]} - {username["Computer Score"]} -"
-                f"{username["Game Score"]}"
-                )
+        leaders += (
+            f"{position:<4} | {username['Username']:<8} | "
+            f" | {username['User Score']:<4} | {username['Computer Score']:<4}"
+            f" {username['Game Score']}\n"
+        )
+
     return leaders
 
 
@@ -57,7 +67,7 @@ def show_lb(size):
         small_sort = sorted(
             small_data, key=lambda x: x["Game Score"], reverse=True
             )
-        small_show = lb_order(small_sort)
+        small_show = lb_order(small_sort, size)
         print("-" * 35)
         print(small_show)
         print("-" * 35)
@@ -65,7 +75,7 @@ def show_lb(size):
         medium_sort = sorted(
             medium_data, key=lambda x: x["Game Score"], reverse=True
             )
-        medium_show = lb_order(medium_sort)
+        medium_show = lb_order(medium_sort, size)
         print("-" * 35)
         print(medium_show)
         print("-" * 35)
@@ -73,7 +83,7 @@ def show_lb(size):
         large_sort = sorted(
             large_data, key=lambda x: x["Game Score"], reverse=True
             )
-        large_show = lb_order(large_sort)
+        large_show = lb_order(large_sort, size)
         print("-" * 35)
         print(large_show)
         print("-" * 35)

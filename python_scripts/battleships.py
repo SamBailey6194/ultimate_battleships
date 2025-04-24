@@ -377,13 +377,16 @@ class Game:
         """
         Prompts the user if they want to save the game or continue
         """
-        save_continue = input(
-            f"{player} would you like to continue or save the game and return"
-            " later?\nIf you choose to save or exit, the program will exit"
-            " and you will have to run it again and log back in.\n"
-            "Please enter C for continue, S for save or E to exit: \n")
         save = saved_games
         while True:
+            save_continue = input(
+                f"{player} would you like to continue or save the game and"
+                " return later?\nIf you choose to save or exit, the program"
+                " will exit and you will have to run it again and log back"
+                " in.\nPlease enter C for continue, S for save or E"
+                "to exit: \n"
+            )
+
             if save_continue not in ("C", "S", "E"):
                 print("Please enter 'C', 'S' or 'E'")
                 continue
