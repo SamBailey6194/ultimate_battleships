@@ -163,7 +163,7 @@ class Game:
                     )
                 print("-" * 35)
                 if board.grid[row][col] == ".":
-                    board.grid[row][col] = "S"
+                    board.grid[row][col] = f"{Fore.BLUE}S{Style.RESET_ALL}"
                     self.ships_placed += 1
                     print(f"Ship placed at {row}, {col}")
                     board.display_board(show_ships=True)
@@ -187,7 +187,7 @@ class Game:
             row = self.random_point(board.size)
             col = self.random_point(board.size)
             if board.grid[row][col] == ".":
-                board.grid[row][col] = "S"
+                board.grid[row][col] = f"{Fore.BLUE}S{Style.RESET_ALL}"
                 self.ships_placed += 1
 
         return board
@@ -232,7 +232,7 @@ class Game:
                 )
             return False
         elif board.grid[row][col] == "S":
-            board.grid[row][col] = "H"
+            board.grid[row][col] = f"{Fore.RED}H{Style.RESET_ALL}"
             self.ships_hit += 1
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
@@ -242,7 +242,7 @@ class Game:
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
             print(f"{player} missed! Still {ships} left to hit", flush=True)
-            board.grid[row][col] = "M"
+            board.grid[row][col] = f"{Fore.GREEN}M{Style.RESET_ALL}"
             return True
         else:
             time.sleep(1)
@@ -322,9 +322,9 @@ class Game:
         print("-" * 35)
         print(
             "Key:\n"
-            "S = Ship\n"
-            "H = Hit\n"
-            "M = Miss\n"
+            f"{Fore.BLUE}S{Style.RESET_ALL} = Ship\n"
+            f"{Fore.RED}H{Style.RESET_ALL} = Hit\n"
+            f"{Fore.GREEN}M{Style.RESET_ALL} = Miss\n"
             )
         print("-" * 35)
         print(f"{player}'s board:")
@@ -335,8 +335,16 @@ class Game:
         print("-" * 35)
         time.sleep(1)
         print("-" * 35)
-        print(f"{player} hits: {computer_ships_hits}/{computer.num_ships}")
-        print(f"Computer hits: {user_ships_hits}/{user.num_ships}")
+        print(
+            f"{player} hits: {Fore.GREEN}{computer_ships_hits}"
+            f"{Style.RESET_ALL}/{Fore.RED}{computer.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
+        print(
+            f"{player} hits: {Fore.GREEN}{user_ships_hits}"
+            f"{Style.RESET_ALL}/{Fore.RED}{user.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
         print("-" * 35)
         time.sleep(1.5)
 
@@ -403,12 +411,17 @@ class Game:
                 f"{player} would you like to continue or save the game and"
                 " return later? \nIf you choose to save or exit, the program"
                 " will exit and you will \nhave to run it again and log back"
-                " in.\nPlease enter C for continue, S for save or E"
-                " to exit: \n"
+                f" in.\nPlease enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
+                f" continue, '{Fore.YELLOW}S{Style.RESET_ALL}' for save or"
+                f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
             )
 
             if save_continue not in ("C", "S", "E"):
-                print("Please enter 'C', 'S' or 'E'")
+                print(
+                    f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}',"
+                    f" '{Fore.YELLOW}S{Style.RESET_ALL}' or"
+                    f" '{Fore.RED}E{Style.RESET_ALL}'"
+                    )
                 continue
             elif save_continue == "C":
                 self.continue_game(player)
