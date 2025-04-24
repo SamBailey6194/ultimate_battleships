@@ -96,7 +96,7 @@ def play_game(player, user=None, computer=None, total_ships=None):
             break
         else:
             game.save_game_state(
-                player, user.size, user, computer,
+                player, user.size, total_ships, user, computer,
                 computer_ships_hit, user_ships_hit
                 )
 
@@ -114,25 +114,19 @@ class Load_Games:
     def __init__(self):
         pass
 
-    def convert_board_to_grid(self, game_board, show_ships=False):
+    def convert_board_to_grid(self, game_board):
         """
         Converts board from google sheets back to a grid
         """
         lines = [
             line for line in game_board.strip().split("\n") if line.strip()
             ]
-        grid = [row.split().strip() for row in lines]
+        grid = [row.strip().split() for row in lines]
         max_len = max(len(row) for row in grid)
 
         for row in grid:
             if len(row) != max_len:
                 raise ValueError("Inconsistent row length in saved game grid.")
-
-        if show_ships:
-            for row in grid:
-                for i in range(len(row)):
-                    if row[i] == 'S':
-                        row[i] = '.'
 
         return grid
 
@@ -145,14 +139,6 @@ class Load_Games:
         player_games = [game for game in data if game["Username"] == username]
         return player_games
 
-    def ship_hit_count(self, grid):
-        """
-        Helper function to allow locating ships and hits
-        """
-        return sum(
-            row.count("S") + row.count("H") + row.count("M") for row in grid
-            )
-
     def board_size(self, selected):
         """
         Helper function to check board size
@@ -161,18 +147,6 @@ class Load_Games:
         board = Board(size=size)
         board.grid = [["."] * size for _ in range(size)]
         return board
-
-    def check_database(self, player):
-        """
-        Check if the user has any saved games
-        """
-        games = self.load_saved_games(player)
-
-        if not games:
-            print("-" * 35)
-            print(f"Currently no saved games for {player}")
-            print("-" * 35)
-            return
 
     def access_saved_games(self, player):
         """
@@ -185,11 +159,12 @@ class Load_Games:
         print(f"{player} saved games available:")
         for i, save_data in enumerate(games):
             size = save_data["Board Size"]
+            num_ships = save_data["Number of Ships"]
             user_hits = save_data["User Hits"]
             computer_hits = save_data["Computer Hits"]
             print(
-                f"{i + 1}. Size: {size} | {player} Hits: {user_hits} |"
-                f" Computer Hits: {computer_hits}"
+                f"{i + 1}. Size: {size} | Number of Ships: {num_ships} |"
+                f" {player} Hits: {user_hits} | Computer Hits: {computer_hits}"
                 )
 
         while True:
@@ -215,16 +190,21 @@ class Load_Games:
         # Rebuild user boards for selected game
         user_board = self.board_size(user_selection)
         user_board.grid = user_grid
-        print(f"Loaded user board: {len(user_grid)}x{len(user_grid[0])}")
-        for row in user_grid:
-            print(row)
-
-        user_board.num_ships = self.ship_hit_count(user_grid)
+        user_board.num_ships = user_selection["Number of Ships"]
 
         # Rebuild computer boards for selected game
-        computer_board = self.board_size(user_selection)
+        computer_board = user_board
         computer_board.grid = computer_grid
-        computer_board.num_ships = self.ship_hit_count(computer_grid)
+        computer_board.num_ships = user_board.num_ships
+
+        # Loaded board being displayed
+        print(f"{player}'s board: {len(user_grid)}x{len(user_grid[0])}")
+        for row in user_grid:
+            print(" ".join(row))
+
+        print(f"Computer board: {len(computer_grid)}x{len(computer_grid[0])}")
+        for row in user_grid:
+            print(" ".join(row))
 
         return user_board, computer_board, user_board.num_ships
 
@@ -246,7 +226,7 @@ def main():
             print("-" * 35)
 
     loaded = Load_Games()
-    games_saved = loaded.check_database(username)
+    games_saved = loaded.load_saved_games(username)
 
     if games_saved:
         while True:
@@ -277,6 +257,9 @@ def main():
                 play_game(username)
                 break
     else:
+        print("-" * 35)
+        print(f"Currently no saved games for {username}")
+        print("-" * 35)
         play_game(username)
 
     game.exit_game(username)

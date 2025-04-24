@@ -351,7 +351,7 @@ class Game:
             )
         print("-" * 35)
 
-    def convert_board(self, board, show_ships=False):
+    def convert_board(self, board):
         """
         Converts board into a state that can be saved into Google Sheets
         """
@@ -371,7 +371,7 @@ class Game:
         print("-" * 35)
 
     def save_game_state(
-            self, player, board_size, user_board, computer_board,
+            self, player, board_size, num_ships, user_board, computer_board,
             user_hits, computer_hits
             ):
         """
@@ -379,7 +379,7 @@ class Game:
         """
         save_continue = input(
             f"{player} would you like to continue or save the game and return"
-            " later?\n If you choose to save or exit, the program will exit"
+            " later?\nIf you choose to save or exit, the program will exit"
             " and you will have to run it again and log back in.\n"
             "Please enter C for continue, S for save or E to exit: \n")
         save = saved_games
@@ -392,11 +392,9 @@ class Game:
                 return True
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
-                computer_board_convert = self.convert_board(
-                    computer_board, show_ships=True
-                    )
+                computer_board_convert = self.convert_board(computer_board)
                 save.append_row([
-                        player, board_size, user_board_convert,
+                        player, board_size, num_ships, user_board_convert,
                         computer_board_convert, user_hits, computer_hits
                         ])
                 break
