@@ -1,5 +1,5 @@
 # Imported dependencies and modules
-from random import randint
+from random import randint, choice
 import colorama
 import time
 import sys
@@ -106,6 +106,12 @@ class Game:
         Helper method to generate random integer between 0 and board size
         """
         return randint(0, size-1)
+
+    def random_coordinate(self, coordinates):
+        """
+        Helper method to generate random coordinates
+        """
+        return choice(coordinates)
 
     def validate_coordinates(self, prompt, size):
         """
@@ -268,9 +274,8 @@ class Game:
                     )
                 print("-" * 35)
             else:
-                row = self.random_point(available_coordinates)
-                col = self.random_point(available_coordinates)
-                shot = row, col
+                shot = self.random_coordinate(available_coordinates)
+                row, col = shot
                 available_coordinates.remove(shot)
             if self.update_board(player_name, target_board, row, col):
                 break
