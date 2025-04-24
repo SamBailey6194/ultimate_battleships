@@ -139,7 +139,7 @@ class Game:
             "Please bear that in mind when entering rows and columns.\n"
             "S = Ship placement.")
         print("-" * 35)
-        self.ships_placed
+        self.ships_placed = 0
         while self.ships_placed < board.num_ships:
             try:
                 print("-" * 35)
@@ -172,7 +172,7 @@ class Game:
         """
         Places the ships randomly on the board
         """
-        self.ships_placed
+        self.ships_placed = 0
         while self.ships_placed < board.num_ships:
             row = self.random_point(board.size)
             col = self.random_point(board.size)
@@ -356,7 +356,7 @@ class Game:
         Converts board into a state that can be saved into Google Sheets
         """
         return "\n".join([
-            " ".join(cell for cell in row) for row in board.grid]
+            " , ".join(row) for row in board.grid]
             )
 
     def exit_game(self, player):
