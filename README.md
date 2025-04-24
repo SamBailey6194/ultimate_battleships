@@ -59,6 +59,9 @@ The
 - Loaded in board was not looking user friendly, so used the " ".join to help make the board display nicely when loaded in.
 - Leaderboard was displaying without a title or headings, so I added a leaders variable to lb_order that was appended too throughout to make the code neater and more manageable to read.
 - When asking user to decide if they wanted to save, continue or exit the program and the user made an invalid input it kept looping through the print statement becuase the input request wasn't in the while loop
+- Save function wasn't saving ship placement by the computer, so added a "," to ensure each item is saved to show the board as a list of strings, the user does not have access to the database file.
+- When loading the saved game the boards weren't being converted as I needed to add the "," to the convert_board_to_grid function as the saved board was a list of strings
+- When loading saved game states the program was displaying the ship placement, therefore needed to use the display_board function with the show_ships parameter correctly for the user board and computer board
 
 ### Unfixed Bugs
 
@@ -80,10 +83,10 @@ To create the app Heroku was used. In Heroku two buildpacks were needed and were
 1. `heroku/python`
 2. `heroku/nodejs`
 
-Then X config vars were needed and were created by going to _Settings_ tab in Heroku and scrolling down to _Config Var_ section. After each individual config var was added the settings were saved Then the following config vars were created: 
+Then 2 config vars were needed and were created by going to _Settings_ tab in Heroku and scrolling down to _Config Var_ section. After each individual config var was added the settings were saved Then the following config vars were created: 
 
 1. One called `PORT` and set to `8000` was created
-2. 
+2. creds.json
 
 Then the GitHub repository was connected by following the below steps:
 
@@ -118,4 +121,14 @@ Below are my credits for where I got inspiration for some of the code.
 
 ### Code
 
-- The
+- This video helped me understand regex, [regex tutorial](https://www.youtube.com/watch?v=F6FW_NMtvNY)
+- This article helped me understand how to import other script files as modules, [import python script as a module guide](https://csatlas.com/python-import-file-module/)
+- This video helped me understand how to use user login verification and creation in python, [User Login Guide in Python](https://www.youtube.com/watch?v=9OjD_HjV03E)
+- Below are the various articles I used to help form the battleships game:
+  - [Battleship Game Guide 1](https://bigmonty12.github.io/battleship)
+  - [Battleship Game Guide 2](https://www.pyshine.com/Make-a-battleship-game/)
+  - [Battleship Game Guide 3](https://llego.dev/posts/how-code-simple-battleship-game-python/)
+- Using the Love Sandwiches project I learnt how to use Google APIs and therefore used the steps to be able to use Google Sheets as my database
+- Code Institutes Battleships example introduced me to random and randint
+- Various stack overflow posts introduced me to sys and time module and how to use them both, there were too many to remember which ones were truly helpful
+- My mentor mentioned to me about colorama module
