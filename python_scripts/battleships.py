@@ -30,7 +30,7 @@ class Board:
         for row in self.grid:
             if not show_ships:
                 # Replace ships "S" with "."
-                print(" ".join(["." if cell == "S" else cell for cell in row]))
+                print(" ".join(["." if "S" in cell else cell for cell in row]))
             else:
                 # Show full board with ships
                 print(" ".join(row))
@@ -146,7 +146,8 @@ class Game:
             "Please place your ships. Each ship takes up one space.\n"
             "The top left corner is row: 0, col: 0.\n"
             "Please bear that in mind when entering rows and columns.\n"
-            "S = Ship placement.")
+            f"'{Fore.BLUE}S{Style.RESET_ALL}' = Ship placement."
+            )
         print("-" * 35)
         self.ships_placed = 0
         while self.ships_placed < board.num_ships:
@@ -258,11 +259,11 @@ class Game:
         """
         # Variables that help the random shots not include coordinates
         # the computer has already shot at
-        # size = target_board.size
-        # coordinates = [
-        #     (row, col) for row in range(size) for col in range(size)
-        #     ]
-        # available_coordinates = coordinates.copy()
+        size = target_board.size
+        coordinates = [
+            (row, col) for row in range(size) for col in range(size)
+            ]
+        available_coordinates = coordinates.copy()
 
         while True:
             if is_user:
@@ -277,11 +278,12 @@ class Game:
                     )
                 print("-" * 35)
             else:
-                # shot = self.random_coordinate(available_coordinates)
-                # row, col = shot
-                # available_coordinates.remove(shot)
-                row = self.random_point(target_board.size)
-                col = self.random_point(target_board.size)
+                shot = self.random_coordinate(available_coordinates)
+                row, col = shot
+                available_coordinates.remove(shot)
+                # row = self.random_point(target_board.size)
+                # col = self.random_point(target_board.size)
+
             if self.update_board(player_name, target_board, row, col):
                 break
 

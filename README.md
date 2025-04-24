@@ -63,6 +63,9 @@ The
 - When loading the saved game the boards weren't being converted as I needed to add the "," to the convert_board_to_grid function as the saved board was a list of strings
 - When loading saved game states the program was displaying the ship placement, therefore needed to use the display_board function with the show_ships parameter correctly for the user board and computer board
 - The computer's random shots sometimes shoot at the space it has already shot at to avoid this I added some variables to track and store where the computer had shot, so the random selection was not a duplicate shot.
+- After adding colorama to various parts of the card we had some bugs:
+  - dispaly_board function wouldn't work as the colour match wouldn't work. So had to change it from a hard equals to just look for an S no matter the colour.
+  - 
 
 ### Unfixed Bugs
 
