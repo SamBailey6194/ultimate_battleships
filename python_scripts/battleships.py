@@ -50,9 +50,7 @@ class Board:
         elif data == 3:
             self.size, self.num_ships = 15, 12
         else:
-            print("""Invalid option please pick a valid option of
-1, 2 or 3.
-                """)
+            print("Invalid option please pick a valid option of 1, 2 or 3.")
             return False
         self.grid = self.board_creation()
         return True
@@ -64,20 +62,22 @@ class Board:
         size board.
         """
         print("-" * 35)
-        print("""Now you are logged in. You can play the game.
-First though you need to select what size board you want to play on.
-All options are a square grid. Each size has a different amount of battleships
-to place. Your options are as follows:\n
-            1 = 5x5 with 4 battleships
-            2 = 10x10 with 8 battleships
-            3 = 15x15 with 12 battleships
-          """)
+        print(
+            "Now you are logged in. You can play the game.\n First though you"
+            "need to select what size board you want to play on.\n All options"
+            "are a square grid.\n Each size has a different amount of"
+            "battleships to place.\n Your options are as follows:\n"
+            "- 1 = 5x5 with 4 battleships\n"
+            "- 2 = 10x10 with 8 battleships\n"
+            "- 3 = 15x15 with 12 battleships\n")
         print("-" * 35)
 
         while True:
             try:
-                size = int(input("""Please enter 1, 2 or 3 depending on
-the size board you would like to play on: \n"""))
+                size = int(input(
+                    "Please enter 1, 2 or 3\n depending on the size board you"
+                    "would like to play on: \n"
+                    ))
                 if self.validate_board_size(size):
                     time.sleep(0.5)
                     print("Generating board . . .")
@@ -116,25 +116,27 @@ class Game:
                 if 0 <= value < size:
                     return value
                 else:
-                    print(f"""Please remember to enter a coordinate in the
-correct range. It must be a number between 0 and {size - 1}.
-                        """)
+                    print(
+                        "Please remember to enter a coordinate in the correct"
+                        f"range. It must be a number between 0 and {size - 1}."
+                        )
             except (ValueError, IndexError):
-                print("""Remember: The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-                    """)
+                print(
+                    "Remember: The top left corner is row: 0, col: 0."
+                    "Please bear that in mind when entering rows and columns."
+                    )
 
     def place_ships(self, board):
         """
         Allows user to place their ships where they choose too
         """
         print("-" * 35)
-        print("""Now you have chosen the size board you want to play
-on. Please place your ships. Each ship takes up one space.
-The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-S = Ship placement.
-            """)
+        print(
+            "Now you have chosen the size board you want to play on.\n"
+            "Please place your ships. Each ship takes up one space.\n"
+            "The top left corner is row: 0, col: 0.\n"
+            "Please bear that in mind when entering rows and columns.\n"
+            "S = Ship placement.")
         print("-" * 35)
         self.ships_placed
         while self.ships_placed < board.num_ships:
@@ -155,13 +157,15 @@ S = Ship placement.
                     print(f"Ship placed at {row}, {col}")
                     board.display_board(show_ships=True)
                 elif board.grid[row][col] == "S":
-                    print("""Ship already palced there, please select another
-place.
-                        """)
+                    print(
+                        "Ship already palced there,"
+                        " please select another place."
+                        )
             except (ValueError, IndexError):
-                print("""Remember: The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-                    """)
+                print(
+                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    "Please bear that in mind when entering rows and columns."
+                    )
 
     def random_ship_placement(self, board):
         """
@@ -212,32 +216,29 @@ Please bear that in mind when entering rows and columns.
         self.ships_hit
         if board.grid[row][col] in ("M", "H"):
             time.sleep(1)
-            print(f"""{player} you have already shot here, please
-pick a new spot.
-                  """)
+            print(
+                f"{player} you have already shot here, pleasepick a new spot."
+                )
             return False
         elif board.grid[row][col] == "S":
             board.grid[row][col] = "H"
             self.ships_hit += 1
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{player} Hit! Just
-{ships} left to destroy.
-                  """, flush=True)
+            print(f"{player} Hit! Just {ships} left to destroy.", flush=True)
             return True
         elif board.grid[row][col] == ".":
             ships = board.num_ships - sum(row.count("H") for row in board.grid)
             time.sleep(1)
-            print(f"""{player} missed! Still
-{ships} left to hit
-                """, flush=True)
+            print(f"{player} missed! Still {ships} left to hit", flush=True)
             board.grid[row][col] = "M"
             return True
         else:
             time.sleep(1)
-            print("""Remember: The top left corner is row: 0, col: 0.
-Please bear that in mind when entering rows and columns.
-                    """)
+            print(
+                "Remember: The top left corner is row: 0, col: 0.\n"
+                "Please bear that in mind when entering rows and columns."
+                )
             return False
 
     def shots_fired(self, player_name, target_board, is_user):
@@ -298,11 +299,12 @@ Please bear that in mind when entering rows and columns.
         """
         time.sleep(1.5)
         print("-" * 35)
-        print("""Key:
-        S = Ship
-        H = Hit
-        M = Miss
-            """)
+        print(
+            "Key:\n"
+            "S = Ship\n"
+            "H = Hit\n"
+            "M = Miss\n"
+            )
         print("-" * 35)
         print(f"{player}'s board:")
         user.display_board(show_ships=True)
@@ -343,9 +345,9 @@ Please bear that in mind when entering rows and columns.
         Continues game if no one has won yet
         """
         print("-" * 35)
-        print(f"""No winner yet. Game continues.
-Come on {player} you can win!!!
-                """)
+        print(
+            f"No winner yet. Game continues. Come on {player} you can win!!!"
+            )
         print("-" * 35)
 
     def convert_board(self, board):
@@ -359,9 +361,10 @@ Come on {player} you can win!!!
         Function that exits the game if player chose to save game instead
         """
         print("-" * 35)
-        print(f"""Thanks for playing {player}. Feel free to come back and
-access any saved games you have.
-              """)
+        print(
+            f"Thanks for playing {player}. Feel free to come back and access"
+            " any saved games you have."
+            )
         print("-" * 35)
 
     def save_game_state(
@@ -371,13 +374,11 @@ access any saved games you have.
         """
         Prompts the user if they want to save the game or continue
         """
-        print(f"""{player} would you like to continue or save the game and
-return later?
-If you choose to save or exit, the program will exit and you will have to run
-it again and log back in.
-              """)
-        save_continue = input("""Please enter C for continue, S for save or
-E to exit: \n""")
+        save_continue = input(
+            f"{player} would you like to continue or save the game and return"
+            " later?\n If you choose to save or exit, the program will exit and"
+            " you will have to run it again and log back in.\n"
+            "Please enter C for continue, S for save or E to exit: \n")
         save = saved_games
         while True:
             if save_continue not in ("C", "S", "E"):

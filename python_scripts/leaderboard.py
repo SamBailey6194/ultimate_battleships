@@ -30,15 +30,17 @@ def lb_order(sorted_lb):
     """
     for position, username in enumerate(sorted_lb, 1):
         if position == 2:
-            print(f"""{position}. {username["Username"]} -
-                  {username["User Score"]} - {username["Computer Score"]} -
-                  {username["Game Score"]}
-                    """)
+            print(
+                f"{position}. {username["Username"]} -"
+                f"{username["User Score"]} - {username["Computer Score"]} -"
+                f"{username["Game Score"]}"
+                )
         else:
-            print(f"""{position}. {username["Username"]} -
-                  {username["User Score"]} - {username["Computer Score"]} -
-                  {username["Game Score"]}
-                    """)
+            print(
+                f"{position}. {username["Username"]} -"
+                f"{username["User Score"]} - {username["Computer Score"]} -"
+                f"{username["Game Score"]}"
+                )
 
 
 def show_lb(size):

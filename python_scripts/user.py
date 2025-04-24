@@ -142,10 +142,11 @@ def username_requirements():
     requirements here
     """
     print("-" * 35)
-    print("""Username requirements:
-    Contain at least 1 uppercase and lowercase character
-    No spaces allowed
-        """)
+    print(
+        "Username requirements:"
+        "- Contain at least 1 uppercase and lowercase character"
+        "- No spaces allowed"
+        )
     print("-" * 35)
 
 
@@ -155,13 +156,14 @@ def password_requirements():
     requirements here
     """
     print("-" * 35)
-    print("""Password requirements:
-    8 characters long
-    Contain at least 1 uppercase and lowercase character
-    Contain at least 1 number
-    Contain 1 special character
-    No spaces allowed
-          """)
+    print(
+        "Password requirements:"
+        "- 8 characters long"
+        "- Contain at least 1 uppercase and lowercase character"
+        "- Contain at least 1 number"
+        "- Contain 1 special character"
+        "- No spaces allowed"
+        )
     print("-" * 35)
 
 

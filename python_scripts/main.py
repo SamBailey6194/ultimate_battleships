@@ -19,13 +19,14 @@ def intro():
     logged in before or not
     """
     print("-" * 35)
-    print("""Battleships is a strategy guessing game for two players.
-This program allows you to play against a computer to practice.
-Once the game starts you will be able to pick a point to hit on
-the computers board.
-The aim of the game is to hit all of the computers battleships
-before they hit all of yours.
-          """)
+    print(
+        "Battleships is a strategy guessing game for two players.\n"
+        "This program allows you to play against a computer to practice.\n"
+        "Once the game starts you will be able to pick a point to hit on the\n"
+        "computers board.\n"
+        "The aim of the game is to hit all of the computers battleships\n"
+        "before they hit all of yours."
+        )
     print("-" * 35)
     time.sleep(1.5)
 
@@ -37,9 +38,10 @@ def user_choice():
     """
     while True:
         print("Have you already got a login?")
-        login_option = input("""If yes please enter 'Y',
-if no please enter 'N':\n
-                        """)
+        login_option = input(
+            "Have you already got a login?\n"
+            "If yes please enter 'Y', if no please enter 'N':\n"
+            ).strip()
 
         if login_option not in ("Y", "N"):
             print("Please enter 'Y' or 'N' \n")
@@ -65,7 +67,14 @@ class Load_Games:
         """
         Converts board from google sheets back to a grid
         """
-        grid = [row.split(" ") for row in game_board.strip().split("\n")]
+        lines = [
+            line for line in game_board.strip().split("\n") if line.strip()
+            ]
+        grid = [list(row.strip()) for row in lines]
+        max_len = max(len(row) for row in grid)
+        for row in grid:
+            if len(row) != max_len:
+                raise ValueError("Inconsistent row length in saved game grid.")
         return grid
 
     def load_saved_games(self, username):
@@ -113,15 +122,17 @@ class Load_Games:
             size = save_data["Board Size"]
             user_hits = save_data["User Hits"]
             computer_hits = save_data["Computer Hits"]
-            print(f"""{i + 1}. Size: {size} | {player} Hits: {user_hits}
-    | Computer Hits: {computer_hits}
-                """)
+            print(
+                f"{i + 1}. Size: {size} | {player} Hits: {user_hits} |"
+                f" Computer Hits: {computer_hits}"
+                )
 
         while True:
             try:
-                option = int(input("""Enter the number next to the game
-you would like to load: \n
-                                   """))
+                option = int(input(
+                    "Enter the number next to the game"
+                    "you would like to load: \n"
+                    ))
                 if 1 <= option <= len(games):
                     user_selection = games[option - 1]
                     break
@@ -139,6 +150,10 @@ you would like to load: \n
         # Rebuild user boards for selected game
         user_board = self.board_size(user_selection)
         user_board.grid = user_grid
+        print(f"Loaded user board: {len(user_grid)}x{len(user_grid[0])}")
+        for row in user_grid:
+            print(row)
+
         user_board.num_ships = self.ship_hit_count(user_grid)
 
         # Rebuild computer boards for selected game
@@ -157,11 +172,12 @@ def leaderboard_generation(player, size):
     print(f"{player}, see how you did on the leaderboard below")
     print("-" * 35)
     lb.show_lb(size)
-#     print("-" * 35)
-#     print("""Can't see your score on the leaderboard you can search for it
-# using the serachbox below
-#         """)
-#     print("-" * 35)
+    print("-" * 35)
+    # print(
+    #     "Can't see your score on the leaderboard you can search for it using"
+    #     "the serachbox below"
+    #     )
+    # print("-" * 35)
     # print("-" * 35)
     # lb.search_lb()
     # print("-" * 35)
@@ -220,10 +236,10 @@ def main():
 
     while True:
         print("-" * 35)
-        print(f"{username}, would you like to access any of your saved games?")
-        access_games = input("""If yes please enter Y,
-        if no please enter N:\n
-                                """)
+        access_games = input(
+            f"{username}, would you like to access any of your saved games?\n"
+            "If yes please enter Y, if no please enter N:\n"
+            ).strip()
         print("-" * 35)
 
         if access_games not in ("Y", "N"):
