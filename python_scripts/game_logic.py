@@ -65,10 +65,11 @@ class Game:
             "Please place your ships. Each ship takes up one space.\n"
             "The top left corner is row: 0, col: 0.\n"
             "Please bear that in mind when entering rows and columns.\n"
-            f"'{Fore.BLUE}S{Style.RESET_ALL}' = Ship placement."
+            f"'{Fore.MAGENTA}S{Style.RESET_ALL}' = Ship placement."
             )
         print("-" * 35)
         self.ships_placed = 0
+        ship = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
         while self.ships_placed < board.num_ships:
             try:
                 print("-" * 35)
@@ -81,12 +82,12 @@ class Game:
                     "Enter col to place ship at: \n", board.size
                     )
                 print("-" * 35)
-                if board.grid[row][col] == ".":
-                    board.grid[row][col] = f"{Fore.BLUE}S{Style.RESET_ALL}"
+                if board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
+                    board.grid[row][col] = ship
                     self.ships_placed += 1
                     print(f"Ship placed at {row}, {col}")
                     board.display_board(show_ships=True)
-                elif board.grid[row][col] == f"{Fore.BLUE}S{Style.RESET_ALL}":
+                elif board.grid[row][col] == ship:
                     print(
                         "Ship already palced there,"
                         " please select another place."
@@ -105,8 +106,8 @@ class Game:
         while self.ships_placed < board.num_ships:
             row = self.random_point(board.size)
             col = self.random_point(board.size)
-            if board.grid[row][col] == ".":
-                board.grid[row][col] = f"{Fore.BLUE}S{Style.RESET_ALL}"
+            if board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
+                board.grid[row][col] = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
                 self.ships_placed += 1
 
         return board
@@ -152,7 +153,7 @@ class Game:
                 f"{player} you have already shot here, please pick a new spot."
                 )
             return False
-        elif board.grid[row][col] == f"{Fore.BLUE}S{Style.RESET_ALL}":
+        elif board.grid[row][col] == f"{Fore.MAGENTA}S{Style.RESET_ALL}":
             board.grid[row][col] = f"{Fore.RED}H{Style.RESET_ALL}"
             self.ships_hit += 1
             ships = board.num_ships - sum(
@@ -162,7 +163,7 @@ class Game:
             time.sleep(1)
             print(f"{player} Hit! Just {ships} left to destroy.", flush=True)
             return True
-        elif board.grid[row][col] == ".":
+        elif board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
             ships = board.num_ships - sum(
                 row.count(f"{Fore.RED}H{Style.RESET_ALL}")
                 for row in board.grid
@@ -250,7 +251,8 @@ class Game:
         print("-" * 35)
         print(
             "Key:\n"
-            f"{Fore.BLUE}S{Style.RESET_ALL} = Ship\n"
+            f"{Fore.BLUE}~{Style.RESET_ALL} = Water\n"
+            f"{Fore.MAGENTA}S{Style.RESET_ALL} = Ship\n"
             f"{Fore.RED}H{Style.RESET_ALL} = Hit\n"
             f"{Fore.GREEN}M{Style.RESET_ALL} = Miss\n"
             )

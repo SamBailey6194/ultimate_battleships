@@ -1,5 +1,10 @@
 # Imported dependencies and modules
 import time
+import colorama
+from colorama import Fore, Style
+
+# Initialise colorama
+colorama.init(autoreset=True)
 
 
 class Board:
@@ -22,7 +27,10 @@ class Board:
         for row in self.grid:
             if not show_ships:
                 # Replace ships "S" with "."
-                print(" ".join(["." if "S" in cell else cell for cell in row]))
+                print(
+                    " ".join([f"{Fore.BLUE}~{Style.RESET_ALL}"
+                              if "S" in cell else cell for cell in row])
+                      )
             else:
                 # Show full board with ships
                 print(" ".join(row))
@@ -31,7 +39,10 @@ class Board:
         """
         Generates the board size the user selected as a 2D list
         """
-        self.grid = [["."] * self.size for _ in range(self.size)]
+        self.grid = [
+            [f"{Fore.BLUE}~{Style.RESET_ALL}"] *
+            self.size for _ in range(self.size)
+            ]
         return self.grid
 
     def validate_board_size(self, data):

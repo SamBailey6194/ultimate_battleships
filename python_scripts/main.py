@@ -118,17 +118,22 @@ def leaderboard_generation(player, size):
 
 
 def full_game(
-        player, user=None, computer=None, total_ships=None,
+        player, size=None, user=None, computer=None, total_ships=None,
         computer_ships_hit=None, user_ships_hit=None
         ):
     """
     Starts or resumes the game and checks when the game finishes
     """
+    if size in None:
+        board = Board()
+        board.board_size()
+        size = board.size
+
     game = Game()
     battleships = game.play_game(
         player, user, computer, total_ships, computer_ships_hit, user_ships_hit
         )
-    display_leaderboard = leaderboard_generation(player, user.size)
+    display_leaderboard = leaderboard_generation(player, size)
 
     if battleships == "saved":
         play_again_option(player)
@@ -176,9 +181,10 @@ class Load_Games:
         """
         Helper function to check board size
         """
+        water = f"{Fore.BLUE}~{Style.RESET_ALL}"
         size = int(selected["Board Size"])
         board = Board(size=size)
-        board.grid = [["."] * size for _ in range(size)]
+        board.grid = [[water] * size for _ in range(size)]
         return board
 
     def access_saved_games(self, player):
@@ -289,8 +295,8 @@ def main():
                 )
                 if user_board and computer_board:
                     full_game(
-                        username, user_board, computer_board, total_ships,
-                        user_hits, computer_hits
+                        username, user_board.size, user_board, computer_board,
+                        total_ships, user_hits, computer_hits
                         )
                     break
             elif access_games == "N":
