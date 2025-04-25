@@ -124,15 +124,17 @@ def full_game(
     """
     Starts or resumes the game and checks when the game finishes
     """
-    if size in None:
-        board = Board()
-        board.board_size()
-        size = board.size
-
     game = Game()
     battleships = game.play_game(
         player, user, computer, total_ships, computer_ships_hit, user_ships_hit
         )
+
+    if user:
+        if size is None:
+            size = user.size
+        if total_ships is None:
+            total_ships = user.num_ships
+
     display_leaderboard = leaderboard_generation(player, size)
 
     if battleships == "saved":
