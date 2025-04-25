@@ -48,7 +48,7 @@ The
 - Updated boards weren't printing to the terminal at all, updated play_game function to display_board in the correct space to allow it to be displayed
 - Update_board function printing the statement incorrectly when a ship is hit, needed to reorder the structure below the elif statements
 - Username not accessed by other scripts:
-  - Username being fetched from database, the user_choice function keeps being called everytime fetch_username is being called, therefore set the username input as a global variable and created a function in user.py that returned the username which was then imported into battleships.py
+  - Username being fetched from database, the user_choice function keeps being called everytime fetch_username is being called, therefore set the username input as a global variable and created a function in user.py that returned the username which was then imported into game_logic.py
   - The above fix is not best practice, therefore adjusted user_login, user_creation and user_choice to properly return the correct information to allow the username to be accessed by other scripts
   - To also double check the login_credentials there was a while loop added to the main function in main.py to check that the username had returned properly
 - Game state not saving when user requests to save it due to board not being JSON serializable, add function that converts the table into a string that is readable for google sheets
@@ -65,7 +65,10 @@ The
 - The computer's random shots sometimes shoot at the space it has already shot at to avoid this I added some variables to track and store where the computer had shot, so the random selection was not a duplicate shot.
 - After adding colorama to various parts of the card we had some bugs:
   - dispaly_board function wouldn't work as the colour match wouldn't work. So had to change it from a hard equals to just look for an S no matter the colour.
-  - 
+  - update_game_status was printing the players name for both, because of a mistyped line by myself, fixed by changing it from {player} to Computer.
+  - the save_game_state function wasn't accepting the inputs properly moved play_game function into game_logic.py at the end of the Game class, then renamed play_game function to full_game in main.py call the play_game function from game_logic.py
+  - When checking shots due to the S and H now having a colour it the update_board function wasn't working out when a user or the computer hit a ship, so added in the colours to the if and elif statements.
+  - The saved board was including the colorama ANSI codes in the saved boards, to remove this I added remove_colorama_codes() which compiles the various characters and numbers used in the ANSI codes and then removes them from the board before saving.
 
 ### Unfixed Bugs
 

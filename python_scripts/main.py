@@ -5,7 +5,8 @@ import time
 import sys
 # Imported other python scripts
 from user import user_login, user_creation
-from battleships import Board, Game
+from game_logic import Game
+from board_creation import Board
 import leaderboard
 from sheets import saved_games
 
@@ -13,8 +14,6 @@ from sheets import saved_games
 colorama.init(autoreset=True)
 
 # Global variables for main.py
-game = Game()
-lb = leaderboard
 save = saved_games
 
 
@@ -60,64 +59,6 @@ def user_choice():
             return user_creation()
 
 
-def leaderboard_generation(player, size):
-    """
-    Function to show leaderboard and allow user to search leaderboard
-    """
-    print("-" * 35)
-    print(f"{player}, see how you did on the leaderboard below")
-    print("-" * 35)
-    lb.show_lb(size)
-    print("-" * 35)
-    user_search = input(
-        "Can't see your score on the leaderboard you can search for it using\n"
-        " the serachbox below.\n"
-        "Type your username here to see where you stand:\n"
-        )
-    print("-" * 35)
-    print("-" * 35)
-    lb.search_lb(user_search, size)
-    print("-" * 35)
-
-
-def play_game(
-        player, user=None, computer=None, total_ships=None,
-        computer_ships_hit=None, user_ships_hit=None
-        ):
-    """
-    Starts or resumes the game and checks when the game finishes
-    """
-    if not user or not computer:
-        user = game.user_board(player)
-        computer = game.computer_board(user.size, user.num_ships)
-        total_ships = user.num_ships
-
-    while True:
-        game.player_turn(player, computer)
-        computer_ships_hit = game.hit_counter(computer.grid)
-
-        game.computer_turn(user)
-        user_ships_hit = game.hit_counter(user.grid)
-
-        game.update_game_status(
-            player, user, computer, user_ships_hit, computer_ships_hit
-            )
-
-        if game.game_over_check(
-            player, user_ships_hit, computer_ships_hit, total_ships
-                ):
-            break
-        else:
-            game.save_game_state(
-                player, user.size, total_ships, user, computer,
-                computer_ships_hit, user_ships_hit
-                )
-            break
-
-    lb.update_lb(player, user.size, computer_ships_hit, user_ships_hit)
-    leaderboard_generation(player, user.size)
-
-
 def exit_game(player):
     """
     Function that exits the game if player chose to save game instead
@@ -136,19 +77,63 @@ def play_again_option(player):
     """
     while True:
         play_or_exit = input(
-            "When you are done searching the leaderboard you can either play"
-            " again or exit.\n"
+            "Would you like to play again or exit the game?\n"
             f"Please enter '{Fore.GREEN}P{Style.RESET_ALL}' to play again or"
             f"'{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
         )
         if play_or_exit not in ("P", "E"):
             continue
         elif play_or_exit == "P":
-            play_game(player)
+            full_game(player)
             continue
         else:
             exit_game(player)
             sys.exit()
+
+
+def leaderboard_generation(player, size):
+    """
+    Function to show leaderboard and allow user to search leaderboard
+    """
+    lb = leaderboard
+    print("-" * 35)
+    print(f"{player}, see how you did on the leaderboard below")
+    lb.update_lb(player)
+    print("-" * 35)
+    lb.show_lb(size)
+    print("-" * 35)
+    user_search = input(
+        "Can't see your score on the leaderboard you can search for it using\n"
+        " the serachbox below.\n"
+        "Type your username here to see where you stand:\n"
+        )
+    print("-" * 35)
+    print("-" * 35)
+    lb.search_lb(user_search, size)
+    print("-" * 35)
+    print(
+        "When you are done searching the leaderboard you can either play again"
+        " or exit.\n")
+    play_again_option(player)
+
+
+def full_game(
+        player, user=None, computer=None, total_ships=None,
+        computer_ships_hit=None, user_ships_hit=None
+        ):
+    """
+    Starts or resumes the game and checks when the game finishes
+    """
+    game = Game()
+    battleships = game.play_game(
+        player, user, computer, total_ships, computer_ships_hit, user_ships_hit
+        )
+    display_leaderboard = leaderboard_generation(player, user.size)
+
+    if battleships == "saved":
+        play_again_option(player)
+    else:
+        display_leaderboard
 
 
 class Load_Games:
@@ -303,7 +288,7 @@ def main():
                     saved_game_data[3:5]
                 )
                 if user_board and computer_board:
-                    play_game(
+                    full_game(
                         username, user_board, computer_board, total_ships,
                         user_hits, computer_hits
                         )
@@ -312,15 +297,13 @@ def main():
                 print("-" * 35)
                 print("Let's start a new game instead.")
                 print("-" * 35)
-                play_game(username)
+                full_game(username)
                 break
     else:
         print("-" * 35)
         print(f"Currently no saved games for {username}")
         print("-" * 35)
-        play_game(username)
-
-    play_again_option(username)
+        full_game(username)
 
 
 # Checks to see if code is being used as a module or main program

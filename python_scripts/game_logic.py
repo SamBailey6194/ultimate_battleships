@@ -3,94 +3,13 @@ from random import randint, choice
 import colorama
 from colorama import Fore, Style
 import time
+import re
 # Imported other python scripts
 from sheets import saved_games
+from board_creation import Board
 
 # Initialise colorama
 colorama.init(autoreset=True)
-
-
-class Board:
-    """
-    Main board class. Allows user to set board size, place ships,
-    generates a computers board, and allows user to make guesses,
-    while generates a random guess for the computer.
-    """
-    def __init__(self, size=0, num_ships=0):
-        self.size = size
-        self.num_ships = num_ships
-        self.grid = []
-
-    def display_board(self, show_ships=False):
-        """
-        Print board for user to see correctly
-        While hiding where computer's ships are
-        Note, this function can also hide where the user put their ships
-        """
-        for row in self.grid:
-            if not show_ships:
-                # Replace ships "S" with "."
-                print(" ".join(["." if "S" in cell else cell for cell in row]))
-            else:
-                # Show full board with ships
-                print(" ".join(row))
-
-    def board_creation(self):
-        """
-        Generates the board size the user selected as a 2D list
-        """
-        self.grid = [["."] * self.size for _ in range(self.size)]
-        return self.grid
-
-    def validate_board_size(self, data):
-        """
-        Validates board size input by user
-        """
-        if data == 1:
-            self.size, self.num_ships = 5, 4
-        elif data == 2:
-            self.size, self.num_ships = 10, 8
-        elif data == 3:
-            self.size, self.num_ships = 15, 12
-        else:
-            print("Invalid option please pick a valid option of 1, 2 or 3.")
-            return False
-        self.grid = self.board_creation()
-        return True
-
-    def board_size(self):
-        """
-        Asks user which board size they would like to go with and
-        then generates the board and the number of ships for each
-        size board.
-        """
-        print("-" * 35)
-        print(
-            "Now you are logged in. You can play the game.\n First though you"
-            " need to select what size board you want to play on.\n"
-            "All options are a square grid.\n"
-            "Each size has a different amount of"
-            " battleships to place.\n Your options are as follows:\n"
-            "- 1 = 5x5 with 4 battleships\n"
-            "- 2 = 10x10 with 8 battleships\n"
-            "- 3 = 15x15 with 12 battleships\n")
-        print("-" * 35)
-
-        while True:
-            try:
-                size = int(input(
-                    "Please enter 1, 2 or 3\n depending on the size board you"
-                    "would like to play on: \n"
-                    ))
-                if self.validate_board_size(size):
-                    time.sleep(0.5)
-                    print("Generating board . . .")
-                    time.sleep(0.5)
-                    self.display_board()
-                    break
-            except ValueError:
-                print("Please input 1, 2, or 3.")
-        return size
 
 
 class Game:
@@ -167,7 +86,7 @@ class Game:
                     self.ships_placed += 1
                     print(f"Ship placed at {row}, {col}")
                     board.display_board(show_ships=True)
-                elif board.grid[row][col] == "S":
+                elif board.grid[row][col] == f"{Fore.BLUE}S{Style.RESET_ALL}":
                     print(
                         "Ship already palced there,"
                         " please select another place."
@@ -225,21 +144,29 @@ class Game:
             return False
 
         self.ships_hit
-        if board.grid[row][col] in ("M", "H"):
+        if board.grid[row][col] in (
+            f"{Fore.GREEN}M{Style.RESET_ALL}", f"{Fore.RED}H{Style.RESET_ALL}"
+                                    ):
             time.sleep(1)
             print(
                 f"{player} you have already shot here, please pick a new spot."
                 )
             return False
-        elif board.grid[row][col] == "S":
+        elif board.grid[row][col] == f"{Fore.BLUE}S{Style.RESET_ALL}":
             board.grid[row][col] = f"{Fore.RED}H{Style.RESET_ALL}"
             self.ships_hit += 1
-            ships = board.num_ships - sum(row.count("H") for row in board.grid)
+            ships = board.num_ships - sum(
+                row.count(f"{Fore.RED}H{Style.RESET_ALL}")
+                for row in board.grid
+                                          )
             time.sleep(1)
             print(f"{player} Hit! Just {ships} left to destroy.", flush=True)
             return True
         elif board.grid[row][col] == ".":
-            ships = board.num_ships - sum(row.count("H") for row in board.grid)
+            ships = board.num_ships - sum(
+                row.count(f"{Fore.RED}H{Style.RESET_ALL}")
+                for row in board.grid
+                                          )
             time.sleep(1)
             print(f"{player} missed! Still {ships} left to hit", flush=True)
             board.grid[row][col] = f"{Fore.GREEN}M{Style.RESET_ALL}"
@@ -281,8 +208,6 @@ class Game:
                 shot = self.random_coordinate(available_coordinates)
                 row, col = shot
                 available_coordinates.remove(shot)
-                # row = self.random_point(target_board.size)
-                # col = self.random_point(target_board.size)
 
             if self.update_board(player_name, target_board, row, col):
                 break
@@ -291,7 +216,7 @@ class Game:
         """
         Counts the hits for each shot a player takes
         """
-        return sum(row.count("H") for row in grid)
+        return sum(row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid)
 
     def player_turn(self, username, opponent):
         """
@@ -344,7 +269,7 @@ class Game:
             f"{Style.RESET_ALL}"
             )
         print(
-            f"{player} hits: {Fore.GREEN}{user_ships_hits}"
+            f"Computer hits: {Fore.GREEN}{user_ships_hits}"
             f"{Style.RESET_ALL}/{Fore.RED}{user.num_ships}"
             f"{Style.RESET_ALL}"
             )
@@ -372,16 +297,6 @@ class Game:
         else:
             return False
 
-    def continue_game(self, player):
-        """
-        Continues game if no one has won yet
-        """
-        print("-" * 35)
-        print(
-            f"No winner yet. Game continues. Come on {player} you can win!!!"
-            )
-        print("-" * 35)
-
     def convert_board(self, board):
         """
         Converts board into a state that can be saved into Google Sheets
@@ -389,6 +304,14 @@ class Game:
         return "\n".join([
             ",".join(row) for row in board.grid]
             )
+
+    def remove_colorama_codes(self, text):
+        """
+        When saving removes the colorama codes for the boards, so the boards
+        are saved cleanly
+        """
+        colorama_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+        return colorama_escape.sub('', text)
 
     def save_game_state(
             self, player, board_size, num_ships, user_board, computer_board,
@@ -406,7 +329,7 @@ class Game:
                 f" in.\nPlease enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
                 f" continue, '{Fore.YELLOW}S{Style.RESET_ALL}' for save or"
                 f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
-            )
+            ).strip().upper()
 
             if save_continue not in ("C", "S", "E"):
                 print(
@@ -416,10 +339,22 @@ class Game:
                     )
                 continue
             elif save_continue == "C":
-                self.continue_game(player)
+                print("-" * 35)
+                print(
+                    "No winner yet. Game continues.\n"
+                    f"Come on {player} you can win!!!"
+                    )
+                print("-" * 35)
+                return "continue"
             elif save_continue == "S":
                 user_board_convert = self.convert_board(user_board)
                 computer_board_convert = self.convert_board(computer_board)
+                user_clean_board = self.remove_colorama_codes(
+                    user_board_convert
+                    )
+                computer_clean_board = self.remove_colorama_codes(
+                    computer_board_convert
+                    )
 
                 username_row = None
                 for username, row in enumerate(save.get_all_values()):
@@ -429,14 +364,53 @@ class Game:
 
                 if username_row:
                     save.update(f"A{username_row}:G{username_row}", [
-                        [player, board_size, num_ships, user_board_convert,
-                            computer_board_convert, user_hits, computer_hits]
+                        [player, board_size, num_ships, user_clean_board,
+                            computer_clean_board, user_hits, computer_hits]
                     ])
                 else:
                     save.append_row([
-                            player, board_size, num_ships, user_board_convert,
-                            computer_board_convert, user_hits, computer_hits
+                            player, board_size, num_ships, user_clean_board,
+                            computer_clean_board, user_hits, computer_hits
                             ])
-                break
+                return "save"
             elif save_continue == "E":
+                return "exit"
+
+    def play_game(
+            self, player, user=None, computer=None, total_ships=None,
+            computer_ships_hit=None, user_ships_hit=None
+            ):
+        """
+        Starts or resumes the game and checks when the game finishes
+        """
+        if not user or not computer:
+            user = self.user_board(player)
+            computer = self.computer_board(user.size, user.num_ships)
+            total_ships = user.num_ships
+
+        while True:
+            self.player_turn(player, computer)
+            computer_ships_hit = self.hit_counter(computer.grid)
+
+            self.computer_turn(user)
+            user_ships_hit = self.hit_counter(user.grid)
+
+            self.update_game_status(
+                player, user, computer, user_ships_hit, computer_ships_hit
+                )
+
+            if self.game_over_check(
+                player, user_ships_hit, computer_ships_hit, total_ships
+                    ):
                 break
+            else:
+                continue_save_exit = self.save_game_state(
+                    player, user.size, total_ships, user, computer,
+                    computer_ships_hit, user_ships_hit
+                    )
+                if continue_save_exit == "continue":
+                    continue
+                elif continue_save_exit == "save":
+                    return "saved"
+                else:
+                    break
