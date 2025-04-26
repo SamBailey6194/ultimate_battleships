@@ -87,12 +87,12 @@ class Game:
         When saving removes the colorama codes for the boards, so the boards
         are saved cleanly
         """
-        colorama_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+        colorama_escape = re.compile(r"\x1B[@-_][0-?]*[ -/]*[@-~]")
         clean_board = []
 
         for row in board:
             clean_row = [colorama_escape.sub('', cell) for cell in row]
-            clean_board.append(''.join(clean_row))
+            clean_board.append(' '.join(clean_row))
 
         return clean_board
 
@@ -412,6 +412,9 @@ class Game:
                     computer_board_convert
                     )
 
+                stringify_player_board = "\n".join(player_clean_board)
+                stringify_computer_board = "\n".join(computer_clean_board)
+
                 username_row = None
                 for username, row in enumerate(save.get_all_values()):
                     if row[0] == self.player:
@@ -422,14 +425,14 @@ class Game:
                     save.update(f"A{username_row}:G{username_row}", [
                         [
                             self.player, board_size, self.ships_placed,
-                            player_clean_board, computer_clean_board,
+                            stringify_player_board, stringify_computer_board,
                             self.user_hits, self.computer_hits
                          ]
                     ])
                 else:
                     save.append_row([
                             self.player, board_size, self.ships_placed,
-                            player_clean_board, computer_clean_board,
+                            stringify_player_board, stringify_computer_board,
                             self.user_hits, self.computer_hits
                             ])
                 return "save"
@@ -454,5 +457,7 @@ class Game:
                     continue
                 elif continue_save_exit == "save":
                     return "saved"
-                else:
-                    break
+                elif continue_save_exit == "exit":
+                    return "exit"
+
+        return "game over"
