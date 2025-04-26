@@ -185,7 +185,6 @@ class Load_Games:
         """
         Helper function to check board size
         """
-        water = f"{Fore.BLUE}~{Style.RESET_ALL}"
         size = int(selected["Board Size"])
         board = Board(size=size)
         board.grid = [[water] * size for _ in range(size)]
@@ -269,33 +268,33 @@ class Load_Games:
         Loads the list of saved games associated with the username logged in
         with
         """
-        games = self.load_saved_games()
+        self.games = self.load_saved_games()
 
-        if not games:
+        if not self.games:
             return None
 
-        self.list_saves(games)
+        self.list_saves()
 
-        user_selection = self.user_choose_save(games)
-
-        # Convert strings to grids for selected game
-        player_grid = self.convert_board_to_grid(user_selection["User Board"])
-        computer_grid = self.convert_board_to_grid(
-            user_selection["Computer Board"]
-            )
+        user_selection = self.user_choose_save()
 
         # Restoring the colorama codes to the grid
-        player_grid_colour = self.restore_colour(player_grid)
-        computer_grid_colour = self.restore_colour(computer_grid)
+        self.player_colour = self.restore_colour(
+            self.convert_board_to_grid(user_selection["User Board"])
+        )
+        self.computer_colour = self.restore_colour(
+            self.convert_board_to_grid(user_selection["Computer Board"])
+        )
 
-        player_board = self.boards_rebuilt(user_selection, player_grid_colour)
-        computer_board = self.boards_rebuilt(
-            user_selection, computer_grid_colour
+        self.player_board, self.computer_board = self.boards_rebuilt(
+            user_selection
             )
 
-        self.display_boards(player_board, computer_board)
+        self.display_boards()
 
         return (
-            player_board, computer_board, player_board.num_ships,
-            user_selection["User Hits"], user_selection["Computer Hits"]
+            self.player_board,
+            self.computer_board,
+            self.player_board.num_ships,
+            user_selection["User Hits"],
+            user_selection["Computer Hits"]
             )
