@@ -98,31 +98,3 @@ def show_lb(size):
         print("-" * 35)
         print(large_show)
         print("-" * 35)
-
-
-# def search_lb(username, size, user_score=None, computer_score=None):
-#     """
-#     Allows user to search the leaderboard for their name and scores
-#     """
-#     if size == 5:
-#         data = small_game_lb.get_all_records()
-#     elif size == 10:
-#         data = medium_game_lb.get_all_records()
-#     elif size == 15:
-#         data = big_game_lb.get_all_records()
-#     else:
-#         print("Game size not recognised.")
-#         return
-
-#     search = [
-#         user_input for user_input in data
-#         if user_input["Username"].strip().lower() == username.strip()
-#     ]
-
-#     if search:
-#         sorted_search = sorted(
-#             search, key=lambda x: x["Game Score"], reverse=True
-#             )
-#         print(lb_order(sorted_search, size))
-#     else:
-#         print(f"No entries found for {username} on {size}x{size} leaderbaord.")

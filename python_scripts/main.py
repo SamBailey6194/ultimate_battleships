@@ -101,14 +101,6 @@ def leaderboard_generation(player, size):
     print(f"{player}, see how you did on the leaderboard below")
     print("-" * 35)
     lb.show_lb(size)
-    # print("-" * 35)
-    # user_search = input(
-    #   "Can't see your score on the leaderboard you can search for it using\n"
-    #     " the serachbox below.\n"
-    #     "Type your username here to see where you stand:\n"
-    #     )
-    # print("-" * 35)
-    # lb.search_lb(user_search, size)
     print("-" * 35)
     print(
         "When you are done searching the leaderboard you can either play again"
