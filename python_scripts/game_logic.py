@@ -84,8 +84,8 @@ class Game:
 
     def remove_colorama_codes(self, board):
         """
-        When saving removes the colorama ANSI codes for the boards, so the boards
-        are saved cleanly
+        When saving removes the colorama ANSI codes for the boards, so the
+        boards are saved cleanly
         """
         colorama_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
         clean_board = []
@@ -96,7 +96,7 @@ class Game:
 
         for row in board:
             clean_row = " ".join([
-                colorama_escape.sub('', char) for char in row
+                colorama_escape.sub('', row)
                 ])
             clean_board.append(clean_row)
 
