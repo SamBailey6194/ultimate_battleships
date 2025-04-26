@@ -29,7 +29,7 @@ class Game:
     computers guesses and checks for hits and misses.
     """
     def __init__(
-            self, player, total_ships=None, player_board=None, pc_board=None,
+            self, player, total_ships=0, player_board=None, pc_board=None,
             user_hits=0, computer_hits=0, ships_placed=0
             ):
         self.player = player
@@ -430,16 +430,24 @@ class Game:
                 if username_row:
                     save.update(f"A{username_row}:G{username_row}", [
                         [
-                            self.player, board_size, self.ships_placed,
-                            stringify_player_board, stringify_computer_board,
-                            self.user_hits, self.computer_hits
+                            self.player,
+                            board_size,
+                            self.player_board.num_ships,
+                            stringify_player_board,
+                            stringify_computer_board,
+                            self.user_hits,
+                            self.computer_hits
                          ]
                     ])
                 else:
                     save.append_row([
-                            self.player, board_size, self.ships_placed,
-                            stringify_player_board, stringify_computer_board,
-                            self.user_hits, self.computer_hits
+                            self.player,
+                            board_size,
+                            self.player_board.num_ships,
+                            stringify_player_board,
+                            stringify_computer_board,
+                            self.user_hits,
+                            self.computer_hits
                             ])
                 return "save"
             elif save_continue == "E":

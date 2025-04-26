@@ -72,6 +72,7 @@ The
 - No size set in full_game function for leaderboard_generation function to be called, therefore, added a size=None parameter in the full_game function.
 - After cleaning up the code in the Game class and in main.py user_board and computer_board were accessing functions the wrong way, leading to not asking the user to place the ships and having blank boards. To fix the issue the requirement was to use self.player_board and self.pc_board variables in them instead of calling Board class.
 - The user_hits and computer_hits in full_game and new_game were set to None rather than 0 as an integer.
+- Saved data wasn't saving number of ships correctly due to passing None as the attribute and not 0 as a integer and ensure the num_ships was being used in the update and append_row part of the save_game_state function
 
 ### Unfixed Bugs
 

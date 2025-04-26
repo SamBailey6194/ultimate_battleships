@@ -117,7 +117,7 @@ def leaderboard_generation(player, size):
 
 
 def full_game(
-        player, size=None, total_ships=None,
+        player, size=None, total_ships=0,
         player_board=None, pc_board=None,
         user_hits=0, computer_hits=0
         ):
@@ -144,7 +144,7 @@ def full_game(
 
 def new_game(
         player,
-        total_ships=None,
+        total_ships=0,
         player_board=None,
         pc_board=None,
         user_hits=0,
