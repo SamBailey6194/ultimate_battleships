@@ -212,7 +212,6 @@ class Game:
             print(f"Invalid coordinates: ({row}, {col})")
             return False
 
-        ships_hit = self.user_hits, self.computer_hits
         if board.grid[row][col] in (miss, hit):
             time.sleep(1)
             print(
@@ -222,7 +221,12 @@ class Game:
             return False
         elif board.grid[row][col] == ship:
             board.grid[row][col] = hit
-            ships_hit += 1
+
+            if general == self.player:
+                self.user_hits += 1
+            else:
+                self.computer_hits += 1
+
             ships = board.num_ships - sum(
                 row.count(hit)
                 for row in board.grid
@@ -233,6 +237,7 @@ class Game:
                 f"Just {ships} left to destroy.", flush=True
                 )
             return True
+
         elif board.grid[row][col] == water:
             ships = board.num_ships - sum(
                 row.count(hit)
@@ -245,6 +250,7 @@ class Game:
                 )
             board.grid[row][col] = miss
             return True
+
         else:
             time.sleep(1)
             print(
