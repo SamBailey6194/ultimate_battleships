@@ -29,13 +29,13 @@ class Game:
     computers guesses and checks for hits and misses.
     """
     def __init__(
-            self, player, num_ships=None, player_board=None, pc_board=None,
+            self, player, total_ships=None, player_board=None, pc_board=None,
             user_hits=0, computer_hits=0, ships_placed=0
             ):
         self.player = player
 
         if player_board and pc_board:
-            self.total_ships = num_ships
+            self.total_ships = total_ships
             self.player_board = player_board
             self.pc_board = pc_board
             self.user_hits = user_hits
@@ -45,12 +45,12 @@ class Game:
             self.reset_coordinates(self.pc_board.size)
 
         else:
-            self.total_ships = num_ships
+            self.total_ships = total_ships
             self.player_board = Board()
             self.pc_board = Board()
             self.user_hits = 0
             self.computer_hits = 0
-            self.ships_placed = ships_placed
+            self.ships_placed = 0
             self.available_coordinates = []
 
     def random_point(self, size):
@@ -87,7 +87,7 @@ class Game:
         When saving removes the colorama codes for the boards, so the boards
         are saved cleanly
         """
-        colorama_escape = re.compile(r"\x1B[@-_][0-?]*[ -/]*[@-~]")
+        colorama_escape = re.compile(r"\x1B\[[@-_]*[0-?]*[ -/]*[@-~]")
         clean_board = []
 
         for row in board:
@@ -137,7 +137,7 @@ class Game:
             )
         print("-" * 35)
         self.ships_placed = 0
-        while self.ships_placed < self.player_board:
+        while self.ships_placed < self.player_board.num_ships:
             try:
                 print("-" * 35)
                 row = self.validate_coordinates(
@@ -171,7 +171,7 @@ class Game:
         Places the ships randomly on the board
         """
         self.ships_placed = 0
-        while self.ships_placed < self.pc_board:
+        while self.ships_placed < self.pc_board.num_ships:
             row = self.random_point(self.pc_board.size)
             col = self.random_point(self.pc_board.size)
             if self.pc_board.grid[row][col] == water:
@@ -184,25 +184,25 @@ class Game:
         """
         User board is generated blank to allow user to place their ships
         """
-        board_player = Board()
-        board_player.board_size()
+        self.player_board.board_size()
         self.player_place_ships()
         print("-" * 35)
         print(f"{self.player}'s final board \n")
-        board_player.display_board(show_ships=True)
-        return board_player
+        self.player_board.display_board(show_ships=True)
+        return self.player_board
 
     def computer_board(self, user_size, user_ships):
         """
         Generates a board with random placement of ships
         """
-        board_pc = Board(size=user_size, num_ships=user_ships)
-        board_pc.board_creation()
+        self.pc_board.size = user_size
+        self.pc_board.num_ships = user_ships
+        self.pc_board.board_creation()
         self.random_ship_placement()
         print("-" * 35)
         print("Computer's board \n")
-        board_pc.display_board(show_ships=False)
-        return board_pc
+        self.pc_board.display_board(show_ships=False)
+        return self.pc_board
 
     def update_board(self, general, board, row, col):
         """

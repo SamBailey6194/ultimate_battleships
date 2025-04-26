@@ -119,7 +119,7 @@ def leaderboard_generation(player, size):
 def full_game(
         player, size=None, total_ships=None,
         player_board=None, pc_board=None,
-        user_hits=None, computer_hits=None
+        user_hits=0, computer_hits=0
         ):
     """
     Starts or resumes the game and checks when the game finishes
@@ -140,6 +140,27 @@ def full_game(
     elif battleships == "game over":
         lb.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
+
+
+def new_game(
+        player,
+        total_ships=None,
+        player_board=None,
+        pc_board=None,
+        user_hits=0,
+        computer_hits=0
+        ):
+    """
+    Function ensures a new game is set up if there are no
+    saved games or the user wants to start a new game instead
+    of continuing a saved game
+    """
+    game = Game(
+        player, total_ships, player_board, pc_board, user_hits, computer_hits
+        )
+    user = game.user_board()
+    computer = game.computer_board(user.size, user.num_ships)
+    full_game(player, player_board=user, pc_board=computer)
 
 
 def main():
@@ -203,12 +224,12 @@ def main():
                 print("-" * 35)
                 print("Let's start a new game instead.")
                 print("-" * 35)
-                full_game(username)
+                new_game(username)
     else:
         print("-" * 35)
         print(f"Currently no saved games for {username}")
         print("-" * 35)
-        full_game(username)
+        new_game(username)
 
 
 # Checks to see if code is being used as a module or main program
