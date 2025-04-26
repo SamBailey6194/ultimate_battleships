@@ -71,7 +71,7 @@ The
   - The saved board was including the colorama ANSI codes in the saved boards, to remove this I added remove_colorama_codes() which compiles the various characters and numbers used in the ANSI codes and then removes them from the board before saving.
 - No size set in full_game function for leaderboard_generation function to be called, therefore, added a size=None parameter in the full_game function.
 - After cleaning up the code in the Game class and in main.py user_board and computer_board were accessing functions the wrong way, leading to not asking the user to place the ships and having blank boards. To fix the issue the requirement was to use self.player_board and self.pc_board variables in them instead of calling Board class.
-- The user_hits and computer_hits in full_game and new_game were set to None rather than 0 as an integer
+- The user_hits and computer_hits in full_game and new_game were set to None rather than 0 as an integer.
 
 ### Unfixed Bugs
 
@@ -142,3 +142,4 @@ Below are my credits for where I got inspiration for some of the code.
 - Code Institutes Battleships example introduced me to random and randint
 - Various stack overflow posts introduced me to sys and time module and how to use them both, there were too many to remember which ones were truly helpful
 - My mentor mentioned to me about colorama module and this video helped me understand it, [Colorama Guide](https://www.youtube.com/watch?v=u51Zjlnui4Y)
+- This post on stack overflow helped me grasp the idea of how to strip ANSI codes from the saved baords, [ANSI Codes Guide](https://superuser.com/questions/380772/removing-ansi-color-codes-from-text-stream/1388860#1388860)
