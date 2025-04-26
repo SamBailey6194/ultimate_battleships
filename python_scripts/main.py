@@ -119,14 +119,14 @@ def leaderboard_generation(
 
 
 def full_game(
-        player, size=None, player_board=None, pc_board=None, total_ships=None,
+        player, size=None, total_ships=None, player_board=None, pc_board=None,
         user_hits=None, computer_hits=None
         ):
     """
     Starts or resumes the game and checks when the game finishes
     """
     game = Game(
-        player, player_board, pc_board, user_hits, computer_hits, total_ships
+        player, total_ships, player_board, pc_board, user_hits, computer_hits
         )
     battleships = game.play_game()
 

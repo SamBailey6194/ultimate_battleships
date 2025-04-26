@@ -25,12 +25,13 @@ class Game:
     computers guesses and checks for hits and misses.
     """
     def __init__(
-            self, player, player_board=None, pc_board=None, user_hits=0,
-            computer_hits=0, ships_placed=0
+            self, player, num_ships=None, player_board=None, pc_board=None,
+            user_hits=0, computer_hits=0, ships_placed=0
             ):
         self.player = player
 
         if player_board and pc_board:
+            self.total_ships = num_ships
             self.player_board = player_board
             self.pc_board = pc_board
             self.user_hits = user_hits
@@ -40,6 +41,7 @@ class Game:
             self.reset_coordinates(self.pc_board.size)
 
         else:
+            self.total_ships = num_ships
             self.player_board = Board()
             self.pc_board = Board()
             self.user_hits = 0
@@ -328,17 +330,19 @@ class Game:
         print("-" * 35)
         time.sleep(1.5)
 
-    def game_over_check(self, total_ships):
+    def game_over_check(self):
         """
         Checks after shots taken if the game is over and congratulates winner
         """
-        if self.user_hits == total_ships and self.computer_hits == total_ships:
+        player_hits_count = self.user_hits == self.total_ships
+        computer_hits_count = self.computer_hits == self.total_ships
+        if player_hits_count and computer_hits_count:
             print("Both players took out each other. Game is a tie")
             return True
-        elif self.user_hits == total_ships:
+        elif player_hits_count:
             print(f"{self.player}, you win!!!! You beat the computer.")
             return True
-        elif self.computer_hits == total_ships:
+        elif computer_hits_count:
             print(f"Computer wins!!! Unlucky {self.player}, maybe next time.")
             return True
         else:
@@ -422,7 +426,7 @@ class Game:
 
             self.update_game_status()
 
-            if self.game_over_check(self.player_board.num_ships):
+            if self.game_over_check():
                 break
             else:
                 continue_save_exit = self.save_game_state()
