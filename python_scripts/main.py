@@ -1,3 +1,6 @@
+# This script brings together all the other scripts
+# and then calls the functions in the correct order
+
 # Imported dependencies and modules
 import colorama
 from colorama import Fore, Style
@@ -6,16 +9,14 @@ import sys
 # Imported other python scripts
 from user import user_login, user_creation
 from game_logic import Game
-from board_creation import Board
+from board_creation import Load_Games
 import leaderboard
-from sheets import saved_games
 
 # Initialise colorama
 colorama.init(autoreset=True)
 
 # Global variables for main.py
 lb = leaderboard
-save = saved_games
 
 
 def intro():
@@ -92,9 +93,7 @@ def play_again_option(player):
             sys.exit()
 
 
-def leaderboard_generation(
-        player, size, computer_ships_hit=None, user_ships_hit=None
-        ):
+def leaderboard_generation(player, size):
     """
     Function to show leaderboard and allow user to search leaderboard
     """
@@ -109,7 +108,6 @@ def leaderboard_generation(
         "Type your username here to see where you stand:\n"
         )
     print("-" * 35)
-    print("-" * 35)
     lb.search_lb(user_search, size)
     print("-" * 35)
     print(
@@ -119,7 +117,8 @@ def leaderboard_generation(
 
 
 def full_game(
-        player, size=None, total_ships=None, player_board=None, pc_board=None,
+        player, size=None, total_ships=None,
+        player_board=None, pc_board=None,
         user_hits=None, computer_hits=None
         ):
     """
@@ -137,120 +136,11 @@ def full_game(
             total_ships = player_board.num_ships
 
     lb.update_lb(player, size, game.user_hits, game.computer_hits)
-    display_leaderboard = leaderboard_generation(player, size)
 
     if battleships == "saved":
         play_again_option(player)
     else:
-        display_leaderboard
-
-
-class Load_Games:
-    """
-    Class that loads the user games associated with the username
-    and asks if they want to load any saved games they have
-    then converts the string for the boards into grids to allow the user
-    to continue the game
-    """
-
-    def __init__(self):
-        pass
-
-    def convert_board_to_grid(self, game_board):
-        """
-        Converts board from google sheets back to a grid
-        """
-        lines = [
-            line for line in game_board.strip().split("\n") if line.strip()
-            ]
-        grid = [row.split(",") for row in lines]
-        max_len = max(len(row) for row in grid)
-
-        for row in grid:
-            if len(row) != max_len:
-                raise ValueError("Inconsistent row length in saved game grid.")
-
-        return grid
-
-    def load_saved_games(self, username):
-        """
-        Loads the data from saved games sheet for players to be
-        able to load their saved game states
-        """
-        data = saved_games.get_all_records()
-        player_games = [game for game in data if game["Username"] == username]
-        return player_games
-
-    def board_size(self, selected):
-        """
-        Helper function to check board size
-        """
-        water = f"{Fore.BLUE}~{Style.RESET_ALL}"
-        size = int(selected["Board Size"])
-        board = Board(size=size)
-        board.grid = [[water] * size for _ in range(size)]
-        return board
-
-    def access_saved_games(self, player):
-        """
-        Loads the list of saved games associated with the username logged in
-        with
-        """
-        games = self.load_saved_games(player)
-
-        print("-" * 35)
-        print(f"{player} saved games available:")
-        for i, save_data in enumerate(games):
-            size = save_data["Board Size"]
-            num_ships = save_data["Number of Ships"]
-            user_hits = save_data["User Hits"]
-            computer_hits = save_data["Computer Hits"]
-            print(
-                f"{i + 1}. Size: {size} | Number of Ships: {num_ships} |"
-                f" {player} Hits: {user_hits} | Computer Hits: {computer_hits}"
-                )
-
-        while True:
-            try:
-                option = int(input(
-                    "Enter the number next to the game"
-                    "you would like to load: \n"
-                    ))
-                if 1 <= option <= len(games):
-                    user_selection = games[option - 1]
-                    break
-                else:
-                    print("Invalid selection, please choose a game")
-            except ValueError:
-                print("Please enter a number shown next to the game.")
-
-        # Convert strings to grids for selected game
-        user_grid = self.convert_board_to_grid(user_selection["User Board"])
-        computer_grid = self.convert_board_to_grid(
-            user_selection["Computer Board"]
-            )
-
-        # Rebuild user board for selected game
-        user_board = self.board_size(user_selection)
-        user_board.grid = user_grid
-        user_board.num_ships = user_selection["Number of Ships"]
-
-        # Rebuild computer board for selected game
-        computer_board = self.board_size(user_selection)
-        computer_board.grid = computer_grid
-        computer_board.num_ships = user_selection["Number of Ships"]
-
-        # Loaded board being displayed
-        print(f"{player}'s board: {len(user_grid)}x{len(user_grid[0])}")
-        user_board.display_board(show_ships=True)
-
-        print(f"Computer board: {len(computer_grid)}x{len(computer_grid[0])}")
-        computer_board.display_board(show_ships=False)
-
-        return (
-            user_board, computer_board, user_board.num_ships, user_hits,
-            computer_hits
-            )
+        leaderboard_generation(player, size)
 
 
 def main():
@@ -269,8 +159,11 @@ def main():
             print("Login failed. Please try again.")
             print("-" * 35)
 
-    loaded = Load_Games()
-    games_saved = loaded.load_saved_games(username)
+    loaded = Load_Games(
+        username, player_board=None, computer_board=None,
+        games=None, player_colour=None, computer_colour=None
+        )
+    games_saved = loaded.load_saved_games()
 
     if games_saved:
         while True:
@@ -290,7 +183,7 @@ def main():
                     )
                 continue
             elif access_games == "Y":
-                saved_game_data = loaded.access_saved_games(username)
+                saved_game_data = loaded.access_saved_games()
                 player_board, computer_board, total_ships = (
                     saved_game_data[:3]
                 )
@@ -299,16 +192,19 @@ def main():
                 )
                 if player_board and computer_board:
                     full_game(
-                        username, player_board.size, player_board,
-                        computer_board, total_ships, user_hits, computer_hits
+                        username,
+                        size=player_board.size,
+                        total_ships=total_ships,
+                        player_board=player_board,
+                        pc_board=computer_board,
+                        user_hits=user_hits,
+                        computer_hits=computer_hits
                         )
-                    break
             elif access_games == "N":
                 print("-" * 35)
                 print("Let's start a new game instead.")
                 print("-" * 35)
                 full_game(username)
-                break
     else:
         print("-" * 35)
         print(f"Currently no saved games for {username}")

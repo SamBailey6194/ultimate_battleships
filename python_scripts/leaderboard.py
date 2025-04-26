@@ -1,3 +1,6 @@
+# This script holds all functions to do with the
+# leaderboard logic.
+
 # Imported modules and dependencies
 import colorama
 from colorama import Style

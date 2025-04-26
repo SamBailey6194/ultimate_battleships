@@ -1,3 +1,7 @@
+# This script holds all the game logic within the Game class.
+# The reason this script only holds one class, is due
+# to the Game class length.
+
 # Imported dependencies and modules
 from random import randint, choice
 import colorama
@@ -78,13 +82,19 @@ class Game:
             ",".join(row) for row in board.grid]
             )
 
-    def remove_colorama_codes(self, text):
+    def remove_colorama_codes(self, board):
         """
         When saving removes the colorama codes for the boards, so the boards
         are saved cleanly
         """
         colorama_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
-        return colorama_escape.sub('', text)
+        clean_board = []
+
+        for row in board:
+            clean_row = [colorama_escape.sub('', cell) for cell in row]
+            clean_board.append(''.join(clean_row))
+
+        return clean_board
 
     def hit_counter(self, grid):
         """
@@ -354,6 +364,7 @@ class Game:
         """
         save = saved_games
         board_size = self.player_board.size
+
         while True:
             save_continue = input(
                 f"{self.player} would you like to continue or save the game"
@@ -379,12 +390,15 @@ class Game:
                 print("-" * 35)
                 return "continue"
             elif save_continue == "S":
+                # Converts boards from grids to strings
                 player_board_convert = self.convert_board(
                     self.player_board
                     )
                 computer_board_convert = self.convert_board(
                     self.pc_board
                     )
+
+                # Removes the colorama codes from the board strigns
                 player_clean_board = self.remove_colorama_codes(
                     player_board_convert
                     )

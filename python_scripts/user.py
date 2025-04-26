@@ -1,3 +1,5 @@
+# This script handles the logging in and saving login credentials
+
 # Imported dependencies and modules
 import re
 import bcrypt
