@@ -24,16 +24,24 @@ class Board:
         While hiding where computer's ships are
         Note, this function can also hide where the user put their ships
         """
-        for row in self.grid:
+        water = f"{Fore.BLUE}~{Style.RESET_ALL}"
+
+        grid_nums = "  "+" ".join(f"{num}" for num in range(self.size))
+        print(grid_nums)
+
+        for position, row in enumerate(self.grid):
             if not show_ships:
-                # Replace ships "S" with "."
+                # Replace ships "S" with "~"
                 print(
-                    " ".join([f"{Fore.BLUE}~{Style.RESET_ALL}"
-                              if "S" in cell else cell for cell in row])
+                    f" {water} ".join(
+                        [
+                            water if 'S' in cell else cell for cell in row
+                            ]
+                            )
                       )
             else:
                 # Show full board with ships
-                print(" ".join(row))
+                print(f" {water} ".join(row))
 
     def board_creation(self):
         """
@@ -83,7 +91,7 @@ class Board:
             try:
                 size = int(input(
                     "Please enter 1, 2 or 3\n depending on the size board you"
-                    "would like to play on: \n"
+                    " would like to play on: \n"
                     ))
                 if self.validate_board_size(size):
                     time.sleep(0.5)

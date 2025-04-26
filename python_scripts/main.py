@@ -14,6 +14,7 @@ from sheets import saved_games
 colorama.init(autoreset=True)
 
 # Global variables for main.py
+lb = leaderboard
 save = saved_games
 
 
@@ -91,14 +92,14 @@ def play_again_option(player):
             sys.exit()
 
 
-def leaderboard_generation(player, size):
+def leaderboard_generation(
+        player, size, computer_ships_hit=None, user_ships_hit=None
+        ):
     """
     Function to show leaderboard and allow user to search leaderboard
     """
-    lb = leaderboard
     print("-" * 35)
     print(f"{player}, see how you did on the leaderboard below")
-    lb.update_lb(player)
     print("-" * 35)
     lb.show_lb(size)
     print("-" * 35)
@@ -118,23 +119,24 @@ def leaderboard_generation(player, size):
 
 
 def full_game(
-        player, size=None, user=None, computer=None, total_ships=None,
-        computer_ships_hit=None, user_ships_hit=None
+        player, size=None, player_board=None, pc_board=None, total_ships=None,
+        user_hits=None, computer_hits=None
         ):
     """
     Starts or resumes the game and checks when the game finishes
     """
-    game = Game()
-    battleships = game.play_game(
-        player, user, computer, total_ships, computer_ships_hit, user_ships_hit
+    game = Game(
+        player, player_board, pc_board, user_hits, computer_hits, total_ships
         )
+    battleships = game.play_game()
 
-    if user:
+    if player_board:
         if size is None:
-            size = user.size
+            size = player_board.size
         if total_ships is None:
-            total_ships = user.num_ships
+            total_ships = player_board.num_ships
 
+    lb.update_lb(player, size, game.user_hits, game.computer_hits)
     display_leaderboard = leaderboard_generation(player, size)
 
     if battleships == "saved":
@@ -289,16 +291,16 @@ def main():
                 continue
             elif access_games == "Y":
                 saved_game_data = loaded.access_saved_games(username)
-                user_board, computer_board, total_ships = (
+                player_board, computer_board, total_ships = (
                     saved_game_data[:3]
                 )
                 user_hits, computer_hits = (
                     saved_game_data[3:5]
                 )
-                if user_board and computer_board:
+                if player_board and computer_board:
                     full_game(
-                        username, user_board.size, user_board, computer_board,
-                        total_ships, user_hits, computer_hits
+                        username, player_board.size, player_board,
+                        computer_board, total_ships, user_hits, computer_hits
                         )
                     break
             elif access_games == "N":

@@ -11,6 +11,12 @@ from board_creation import Board
 # Initialise colorama
 colorama.init(autoreset=True)
 
+# Global Colorama variables for game_logic
+water = f"{Fore.BLUE}~{Style.RESET_ALL}"
+ship = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
+hit = f"{Fore.RED}H{Style.RESET_ALL}"
+miss = f"{Fore.GREEN}M{Style.RESET_ALL}"
+
 
 class Game:
     """
@@ -18,10 +24,28 @@ class Game:
     a computers board and then asks user to guess while randomly generating
     computers guesses and checks for hits and misses.
     """
-    def __init__(self, ships_placed=0, ships_hit=0):
-        self.ships_placed = ships_placed
-        self.ships_hit = ships_hit
-        self.username = None
+    def __init__(
+            self, player, player_board=None, pc_board=None, user_hits=0,
+            computer_hits=0, ships_placed=0
+            ):
+        self.player = player
+
+        if player_board and pc_board:
+            self.player_board = player_board
+            self.pc_board = pc_board
+            self.user_hits = user_hits
+            self.computer_hits = computer_hits
+            self.ships_placed = ships_placed
+
+            self.reset_coordinates(self.pc_board.size)
+
+        else:
+            self.player_board = Board()
+            self.pc_board = Board()
+            self.user_hits = 0
+            self.computer_hits = 0
+            self.ships_placed = ships_placed
+            self.available_coordinates = []
 
     def random_point(self, size):
         """
@@ -35,269 +59,14 @@ class Game:
         """
         return choice(coordinates)
 
-    def validate_coordinates(self, prompt, size):
+    def reset_coordinates(self, size):
         """
-        Validates user inputs when asking for coordinates
+        Resets the coordinates the computer can choose from when starting
+        a new game or loading in a saved game
         """
-        while True:
-            try:
-                value = int(input(prompt))
-                if 0 <= value < size:
-                    return value
-                else:
-                    print(
-                        "Please remember to enter a coordinate in the correct"
-                        f"range. It must be a number between 0 and {size - 1}."
-                        )
-            except (ValueError, IndexError):
-                print(
-                    "Remember: The top left corner is row: 0, col: 0."
-                    "Please bear that in mind when entering rows and columns."
-                    )
-
-    def place_ships(self, board):
-        """
-        Allows user to place their ships where they choose too
-        """
-        print("-" * 35)
-        print(
-            "Now you have chosen the size board you want to play on.\n"
-            "Please place your ships. Each ship takes up one space.\n"
-            "The top left corner is row: 0, col: 0.\n"
-            "Please bear that in mind when entering rows and columns.\n"
-            f"'{Fore.MAGENTA}S{Style.RESET_ALL}' = Ship placement."
-            )
-        print("-" * 35)
-        self.ships_placed = 0
-        ship = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
-        while self.ships_placed < board.num_ships:
-            try:
-                print("-" * 35)
-                row = self.validate_coordinates(
-                    "Enter row to place ship at: \n", board.size
-                    )
-                print("-" * 35)
-                print("-" * 35)
-                col = self.validate_coordinates(
-                    "Enter col to place ship at: \n", board.size
-                    )
-                print("-" * 35)
-                if board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
-                    board.grid[row][col] = ship
-                    self.ships_placed += 1
-                    print(f"Ship placed at {row}, {col}")
-                    board.display_board(show_ships=True)
-                elif board.grid[row][col] == ship:
-                    print(
-                        "Ship already palced there,"
-                        " please select another place."
-                        )
-            except (ValueError, IndexError):
-                print(
-                    "Remember: The top left corner is row: 0, col: 0.\n"
-                    "Please bear that in mind when entering rows and columns."
-                    )
-
-    def random_ship_placement(self, board):
-        """
-        Places the ships randomly on the board
-        """
-        self.ships_placed = 0
-        while self.ships_placed < board.num_ships:
-            row = self.random_point(board.size)
-            col = self.random_point(board.size)
-            if board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
-                board.grid[row][col] = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
-                self.ships_placed += 1
-
-        return board
-
-    def user_board(self, player):
-        """
-        User board is generated blank to allow user to place their ships
-        """
-        my_board = Board()
-        my_board.board_size()
-        self.place_ships(my_board)
-        print("-" * 35)
-        print(f"{player}'s final board \n")
-        my_board.display_board(show_ships=True)
-        return my_board
-
-    def computer_board(self, user_size, user_ships):
-        """
-        Generates a board with random placement of ships
-        """
-        pc_board = Board(size=user_size, num_ships=user_ships)
-        pc_board.board_creation()
-        self.random_ship_placement(pc_board)
-        print("-" * 35)
-        print("Computer's board \n")
-        pc_board.display_board(show_ships=False)
-        return pc_board
-
-    def update_board(self, player, board, row, col):
-        """
-        Function to update board that has been attacked
-        """
-        if not (0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])):
-            print(f"Invalid coordinates: ({row}, {col})")
-            return False
-
-        self.ships_hit
-        if board.grid[row][col] in (
-            f"{Fore.GREEN}M{Style.RESET_ALL}", f"{Fore.RED}H{Style.RESET_ALL}"
-                                    ):
-            time.sleep(1)
-            print(
-                f"{player} you have already shot here, please pick a new spot."
-                )
-            return False
-        elif board.grid[row][col] == f"{Fore.MAGENTA}S{Style.RESET_ALL}":
-            board.grid[row][col] = f"{Fore.RED}H{Style.RESET_ALL}"
-            self.ships_hit += 1
-            ships = board.num_ships - sum(
-                row.count(f"{Fore.RED}H{Style.RESET_ALL}")
-                for row in board.grid
-                                          )
-            time.sleep(1)
-            print(f"{player} Hit! Just {ships} left to destroy.", flush=True)
-            return True
-        elif board.grid[row][col] == f"{Fore.BLUE}~{Style.RESET_ALL}":
-            ships = board.num_ships - sum(
-                row.count(f"{Fore.RED}H{Style.RESET_ALL}")
-                for row in board.grid
-                                          )
-            time.sleep(1)
-            print(f"{player} missed! Still {ships} left to hit", flush=True)
-            board.grid[row][col] = f"{Fore.GREEN}M{Style.RESET_ALL}"
-            return True
-        else:
-            time.sleep(1)
-            print(
-                "Remember: The top left corner is row: 0, col: 0.\n"
-                "Please bear that in mind when entering rows and columns."
-                )
-            return False
-
-    def shots_fired(self, player_name, target_board, is_user):
-        """
-        This asks for user to fire their shots and takes a random
-        shot for the computer
-        """
-        # Variables that help the random shots not include coordinates
-        # the computer has already shot at
-        size = target_board.size
-        coordinates = [
+        self.available_coordinates = [
             (row, col) for row in range(size) for col in range(size)
-            ]
-        available_coordinates = coordinates.copy()
-
-        while True:
-            if is_user:
-                print("-" * 35)
-                row = self.validate_coordinates(
-                    "Enter row to shoot at: \n", target_board.size
-                    )
-                print("-" * 35)
-                print("-" * 35)
-                col = self.validate_coordinates(
-                    "Enter col to shoot at: \n", target_board.size
-                    )
-                print("-" * 35)
-            else:
-                shot = self.random_coordinate(available_coordinates)
-                row, col = shot
-                available_coordinates.remove(shot)
-
-            if self.update_board(player_name, target_board, row, col):
-                break
-
-    def hit_counter(self, grid):
-        """
-        Counts the hits for each shot a player takes
-        """
-        return sum(row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid)
-
-    def player_turn(self, username, opponent):
-        """
-        Player turn taken
-        """
-        player = username
-        time.sleep(1.5)
-        print("-" * 35)
-        print("Time to take your shot! Fire!!!!!!")
-        print("-" * 35)
-        self.shots_fired(player, opponent, is_user=True)
-        time.sleep(1.5)
-
-    def computer_turn(self, opponent):
-        """
-        Computer turn taken
-        """
-        print("-" * 35)
-        print("Computer's turn, let's hope they miss!!!")
-        print("-" * 35)
-        time.sleep(1.5)
-        self.shots_fired("Computer", opponent, is_user=False)
-
-    def update_game_status(
-            self, player, user, computer, user_ships_hits, computer_ships_hits
-            ):
-        """
-        Updates the game board after shots are taken
-        """
-        time.sleep(1.5)
-        print("-" * 35)
-        print(
-            "Key:\n"
-            f"{Fore.BLUE}~{Style.RESET_ALL} = Water\n"
-            f"{Fore.MAGENTA}S{Style.RESET_ALL} = Ship\n"
-            f"{Fore.RED}H{Style.RESET_ALL} = Hit\n"
-            f"{Fore.GREEN}M{Style.RESET_ALL} = Miss\n"
-            )
-        print("-" * 35)
-        print(f"{player}'s board:")
-        user.display_board(show_ships=True)
-        print("-" * 35)
-        print("Computer's board:")
-        computer.display_board(show_ships=False)
-        print("-" * 35)
-        time.sleep(1)
-        print("-" * 35)
-        print(
-            f"{player} hits: {Fore.GREEN}{computer_ships_hits}"
-            f"{Style.RESET_ALL}/{Fore.RED}{computer.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
-        print(
-            f"Computer hits: {Fore.GREEN}{user_ships_hits}"
-            f"{Style.RESET_ALL}/{Fore.RED}{user.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
-        print("-" * 35)
-        time.sleep(1.5)
-
-    def game_over_check(
-            self, player, user_ships_hit, computer_ships_hit,
-            total_ships
-            ):
-        """
-        Checks after shots taken if the game is over and congratulates winner
-        """
-        user_hits = computer_ships_hit == total_ships
-        computer_hits = user_ships_hit == total_ships
-        if user_hits and computer_hits:
-            print("Both players took out each other. Game is a tie")
-            return True
-        elif user_hits:
-            print(f"{player}, you win!!!! You beat the computer.")
-            return True
-        elif computer_hits:
-            print(f"Computer wins!!! Unlucky {player}, maybe next time.")
-            return True
-        else:
-            return False
+        ]
 
     def convert_board(self, board):
         """
@@ -315,20 +84,277 @@ class Game:
         colorama_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
         return colorama_escape.sub('', text)
 
-    def save_game_state(
-            self, player, board_size, num_ships, user_board, computer_board,
-            user_hits, computer_hits
-            ):
+    def hit_counter(self, grid):
+        """
+        Counts the hits for each shot a player takes
+        """
+        return sum(row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid)
+
+    def validate_coordinates(self, prompt, size):
+        """
+        Validates user inputs when asking for coordinates
+        """
+        while True:
+            try:
+                value = int(input(prompt))
+                if 0 <= value < size:
+                    return value
+                else:
+                    print(
+                        "Please remember to enter a coordinate in the correct"
+                        " range.\n"
+                        f"It must be a number between 0 and {size - 1}."
+                        )
+            except (ValueError, IndexError):
+                print(
+                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    "Please bear that in mind when entering rows and columns."
+                    )
+
+    def player_place_ships(self):
+        """
+        Allows player to place their ships where they choose too
+        """
+        print("-" * 35)
+        print(
+            "Now you have chosen the size board you want to play on.\n"
+            "Please place your ships. Each ship takes up one space.\n"
+            "The top left corner is row: 0, col: 0.\n"
+            "Please bear that in mind when entering rows and columns.\n"
+            f"'{ship}' = Ship placement."
+            )
+        print("-" * 35)
+        self.ships_placed = 0
+        while self.ships_placed < self.player_board:
+            try:
+                print("-" * 35)
+                row = self.validate_coordinates(
+                    "Enter row to place ship at: \n", self.player_board.size
+                    )
+                print("-" * 35)
+                print("-" * 35)
+                col = self.validate_coordinates(
+                    "Enter col to place ship at: \n", self.player_board.size
+                    )
+                print("-" * 35)
+
+                if self.player_board.grid[row][col] == water:
+                    self.player_board.grid[row][col] = ship
+                    self.ships_placed += 1
+                    print(f"Ship placed at {row}, {col}")
+                    self.player_board.display_board(show_ships=True)
+                elif self.player_board.grid[row][col] == ship:
+                    print(
+                        "Ship already palced there,"
+                        " please select another place."
+                        )
+            except (ValueError, IndexError):
+                print(
+                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    "Please bear that in mind when entering rows and columns."
+                    )
+
+    def random_ship_placement(self):
+        """
+        Places the ships randomly on the board
+        """
+        self.ships_placed = 0
+        while self.ships_placed < self.pc_board:
+            row = self.random_point(self.pc_board.size)
+            col = self.random_point(self.pc_board.size)
+            if self.pc_board.grid[row][col] == water:
+                self.pc_board.grid[row][col] = ship
+                self.ships_placed += 1
+
+        return self.pc_board
+
+    def user_board(self):
+        """
+        User board is generated blank to allow user to place their ships
+        """
+        board_player = Board()
+        board_player.board_size()
+        self.player_place_ships()
+        print("-" * 35)
+        print(f"{self.player}'s final board \n")
+        board_player.display_board(show_ships=True)
+        return board_player
+
+    def computer_board(self, user_size, user_ships):
+        """
+        Generates a board with random placement of ships
+        """
+        board_pc = Board(size=user_size, num_ships=user_ships)
+        board_pc.board_creation()
+        self.random_ship_placement()
+        print("-" * 35)
+        print("Computer's board \n")
+        board_pc.display_board(show_ships=False)
+        return board_pc
+
+    def update_board(self, general, board, row, col):
+        """
+        Function to update board that has been attacked
+        """
+        if not (0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])):
+            print(f"Invalid coordinates: ({row}, {col})")
+            return False
+
+        ships_hit = self.user_hits, self.computer_hits
+        if board.grid[row][col] in (miss, hit):
+            time.sleep(1)
+            print(
+                f"{general} you have already shot here, please pick a"
+                " new spot."
+                )
+            return False
+        elif board.grid[row][col] == ship:
+            board.grid[row][col] = hit
+            ships_hit += 1
+            ships = board.num_ships - sum(
+                row.count(hit)
+                for row in board.grid
+                                          )
+            time.sleep(1)
+            print(
+                f"{general} {Fore.RED}Hit{Style.RESET_ALL}!\n"
+                f"Just {ships} left to destroy.", flush=True
+                )
+            return True
+        elif board.grid[row][col] == water:
+            ships = board.num_ships - sum(
+                row.count(hit)
+                for row in board.grid
+                                          )
+            time.sleep(1)
+            print(
+                f"{general} {Fore.GREEN}Miss{Style.RESET_ALL}!\n"
+                f"Just {ships} left to destroy.", flush=True
+                )
+            board.grid[row][col] = miss
+            return True
+        else:
+            time.sleep(1)
+            print(
+                "Remember: The top left corner is row: 0, col: 0.\n"
+                "Please bear that in mind when entering rows and columns."
+                )
+            return False
+
+    def shots_fired(self, player_name, target_board, is_user):
+        """
+        This asks for user to fire their shots and takes a random
+        shot for the computer
+        """
+        size = target_board.size
+
+        if self.available_coordinates is None:
+            self.reset_coordinates(size)
+
+        while True:
+            if is_user:
+                print("-" * 35)
+                row = self.validate_coordinates(
+                    "Enter row to shoot at: \n", size
+                    )
+                print("-" * 35)
+                col = self.validate_coordinates(
+                    "Enter col to shoot at: \n", size
+                    )
+                print("-" * 35)
+            else:
+                shot = self.random_coordinate(self.available_coordinates)
+                row, col = shot
+                self.available_coordinates.remove(shot)
+
+            if self.update_board(player_name, target_board, row, col):
+                break
+
+    def player_turn(self):
+        """
+        Player turn taken
+        """
+        time.sleep(1.5)
+        print("-" * 35)
+        print("Time to take your shot! Fire!!!!!!")
+        print("-" * 35)
+        self.shots_fired(self.player, self.pc_board, is_user=True)
+        self.user_hits = self.hit_counter(self.pc_board.grid)
+        time.sleep(1.5)
+
+    def computer_turn(self):
+        """
+        Computer turn taken
+        """
+        print("-" * 35)
+        print("Computer's turn, let's hope they miss!!!")
+        print("-" * 35)
+        time.sleep(1.5)
+        self.shots_fired("Computer", self.player_board, is_user=False)
+        self.computer_hits = self.hit_counter(self.player_board.grid)
+
+    def update_game_status(self):
+        """
+        Updates the game board after shots are taken
+        """
+        time.sleep(1.5)
+        print("-" * 35)
+        print(
+            "Key:\n"
+            f"{water} = {Fore.BLUE}Water{Style.RESET_ALL} \n"
+            f"{ship} = {Fore.MAGENTA}Ship{Style.RESET_ALL}\n"
+            f"{hit} = {Fore.RED}Hit{Style.RESET_ALL}\n"
+            f"{miss} = {Fore.GREEN}Miss{Style.RESET_ALL}\n"
+            )
+        print("-" * 35)
+        print(f"{self.player}'s board:")
+        self.player_board.display_board(show_ships=True)
+        print("-" * 35)
+        print("Computer's board:")
+        self.pc_board.display_board(show_ships=False)
+        print("-" * 35)
+        time.sleep(1)
+        print("-" * 35)
+        print(
+            f"{self.player} hits: {Fore.RED}{self.user_hits}"
+            f"{Style.RESET_ALL}/{Fore.MAGENTA}{self.pc_board.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
+        print(
+            f"Computer hits: {Fore.RED}{self.computer_hits}"
+            f"{Style.RESET_ALL}/{Fore.MAGENTA}{self.player_board.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
+        print("-" * 35)
+        time.sleep(1.5)
+
+    def game_over_check(self, total_ships):
+        """
+        Checks after shots taken if the game is over and congratulates winner
+        """
+        if self.user_hits == total_ships and self.computer_hits == total_ships:
+            print("Both players took out each other. Game is a tie")
+            return True
+        elif self.user_hits == total_ships:
+            print(f"{self.player}, you win!!!! You beat the computer.")
+            return True
+        elif self.computer_hits == total_ships:
+            print(f"Computer wins!!! Unlucky {self.player}, maybe next time.")
+            return True
+        else:
+            return False
+
+    def save_game_state(self):
         """
         Prompts the user if they want to save the game or continue
         """
         save = saved_games
+        board_size = self.player_board.size
         while True:
             save_continue = input(
-                f"{player} would you like to continue or save the game and"
-                " return later? \nIf you choose to save or exit, the program"
-                " will exit and you will \nhave to run it again and log back"
-                f" in.\nPlease enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
+                f"{self.player} would you like to continue or save the game"
+                " and return later? \n"
+                f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
                 f" continue, '{Fore.YELLOW}S{Style.RESET_ALL}' for save or"
                 f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
             ).strip().upper()
@@ -344,15 +370,19 @@ class Game:
                 print("-" * 35)
                 print(
                     "No winner yet. Game continues.\n"
-                    f"Come on {player} you can win!!!"
+                    f"Come on {self.player} you can win!!!"
                     )
                 print("-" * 35)
                 return "continue"
             elif save_continue == "S":
-                user_board_convert = self.convert_board(user_board)
-                computer_board_convert = self.convert_board(computer_board)
-                user_clean_board = self.remove_colorama_codes(
-                    user_board_convert
+                player_board_convert = self.convert_board(
+                    self.player_board
+                    )
+                computer_board_convert = self.convert_board(
+                    self.pc_board
+                    )
+                player_clean_board = self.remove_colorama_codes(
+                    player_board_convert
                     )
                 computer_clean_board = self.remove_colorama_codes(
                     computer_board_convert
@@ -360,56 +390,42 @@ class Game:
 
                 username_row = None
                 for username, row in enumerate(save.get_all_values()):
-                    if row[0] == player:
+                    if row[0] == self.player:
                         username_row = username + 1
                         break
 
                 if username_row:
                     save.update(f"A{username_row}:G{username_row}", [
-                        [player, board_size, num_ships, user_clean_board,
-                            computer_clean_board, user_hits, computer_hits]
+                        [
+                            self.player, board_size, self.ships_placed,
+                            player_clean_board, computer_clean_board,
+                            self.user_hits, self.computer_hits
+                         ]
                     ])
                 else:
                     save.append_row([
-                            player, board_size, num_ships, user_clean_board,
-                            computer_clean_board, user_hits, computer_hits
+                            self.player, board_size, self.ships_placed,
+                            player_clean_board, computer_clean_board,
+                            self.user_hits, self.computer_hits
                             ])
                 return "save"
             elif save_continue == "E":
                 return "exit"
 
-    def play_game(
-            self, player, user=None, computer=None, total_ships=None,
-            computer_ships_hit=None, user_ships_hit=None
-            ):
+    def play_game(self):
         """
         Starts or resumes the game and checks when the game finishes
         """
-        if not user or not computer:
-            user = self.user_board(player)
-            computer = self.computer_board(user.size, user.num_ships)
-            total_ships = user.num_ships
-
         while True:
-            self.player_turn(player, computer)
-            computer_ships_hit = self.hit_counter(computer.grid)
+            self.player_turn()
+            self.computer_turn()
 
-            self.computer_turn(user)
-            user_ships_hit = self.hit_counter(user.grid)
+            self.update_game_status()
 
-            self.update_game_status(
-                player, user, computer, user_ships_hit, computer_ships_hit
-                )
-
-            if self.game_over_check(
-                player, user_ships_hit, computer_ships_hit, total_ships
-                    ):
+            if self.game_over_check(self.player_board.num_ships):
                 break
             else:
-                continue_save_exit = self.save_game_state(
-                    player, user.size, total_ships, user, computer,
-                    computer_ships_hit, user_ships_hit
-                    )
+                continue_save_exit = self.save_game_state()
                 if continue_save_exit == "continue":
                     continue
                 elif continue_save_exit == "save":
