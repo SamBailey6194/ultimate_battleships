@@ -9,7 +9,7 @@ import sys
 # Imported other python scripts
 from user import user_login, user_creation
 from game_logic import Game
-from board_creation import Load_Games
+from save_load import Load_Games
 import leaderboard
 
 # Initialise colorama

@@ -7,11 +7,10 @@ from random import randint, choice
 import colorama
 from colorama import Fore, Style
 import time
-import re
 import datetime
 # Imported other python scripts
-from sheets import saved_games
-from board_creation import Board, Load_Games
+from save_load import Save, Load_Games
+from board_creation import Board
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -77,34 +76,6 @@ class Game:
         self.available_coordinates = [
             (row, col) for row in range(size) for col in range(size)
         ]
-
-    def convert_board(self, board):
-        """
-        Converts board into a state that can be saved into Google Sheets
-        """
-        return "\n".join([
-            ",".join(row) for row in board.grid]
-            )
-
-    def remove_colorama_codes(self, board):
-        """
-        When saving removes the colorama ANSI codes for the boards, so the
-        boards are saved cleanly
-        """
-        colorama_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-        clean_board = []
-
-        # Making sure the board is a list of strings
-        if isinstance(board, str):
-            board = board.splitlines()
-
-        for row in board:
-            clean_row = " ".join([
-                colorama_escape.sub('', row)
-                ])
-            clean_board.append(clean_row)
-
-        return clean_board
 
     def hit_counter(self, grid):
         """
@@ -393,124 +364,19 @@ class Game:
         else:
             return False
 
-    def prompt_user_save(self):
+    def save_game(self):
         """
-        Refactored function to hold the user prompt
+        Saves the game by calling the Save class
         """
-        allowed_inputs = {
-            "C": "continue",
-            "S": "save",
-            "E": "exit"
-            }
-        while True:
-            save_continue = input(
-                f"{self.player} would you like to continue or save the game"
-                " and return later? \n"
-                f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
-                f" continue, '{Fore.YELLOW}S{Style.RESET_ALL}' for save or"
-                f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
-            ).strip().upper()
-
-            if save_continue in allowed_inputs:
-                return allowed_inputs[save_continue]
-
-            print(
-                    f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}',"
-                    f" '{Fore.YELLOW}S{Style.RESET_ALL}' or"
-                    f" '{Fore.RED}E{Style.RESET_ALL}'"
-                    )
-
-    def cleaned_board(self, board):
-        """
-        Helper function that cleans the boards
-        """
-        board_conversion = self.convert_board(board)
-        return "\n".join(self.remove_colorama_codes(board_conversion))
-
-    def save_board(self):
-        """
-        Refactored function to save the game board state
-        """
-        self.player_board = self.cleaned_board(self.player_board)
-        self.pc_board = self.cleaned_board(self.pc_board)
-
-    def games_exists_check(self):
-        """
-        Refactored code to check if the game exists
-        """
-        for game_data, row in enumerate(saved_games.get_all_values()):
-            if row[0] == self.game_id:
-                return True, game_data + 1
-        return False, None
-
-    def overwrite_save(self, game_row):
-        """
-        Refactor function that overwrites a loaded in game
-        """
-        saved_games.update(f"A{game_row}:G{game_row}", [
-            [
-                self.game_id,
-                self.player,
-                self.player_board.size,
-                self.player_board.num_ships,
-                self.player_board,
-                self.pc_board,
-                self.user_hits,
-                self.computer_hits
-                ]
-                ])
-        print(
-            "Loaded game has been saved over.\n"
-            "You can access this game next time you log in."
-            )
-
-    def save_new_game(self):
-        """
-        Refactor function that saves a new game
-        """
-        saved_games.append_row([
+        save_state = Save(
             self.game_id,
             self.player,
-            self.player_board.size,
-            self.player_board.num_ships,
             self.player_board,
             self.pc_board,
             self.user_hits,
             self.computer_hits
-            ])
-        print(
-            "New game has been saved.\n"
-            "You can access this game next time you log in."
-            )
-
-    def save_game_state(self):
-        """
-        Prompts the user if they want to save the game or continue
-        """
-        save_continue = self.prompt_user_save()
-
-        if save_continue == "continue":
-            print("-" * 35)
-            print(
-                "No winner yet. Game continues.\n"
-                f"Come on {self.player} you can win!!!"
-                )
-            print("-" * 35)
-            return "continue"
-
-        elif save_continue == "save":
-            self.save_board()
-
-            game_exists, game_row = self.games_exists_check()
-
-            if game_exists:
-                self.overwrite_save(game_row)
-            else:
-                self.save_new_game()
-            return "save"
-
-        elif save_continue == "exit":
-            return "exit"
+        )
+        return save_state.save_game_state()
 
     def play_game(self):
         """
@@ -519,7 +385,6 @@ class Game:
         while True:
             self.player_turn()
             self.computer_turn()
-
             self.update_game_status()
 
             if self.game_over_check():
