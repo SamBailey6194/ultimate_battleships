@@ -8,7 +8,9 @@ import time
 import sys
 # Imported other python scripts
 from user import user_login, user_creation
-from game_logic import Game
+from board_creation import Board_Setup
+from game import Game
+from game_logic import Gameplay
 from save_load import Load_Games
 import leaderboard
 
@@ -116,10 +118,10 @@ def full_game(
     """
     Starts or resumes the game and checks when the game finishes
     """
-    game = Game(
-        player, total_ships, player_board, pc_board, user_hits, computer_hits
-        )
-    battleships = game.play_game()
+    setup = Board_Setup(player, total_ships, player_board, pc_board)
+    game = Game(setup, user_hits, computer_hits)
+    gameplay = Gameplay(game)
+    battleships = gameplay.play_game()
 
     if player_board:
         if size is None:
@@ -140,19 +142,15 @@ def new_game(
         total_ships=0,
         player_board=None,
         pc_board=None,
-        user_hits=0,
-        computer_hits=0
         ):
     """
     Function ensures a new game is set up if there are no
     saved games or the user wants to start a new game instead
     of continuing a saved game
     """
-    game = Game(
-        player, total_ships, player_board, pc_board, user_hits, computer_hits
-        )
-    user = game.user_board()
-    computer = game.computer_board(user.size, user.num_ships)
+    setup = Board_Setup(player, total_ships, player_board, pc_board)
+    user = setup.user_board()
+    computer = setup.computer_board(user.size, user.num_ships)
     full_game(
         player,
         total_ships=user.num_ships,

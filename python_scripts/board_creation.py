@@ -4,6 +4,8 @@
 import colorama
 from colorama import Fore, Style
 import time
+import datetime
+from random import randint
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -105,3 +107,139 @@ class Board:
             except ValueError:
                 print("Please input 1, 2, or 3.")
         return size
+
+
+class Board_Setup:
+    """
+    Class that setsup the game by allowing the user to place ships and
+    randomly generates a computers board
+    """
+    def __init__(
+            self,
+            player,
+            total_ships=0,
+            player_board=None,
+            pc_board=None,
+            ):
+        # Provides each game with a unique ID so when saving a loaded game
+        # it overwirtes the correct game
+        self.game_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        self.player = player
+        self.total_ships = total_ships
+        self.ships_placed = 0
+
+        if player_board and pc_board:
+            self.player_board = player_board
+            self.pc_board = pc_board
+
+        else:
+            self.player_board = Board()
+            self.pc_board = Board()
+
+    def random_point(self, size):
+        """
+        Helper method to generate random integer between 0 and board size
+        """
+        return randint(0, size-1)
+
+    def validate_coordinates(self, prompt, size):
+        """
+        Validates user inputs when asking for coordinates
+        """
+        while True:
+            try:
+                value = int(input(prompt))
+                if 0 <= value < size:
+                    return value
+                else:
+                    print(
+                        "Please remember to enter a coordinate in the correct"
+                        " range.\n"
+                        f"It must be a number between 0 and {size - 1}."
+                        )
+            except (ValueError, IndexError):
+                print(
+                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    "Please bear that in mind when entering rows and columns."
+                    )
+
+    def player_place_ships(self):
+        """
+        Allows player to place their ships where they choose too
+        """
+        print("-" * 35)
+        print(
+            "Now you have chosen the size board you want to play on.\n"
+            "Please place your ships. Each ship takes up one space.\n"
+            "The top left corner is row: 0, col: 0.\n"
+            "Please bear that in mind when entering rows and columns.\n"
+            f"'{ship}' = Ship placement."
+            )
+        print("-" * 35)
+        self.ships_placed = 0
+        while self.ships_placed < self.player_board.num_ships:
+            try:
+                print("-" * 35)
+                row = self.validate_coordinates(
+                    "Enter row to place ship at: \n", self.player_board.size
+                    )
+                print("-" * 35)
+                print("-" * 35)
+                col = self.validate_coordinates(
+                    "Enter col to place ship at: \n", self.player_board.size
+                    )
+                print("-" * 35)
+
+                if self.player_board.grid[row][col] == water:
+                    self.player_board.grid[row][col] = ship
+                    self.ships_placed += 1
+                    print(f"Ship placed at {row}, {col}")
+                    self.player_board.display_board(show_ships=True)
+                elif self.player_board.grid[row][col] == ship:
+                    print(
+                        "Ship already palced there,"
+                        " please select another place."
+                        )
+            except (ValueError, IndexError):
+                print(
+                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    "Please bear that in mind when entering rows and columns."
+                    )
+
+    def random_ship_placement(self):
+        """
+        Places the ships randomly on the board
+        """
+        self.ships_placed = 0
+        while self.ships_placed < self.pc_board.num_ships:
+            row = self.random_point(self.pc_board.size)
+            col = self.random_point(self.pc_board.size)
+            if self.pc_board.grid[row][col] == water:
+                self.pc_board.grid[row][col] = ship
+                self.ships_placed += 1
+
+        return self.pc_board
+
+    def user_board(self):
+        """
+        User board is generated blank to allow user to place their ships
+        """
+        self.player_board.board_size()
+        self.player_place_ships()
+        print("-" * 35)
+        print(f"{self.player}'s final board \n")
+        self.player_board.display_board(show_ships=True)
+        return self.player_board
+
+    def computer_board(self, user_size, user_ships):
+        """
+        Generates a board with random placement of ships
+        """
+        self.pc_board.size = user_size
+        self.pc_board.num_ships = user_ships
+        self.pc_board.board_creation()
+        self.random_ship_placement()
+        print("-" * 35)
+        print("Computer's board \n")
+        self.pc_board.display_board(show_ships=False)
+        return self.pc_board

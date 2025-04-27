@@ -1,16 +1,13 @@
-# This script holds all the game logic within the Game class.
-# The reason this script only holds one class, is due
-# to the Game class length.
+# This script holds all the game logic classes
 
 # Imported dependencies and modules
-from random import randint, choice
+from random import choice
 import colorama
 from colorama import Fore, Style
 import time
-import datetime
 # Imported other python scripts
 from save_load import Save, Load_Games
-from board_creation import Board
+from board_creation import Board_Setup
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -22,45 +19,160 @@ hit = f"{Fore.RED}H{Style.RESET_ALL}"
 miss = f"{Fore.GREEN}M{Style.RESET_ALL}"
 
 
-class Game:
-    """
-    Class that runs the game, allowing user to place ships, randomly generates
-    a computers board and then asks user to guess while randomly generating
-    computers guesses and checks for hits and misses.
-    """
-    def __init__(
-            self, player, total_ships=0, player_board=None, pc_board=None,
-            user_hits=0, computer_hits=0, ships_placed=0
-            ):
-        # Provides each game with a unique ID so when saving a loaded game
-        # it overwirtes the correct game
-        self.game_id = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
-        self.player = player
+class Board_After_Shots:
+    def __init__(self, game):
+        self.game = game
 
-        if player_board and pc_board:
-            self.total_ships = total_ships
-            self.player_board = player_board
-            self.pc_board = pc_board
-            self.user_hits = user_hits
-            self.computer_hits = computer_hits
-            self.ships_placed = ships_placed
-
-            self.reset_coordinates(self.pc_board.size)
-
-        else:
-            self.total_ships = total_ships
-            self.player_board = Board()
-            self.pc_board = Board()
-            self.user_hits = 0
-            self.computer_hits = 0
-            self.ships_placed = 0
-            self.available_coordinates = []
-
-    def random_point(self, size):
+    def hit_counter(self, grid):
         """
-        Helper method to generate random integer between 0 and board size
+        Counts the hits for each shot a player takes
         """
-        return randint(0, size-1)
+        return sum(
+            row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid
+            )
+
+    def valid_shot(self, row, col, board):
+        """
+        Refactord code to hold the validate the coordinates shot at
+        """
+        if not (
+            0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])
+        ):
+            print(f"Invalid coordinates: ({row}, {col})")
+            return False
+        return True
+
+    def already_shot(self, board, general, row, col):
+        """
+        Refactored code to hold the explanation a shot has
+        already been made there
+        """
+        if board.grid[row][col] in (miss, hit):
+            time.sleep(1)
+            print(
+                f"{general} you have already shot here, please pick a"
+                " new spot."
+                )
+            return False
+
+    def hit(self, board, general, row, col):
+        """
+        Refactored code to hold the processing of when
+        a shot hits a ship
+        """
+        if board.grid[row][col] == ship:
+            board.grid[row][col] = hit
+
+            if general == self.game.player:
+                self.game.user_hits += 1
+            else:
+                self.game.computer_hits += 1
+
+            ships = board.num_ships - self.hit_counter(board.grid)
+            time.sleep(1)
+            print(
+                f"{general} {Fore.RED}Hit{Style.RESET_ALL}!\n"
+                f"Just {ships} left to destroy.", flush=True
+                )
+            return True
+
+    def miss(self, board, general, row, col):
+        """
+        Refactored code to hold the processing of when
+        a shot misses
+        """
+        if board.grid[row][col] == water:
+            ships = board.num_ships - self.hit_counter(board.grid)
+            time.sleep(1)
+            print(
+                f"{general} {Fore.GREEN}Miss{Style.RESET_ALL}!\n"
+                f"Just {ships} left to destroy.", flush=True
+                )
+            board.grid[row][col] = miss
+            return True
+
+    def update_board(self, general, board, row, col, game):
+        """
+        Function to update board that has been attacked
+        """
+        if not self.valid_shot(row, col, board):
+            return False
+
+        if self.already_shot(board, row, col):
+            return False
+
+        if self.hit(board, general, row, col):
+            return True
+
+        if self.miss(board, general, row, col):
+            return True
+
+        time.sleep(1)
+        print(
+            "Remember: The top left corner is row: 0, col: 0.\n"
+            "Please bear that in mind when entering rows and columns."
+            )
+        return False
+
+    def key(self):
+        """
+        Refactored code to hold the board key
+        """
+        print("-" * 35)
+        print(
+            "Key:\n"
+            f"{water} = {Fore.BLUE}Water{Style.RESET_ALL} \n"
+            f"{ship} = {Fore.MAGENTA}Ship{Style.RESET_ALL}\n"
+            f"{hit} = {Fore.RED}Hit{Style.RESET_ALL}\n"
+            f"{miss} = {Fore.GREEN}Miss{Style.RESET_ALL}\n"
+            )
+        print("-" * 35)
+
+    def boards_shown(self):
+        """
+        Refactored code to show the updated boards
+        """
+        print(f"{self.game.player}'s board:")
+        self.game.player_board.display_board(show_ships=True)
+        print("-" * 35)
+        print("Computer's board:")
+        self.game.pc_board.display_board(show_ships=False)
+        print("-" * 35)
+
+    def stats(self):
+        """
+        Refactored code to display the game stats
+        """
+        print("-" * 35)
+        print(
+            f"{self.game.player} hits: {Fore.RED}{self.game.user_hits}"
+            f"{Style.RESET_ALL}/"
+            f"{Fore.MAGENTA}{self.game.pc_board.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
+        print(
+            f"Computer hits: {Fore.RED}{self.game.computer_hits}"
+            f"{Style.RESET_ALL}/"
+            f"{Fore.MAGENTA}{self.game.player_board.num_ships}"
+            f"{Style.RESET_ALL}"
+            )
+        print("-" * 35)
+
+    def update_game_status(self, game):
+        """
+        Updates the game board after shots are taken
+        """
+        time.sleep(1.5)
+        self.key()
+        self.boards_shown()
+        self.stats()
+        time.sleep(1.5)
+
+
+class Shot_Tracker:
+    def __init__(self, game):
+        self.game = game
+        self.available_coordinates = []
 
     def random_coordinate(self, coordinates):
         """
@@ -77,174 +189,17 @@ class Game:
             (row, col) for row in range(size) for col in range(size)
         ]
 
-    def hit_counter(self, grid):
-        """
-        Counts the hits for each shot a player takes
-        """
-        return sum(row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid)
-
-    def validate_coordinates(self, prompt, size):
-        """
-        Validates user inputs when asking for coordinates
-        """
-        while True:
-            try:
-                value = int(input(prompt))
-                if 0 <= value < size:
-                    return value
-                else:
-                    print(
-                        "Please remember to enter a coordinate in the correct"
-                        " range.\n"
-                        f"It must be a number between 0 and {size - 1}."
-                        )
-            except (ValueError, IndexError):
-                print(
-                    "Remember: The top left corner is row: 0, col: 0.\n"
-                    "Please bear that in mind when entering rows and columns."
-                    )
-
-    def player_place_ships(self):
-        """
-        Allows player to place their ships where they choose too
-        """
-        print("-" * 35)
-        print(
-            "Now you have chosen the size board you want to play on.\n"
-            "Please place your ships. Each ship takes up one space.\n"
-            "The top left corner is row: 0, col: 0.\n"
-            "Please bear that in mind when entering rows and columns.\n"
-            f"'{ship}' = Ship placement."
-            )
-        print("-" * 35)
-        self.ships_placed = 0
-        while self.ships_placed < self.player_board.num_ships:
-            try:
-                print("-" * 35)
-                row = self.validate_coordinates(
-                    "Enter row to place ship at: \n", self.player_board.size
-                    )
-                print("-" * 35)
-                print("-" * 35)
-                col = self.validate_coordinates(
-                    "Enter col to place ship at: \n", self.player_board.size
-                    )
-                print("-" * 35)
-
-                if self.player_board.grid[row][col] == water:
-                    self.player_board.grid[row][col] = ship
-                    self.ships_placed += 1
-                    print(f"Ship placed at {row}, {col}")
-                    self.player_board.display_board(show_ships=True)
-                elif self.player_board.grid[row][col] == ship:
-                    print(
-                        "Ship already palced there,"
-                        " please select another place."
-                        )
-            except (ValueError, IndexError):
-                print(
-                    "Remember: The top left corner is row: 0, col: 0.\n"
-                    "Please bear that in mind when entering rows and columns."
-                    )
-
-    def random_ship_placement(self):
-        """
-        Places the ships randomly on the board
-        """
-        self.ships_placed = 0
-        while self.ships_placed < self.pc_board.num_ships:
-            row = self.random_point(self.pc_board.size)
-            col = self.random_point(self.pc_board.size)
-            if self.pc_board.grid[row][col] == water:
-                self.pc_board.grid[row][col] = ship
-                self.ships_placed += 1
-
-        return self.pc_board
-
-    def user_board(self):
-        """
-        User board is generated blank to allow user to place their ships
-        """
-        self.player_board.board_size()
-        self.player_place_ships()
-        print("-" * 35)
-        print(f"{self.player}'s final board \n")
-        self.player_board.display_board(show_ships=True)
-        return self.player_board
-
-    def computer_board(self, user_size, user_ships):
-        """
-        Generates a board with random placement of ships
-        """
-        self.pc_board.size = user_size
-        self.pc_board.num_ships = user_ships
-        self.pc_board.board_creation()
-        self.random_ship_placement()
-        print("-" * 35)
-        print("Computer's board \n")
-        self.pc_board.display_board(show_ships=False)
-        return self.pc_board
-
-    def update_board(self, general, board, row, col):
-        """
-        Function to update board that has been attacked
-        """
-        if not (0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])):
-            print(f"Invalid coordinates: ({row}, {col})")
-            return False
-
-        if board.grid[row][col] in (miss, hit):
-            time.sleep(1)
-            print(
-                f"{general} you have already shot here, please pick a"
-                " new spot."
-                )
-            return False
-        elif board.grid[row][col] == ship:
-            board.grid[row][col] = hit
-
-            if general == self.player:
-                self.user_hits += 1
-            else:
-                self.computer_hits += 1
-
-            ships = board.num_ships - sum(
-                row.count(hit)
-                for row in board.grid
-                                          )
-            time.sleep(1)
-            print(
-                f"{general} {Fore.RED}Hit{Style.RESET_ALL}!\n"
-                f"Just {ships} left to destroy.", flush=True
-                )
-            return True
-
-        elif board.grid[row][col] == water:
-            ships = board.num_ships - sum(
-                row.count(hit)
-                for row in board.grid
-                                          )
-            time.sleep(1)
-            print(
-                f"{general} {Fore.GREEN}Miss{Style.RESET_ALL}!\n"
-                f"Just {ships} left to destroy.", flush=True
-                )
-            board.grid[row][col] = miss
-            return True
-
-        else:
-            time.sleep(1)
-            print(
-                "Remember: The top left corner is row: 0, col: 0.\n"
-                "Please bear that in mind when entering rows and columns."
-                )
-            return False
-
-    def shots_fired(self, player_name, target_board, is_user):
+    def shots_fired(self, player_name, target_board, is_user, game):
         """
         This asks for user to fire their shots and takes a random
         shot for the computer
         """
+        board = Board_Setup(
+            self.game.player,
+            self.game.player_board.ships,
+            self.game.player_board,
+            self.game.pc_board
+            )
         size = target_board.size
 
         if self.available_coordinates is None:
@@ -253,11 +208,11 @@ class Game:
         while True:
             if is_user:
                 print("-" * 35)
-                row = self.validate_coordinates(
+                row = board.validate_coordinates(
                     "Enter row to shoot at: \n", size
                     )
                 print("-" * 35)
-                col = self.validate_coordinates(
+                col = board.validate_coordinates(
                     "Enter col to shoot at: \n", size
                     )
                 print("-" * 35)
@@ -266,10 +221,20 @@ class Game:
                 row, col = shot
                 self.available_coordinates.remove(shot)
 
-            if self.update_board(player_name, target_board, row, col):
+            if self.game.board_management.update_board(
+                player_name,
+                target_board,
+                row,
+                col
+            ):
                 break
 
-    def player_turn(self):
+
+class Turn_Tracker:
+    def __init__(self, game):
+        self.game = game
+
+    def player_turn(self, game):
         """
         Player turn taken
         """
@@ -277,11 +242,18 @@ class Game:
         print("-" * 35)
         print("Time to take your shot! Fire!!!!!!")
         print("-" * 35)
-        self.shots_fired(self.player, self.pc_board, is_user=True)
-        self.user_hits = self.hit_counter(self.pc_board.grid)
+        self.game.shot.shots_fired(
+            self.game.player,
+            self.game.pc_board,
+            is_user=True,
+            game=game
+            )
+        self.game.user_hits = self.game.board_management.hit_counter(
+            self.game.pc_board.grid
+            )
         time.sleep(1.5)
 
-    def computer_turn(self):
+    def computer_turn(self, game):
         """
         Computer turn taken
         """
@@ -289,51 +261,28 @@ class Game:
         print("Computer's turn, let's hope they miss!!!")
         print("-" * 35)
         time.sleep(1.5)
-        self.shots_fired("Computer", self.player_board, is_user=False)
-        self.computer_hits = self.hit_counter(self.player_board.grid)
+        self.game.shot.shots_fired(
+            "Computer",
+            self.game.player_board,
+            is_user=False,
+            game=game
+            )
+        self.game.computer_hits = self.game.board_management.hit_counter(
+            self.game.player_board.grid
+            )
 
-    def update_game_status(self):
-        """
-        Updates the game board after shots are taken
-        """
-        time.sleep(1.5)
-        print("-" * 35)
-        print(
-            "Key:\n"
-            f"{water} = {Fore.BLUE}Water{Style.RESET_ALL} \n"
-            f"{ship} = {Fore.MAGENTA}Ship{Style.RESET_ALL}\n"
-            f"{hit} = {Fore.RED}Hit{Style.RESET_ALL}\n"
-            f"{miss} = {Fore.GREEN}Miss{Style.RESET_ALL}\n"
-            )
-        print("-" * 35)
-        print(f"{self.player}'s board:")
-        self.player_board.display_board(show_ships=True)
-        print("-" * 35)
-        print("Computer's board:")
-        self.pc_board.display_board(show_ships=False)
-        print("-" * 35)
-        time.sleep(1)
-        print("-" * 35)
-        print(
-            f"{self.player} hits: {Fore.RED}{self.user_hits}"
-            f"{Style.RESET_ALL}/{Fore.MAGENTA}{self.pc_board.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
-        print(
-            f"Computer hits: {Fore.RED}{self.computer_hits}"
-            f"{Style.RESET_ALL}/{Fore.MAGENTA}{self.player_board.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
-        print("-" * 35)
-        time.sleep(1.5)
 
-    def delete_game(self):
+class Gameplay:
+    def __init__(self, game):
+        self.game = game
+
+    def delete_game(self, game):
         """
-        Function that deletes a game from the database if it has been loaded in
-        and completed
+        Function that deletes a game from the database if it has been
+        loaded in and completed
         """
         games = Load_Games(
-            self.player,
+            self.game.player,
             game_id=None,
             player_board=None,
             computer_board=None,
@@ -343,59 +292,65 @@ class Game:
             )
         all_games = games.load_saved_games()
         all_games = [
-            game for game in all_games if self.game_id != self.game_id
+            game for game in all_games
+            if self.game.game_id != self.game.game_id
             ]
 
-    def game_over_check(self):
+    def game_over_check(self, game):
         """
-        Checks after shots taken if the game is over and congratulates winner
+        Checks after shots taken if the game is over and congratulates
+        winner
         """
-        player_hits_count = self.user_hits == self.total_ships
-        computer_hits_count = self.computer_hits == self.total_ships
+        player_hits_count = self.game.user_hits == self.game.total_ships
+        computer_hits_count = (
+            self.game.computer_hits == self.game.total_ships
+            )
         if player_hits_count and computer_hits_count:
             print("Both players took out each other. Game is a tie")
             return True
         elif player_hits_count:
-            print(f"{self.player}, you win!!!! You beat the computer.")
+            print(
+                f"{self.game.player}, you win!!!! You beat the computer."
+                )
             return True
         elif computer_hits_count:
-            print(f"Computer wins!!! Unlucky {self.player}, maybe next time.")
+            print(
+                f"Computer wins!!! Unlucky {self.game.player},"
+                " maybe next time."
+                )
             return True
         else:
             return False
 
-    def save_game(self):
+    def save_game(self, game):
         """
         Saves the game by calling the Save class
         """
         save_state = Save(
-            self.game_id,
-            self.player,
-            self.player_board,
-            self.pc_board,
-            self.user_hits,
-            self.computer_hits
+            self.game.game_id,
+            self.game.player,
+            self.game.player_board,
+            self.game.pc_board,
+            self.game.user_hits,
+            self.game.computer_hits
         )
         return save_state.save_game_state()
 
-    def play_game(self):
+    def play_game(self, game):
         """
         Starts or resumes the game and checks when the game finishes
         """
-        while True:
-            self.player_turn()
-            self.computer_turn()
-            self.update_game_status()
+        while not self.game_over_check():
+            self.game.player_turn()
+            self.game.computer_turn()
+            self.game.update_game_status()
 
-            if self.game_over_check():
-                break
-            else:
-                continue_save_exit = self.save_game_state()
-                if continue_save_exit == "continue":
-                    continue
-                elif continue_save_exit == "save":
-                    return "saved"
-                elif continue_save_exit == "exit":
-                    return "exit"
+            continue_save_exit = self.save_game()
+            if continue_save_exit == "continue":
+                continue
+            elif continue_save_exit == "save":
+                return "saved"
+            elif continue_save_exit == "exit":
+                return "exit"
 
         return "game over"
