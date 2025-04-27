@@ -393,13 +393,15 @@ class Game:
         else:
             return False
 
-    def save_game_state(self):
+    def prompt_user_save(self):
         """
-        Prompts the user if they want to save the game or continue
+        Refactored function to hold the user prompt
         """
-        save = saved_games
-        board_size = self.player_board.size
-
+        allowed_inputs = {
+            "C": "continue",
+            "S": "save",
+            "E": "exit"
+            }
         while True:
             save_continue = input(
                 f"{self.player} would you like to continue or save the game"
@@ -409,84 +411,104 @@ class Game:
                 f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
             ).strip().upper()
 
-            if save_continue not in ("C", "S", "E"):
-                print(
+            if save_continue in allowed_inputs:
+                return allowed_inputs[save_continue]
+            
+            print(
                     f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}',"
                     f" '{Fore.YELLOW}S{Style.RESET_ALL}' or"
                     f" '{Fore.RED}E{Style.RESET_ALL}'"
                     )
-                continue
-            elif save_continue == "C":
-                print("-" * 35)
-                print(
-                    "No winner yet. Game continues.\n"
-                    f"Come on {self.player} you can win!!!"
-                    )
-                print("-" * 35)
-                return "continue"
-            elif save_continue == "S":
-                # Converts boards from grids to strings
-                player_board_convert = self.convert_board(
-                    self.player_board
-                    )
-                computer_board_convert = self.convert_board(
-                    self.pc_board
-                    )
 
-                # Removes the colorama codes from the board strigns
-                player_clean_board = self.remove_colorama_codes(
-                    player_board_convert
-                    )
-                computer_clean_board = self.remove_colorama_codes(
-                    computer_board_convert
-                    )
+    def save_board(self):
+        """
+        Refactored function to save the game board state
+        """
+        # Converts boards from grids to strings
+        player_board_convert = self.convert_board(self.player_board)
+        computer_board_convert = self.convert_board(self.pc_board)
 
-                stringify_player_board = "\n".join(player_clean_board)
-                stringify_computer_board = "\n".join(computer_clean_board)
+        # Removes the colorama codes from the board strigns
+        player_clean_board = self.remove_colorama_codes(player_board_convert)
+        computer_clean_board = self.remove_colorama_codes(
+            computer_board_convert
+            )
 
-                game_exists = False
-                game_row = None
-                for game_data, row in enumerate(save.get_all_values()):
-                    if row[0] == self.game_id:
-                        game_exists = True
-                        game_row = game_data + 1
-                        break
+        self.player_board = "\n".join(player_clean_board)
+        self.pc_board = "\n".join(computer_clean_board)
 
-                if game_exists:
-                    save.update(f"A{game_row}:G{game_row}", [
-                        [
-                            self.game_id,
-                            self.player,
-                            board_size,
-                            self.player_board.num_ships,
-                            stringify_player_board,
-                            stringify_computer_board,
-                            self.user_hits,
-                            self.computer_hits
-                         ]
-                    ])
-                    print(
-                        "Loaded game has been saved over.\n"
-                        "You can access this game next time you log in."
-                          )
-                else:
-                    save.append_row([
-                        self.game_id,
-                        self.player,
-                        board_size,
-                        self.player_board.num_ships,
-                        stringify_player_board,
-                        stringify_computer_board,
-                        self.user_hits,
-                        self.computer_hits
-                            ])
-                    print(
-                        "New game has been saved.\n"
-                        "You can access this game next time you log in."
-                          )
-                return "save"
-            elif save_continue == "E":
-                return "exit"
+    def overwrite_save(self, game_row):
+        """
+        Refactor function that overwrites a loaded in game
+        """
+        saved_games.update(f"A{game_row}:G{game_row}", [
+            [
+                self.game_id,
+                self.player,
+                self.player_board.size,
+                self.player_board.num_ships,
+                self.player_board,
+                self.pc_board,
+                self.user_hits,
+                self.computer_hits
+                ]
+                ])
+        print(
+            "Loaded game has been saved over.\n"
+            "You can access this game next time you log in."
+            )
+
+    def save_new_game(self):
+        """
+        Refactor function that saves a new game
+        """
+        saved_games.append_row([
+            self.game_id,
+            self.player,
+            self.player_board.size,
+            self.player_board.num_ships,
+            self.player_board,
+            self.pc_board,
+            self.user_hits,
+            self.computer_hits
+            ])
+        print(
+            "New game has been saved.\n"
+            "You can access this game next time you log in."
+            )
+
+    def save_game_state(self):
+        """
+        Prompts the user if they want to save the game or continue
+        """
+        save_continue = self.prompt_user_save()
+
+        if save_continue == "continue":
+            print("-" * 35)
+            print(
+                "No winner yet. Game continues.\n"
+                f"Come on {self.player} you can win!!!"
+                )
+            print("-" * 35)
+            return "continue"
+        elif save_continue == "save":
+            self.save_board()
+
+            game_exists = False
+            game_row = None
+            for game_data, row in enumerate(saved_games.get_all_values()):
+                if row[0] == self.game_id:
+                    game_exists = True
+                    game_row = game_data + 1
+                    break
+
+            if game_exists:
+                self.overwrite_save(game_row)
+            else:
+                self.save_new_game()
+            return "save"
+        elif save_continue == "exit":
+            return "exit"
 
     def play_game(self):
         """
