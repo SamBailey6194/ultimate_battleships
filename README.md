@@ -73,6 +73,8 @@ The
 - After cleaning up the code in the Game class and in main.py user_board and computer_board were accessing functions the wrong way, leading to not asking the user to place the ships and having blank boards. To fix the issue the requirement was to use self.player_board and self.pc_board variables in them instead of calling Board class.
 - The user_hits and computer_hits in full_game and new_game were set to None rather than 0 as an integer.
 - Saved data wasn't saving number of ships correctly due to passing None as the attribute and not 0 as a integer and ensure the num_ships was being used in the update and append_row part of the save_game_state function
+- new_game function wasn't collecting the number of ships from selected game correctly, added total_ships=user.num_ships to the parameters of full_game within new_game.
+- Validating password creation was not allowing passwords that were 8 characters long due to the >= 8, so removed the = signs from that if statement
 
 ### Unfixed Bugs
 
