@@ -152,7 +152,12 @@ def new_game(
         )
     user = game.user_board()
     computer = game.computer_board(user.size, user.num_ships)
-    full_game(player, player_board=user, pc_board=computer)
+    full_game(
+        player,
+        total_ships=user.num_ships,
+        player_board=user,
+        pc_board=computer
+        )
 
 
 def main():

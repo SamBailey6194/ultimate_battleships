@@ -59,8 +59,8 @@ def check_username(data):
     if data in usernames:
         print(f"{data} is already in use, please create a new one")
         return False
-    elif (len(data) >= 8):
-        print(f"{data} must be no more than 8 characters long\n")
+    elif (len(data) < 3 or len(data) > 12):
+        print(f"{data} must be between 3 to 12 characters long\n")
         return False
     elif re.search("[A-Z]", data) is None:
         print("Username must contain 1 uppercase character\n")
@@ -83,7 +83,7 @@ def check_password(data):
     """
     Checks password meets criteria
     """
-    if (len(data) <= 8):
+    if (len(data) < 8):
         print(f"{data} must be at least 8 characters long\n")
         return False
     elif re.search("[A-Z]", data) is None:
@@ -95,13 +95,15 @@ def check_password(data):
     elif re.search(r"[\d]", data) is None:
         print("Password must contain 1 number\n")
         return False
-    elif re.search(r"[!@#$£%^&*_\-+=:;<>,.?~]", data) is None:
+    elif re.search(r"[!\"@#$£%^&'()*+,\-./:;<=>?@\[\]^_`{|}~]", data) is None:
         print("Password must contain 1 special character\n")
         return False
     elif re.search(r"\s", data):
         print("Password can't have any spaces\n")
         return False
-    elif re.fullmatch(r"[a-zA-Z0-9!@#$£%^&*_\-+=:;<>,.?~]{8,}", data):
+    elif re.fullmatch(
+        r"[a-zA-Z0-9!\"@#$£%^&'()*+,\-./:;<=>?@\[\]^_`{|}~]{8,}", data
+            ):
         print(f"{data} is a valid password\n")
         return True
     else:
@@ -145,6 +147,7 @@ def username_requirements():
     print("-" * 35)
     print(
         "Username requirements:\n"
+        "- Must be between 3-12 characters long"
         "- Contain at least 1 uppercase and lowercase character\n"
         "- No spaces allowed"
         )
@@ -159,7 +162,7 @@ def password_requirements():
     print("-" * 35)
     print(
         "Password requirements:\n"
-        "- 8 characters long\n"
+        "- A minimumun of 8 characters long\n"
         "- Contain at least 1 uppercase and lowercase character\n"
         "- Contain at least 1 number\n"
         "- Contain 1 special character\n"
