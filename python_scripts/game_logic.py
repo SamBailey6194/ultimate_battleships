@@ -413,29 +413,35 @@ class Game:
 
             if save_continue in allowed_inputs:
                 return allowed_inputs[save_continue]
-            
+
             print(
                     f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}',"
                     f" '{Fore.YELLOW}S{Style.RESET_ALL}' or"
                     f" '{Fore.RED}E{Style.RESET_ALL}'"
                     )
 
+    def cleaned_board(self, board):
+        """
+        Helper function that cleans the boards
+        """
+        board_conversion = self.convert_board(board)
+        return "\n".join(self.remove_colorama_codes(board_conversion))
+
     def save_board(self):
         """
         Refactored function to save the game board state
         """
-        # Converts boards from grids to strings
-        player_board_convert = self.convert_board(self.player_board)
-        computer_board_convert = self.convert_board(self.pc_board)
+        self.player_board = self.cleaned_board(self.player_board)
+        self.pc_board = self.cleaned_board(self.pc_board)
 
-        # Removes the colorama codes from the board strigns
-        player_clean_board = self.remove_colorama_codes(player_board_convert)
-        computer_clean_board = self.remove_colorama_codes(
-            computer_board_convert
-            )
-
-        self.player_board = "\n".join(player_clean_board)
-        self.pc_board = "\n".join(computer_clean_board)
+    def games_exists_check(self):
+        """
+        Refactored code to check if the game exists
+        """
+        for game_data, row in enumerate(saved_games.get_all_values()):
+            if row[0] == self.game_id:
+                return True, game_data + 1
+        return False, None
 
     def overwrite_save(self, game_row):
         """
@@ -491,22 +497,18 @@ class Game:
                 )
             print("-" * 35)
             return "continue"
+
         elif save_continue == "save":
             self.save_board()
 
-            game_exists = False
-            game_row = None
-            for game_data, row in enumerate(saved_games.get_all_values()):
-                if row[0] == self.game_id:
-                    game_exists = True
-                    game_row = game_data + 1
-                    break
+            game_exists, game_row = self.games_exists_check()
 
             if game_exists:
                 self.overwrite_save(game_row)
             else:
                 self.save_new_game()
             return "save"
+
         elif save_continue == "exit":
             return "exit"
 
