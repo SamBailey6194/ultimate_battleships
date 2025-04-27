@@ -132,6 +132,7 @@ def full_game(
     elif battleships == "game over":
         lb.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
+        game.delete_game()
 
 
 def new_game(
@@ -177,7 +178,7 @@ def main():
             print("-" * 35)
 
     loaded = Load_Games(
-        username, player_board=None, computer_board=None,
+        username, game_id=None, player_board=None, computer_board=None,
         games=None, player_colour=None, computer_colour=None
         )
     games_saved = loaded.load_saved_games()

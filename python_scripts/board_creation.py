@@ -119,9 +119,16 @@ class Load_Games:
     """
 
     def __init__(
-            self, username=None, player_board=None, computer_board=None,
-            games=None, player_colour=None, computer_colour=None
+            self,
+            game_id=None,
+            username=None,
+            player_board=None,
+            computer_board=None,
+            games=None,
+            player_colour=None,
+            computer_colour=None
             ):
+        self.game_id = game_id
         self.username = username
         self.player_board = player_board
         self.computer_board = computer_board
@@ -178,8 +185,9 @@ class Load_Games:
         data = saved_games.get_all_records()
         player_games = [
             game for game in data if game["Username"] == self.username
-                        ]
-        return player_games
+        ]
+
+        return player_games, self.game_id
 
     def board_size(self, selected):
         """
@@ -277,6 +285,8 @@ class Load_Games:
 
         user_selection = self.user_choose_save()
 
+        self.game_id = user_selection["Game Id"]
+
         # Restoring the colorama codes to the grid
         self.player_colour = self.restore_colour(
             self.convert_board_to_grid(user_selection["User Board"])
@@ -292,8 +302,10 @@ class Load_Games:
         self.display_boards()
 
         return (
+            self.game_id,
             self.player_board,
             self.computer_board,
+            self.games,
             self.player_board.num_ships,
             user_selection["User Hits"],
             user_selection["Computer Hits"]

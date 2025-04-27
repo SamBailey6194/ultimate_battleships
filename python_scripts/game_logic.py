@@ -8,9 +8,10 @@ import colorama
 from colorama import Fore, Style
 import time
 import re
+import datetime
 # Imported other python scripts
 from sheets import saved_games
-from board_creation import Board
+from board_creation import Board, Load_Games
 
 # Initialise colorama
 colorama.init(autoreset=True)
@@ -32,6 +33,9 @@ class Game:
             self, player, total_ships=0, player_board=None, pc_board=None,
             user_hits=0, computer_hits=0, ships_placed=0
             ):
+        # Provides each game with a unique ID so when saving a loaded game
+        # it overwirtes the correct game
+        self.game_id = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
         self.player = player
 
         if player_board and pc_board:
@@ -352,6 +356,25 @@ class Game:
         print("-" * 35)
         time.sleep(1.5)
 
+    def delete_game(self):
+        """
+        Function that deletes a game from the database if it has been loaded in
+        and completed
+        """
+        games = Load_Games(
+            self.player,
+            game_id=None,
+            player_board=None,
+            computer_board=None,
+            games=None,
+            player_colour=None,
+            computer_colour=None
+            )
+        all_games = games.load_saved_games()
+        all_games = [
+            game for game in all_games if self.game_id != self.game_id
+            ]
+
     def game_over_check(self):
         """
         Checks after shots taken if the game is over and congratulates winner
@@ -421,15 +444,18 @@ class Game:
                 stringify_player_board = "\n".join(player_clean_board)
                 stringify_computer_board = "\n".join(computer_clean_board)
 
-                username_row = None
-                for username, row in enumerate(save.get_all_values()):
-                    if row[0] == self.player:
-                        username_row = username + 1
+                game_exists = False
+                game_row = None
+                for game_data, row in enumerate(save.get_all_values()):
+                    if row[0] == self.game_id:
+                        game_exists = True
+                        game_row = game_data + 1
                         break
 
-                if username_row:
-                    save.update(f"A{username_row}:G{username_row}", [
+                if game_exists:
+                    save.update(f"A{game_row}:G{game_row}", [
                         [
+                            self.game_id,
                             self.player,
                             board_size,
                             self.player_board.num_ships,
@@ -439,16 +465,25 @@ class Game:
                             self.computer_hits
                          ]
                     ])
+                    print(
+                        "Loaded game has been saved over.\n"
+                        "You can access this game next time you log in."
+                          )
                 else:
                     save.append_row([
-                            self.player,
-                            board_size,
-                            self.player_board.num_ships,
-                            stringify_player_board,
-                            stringify_computer_board,
-                            self.user_hits,
-                            self.computer_hits
+                        self.game_id,
+                        self.player,
+                        board_size,
+                        self.player_board.num_ships,
+                        stringify_player_board,
+                        stringify_computer_board,
+                        self.user_hits,
+                        self.computer_hits
                             ])
+                    print(
+                        "New game has been saved.\n"
+                        "You can access this game next time you log in."
+                          )
                 return "save"
             elif save_continue == "E":
                 return "exit"
