@@ -14,6 +14,8 @@ From the User Stories and wireframes a logic flow chart was mocked up to help kn
 
 ![Logic Flowchart](assets/readmeimgs/ultimate_battleships_logic_flowchart.png)
 
+Please note that in features and testing there are extra parts to the logic flow, which were thought of later in the project.
+
 ## Responsive Design
 
 ![Responsive Mockup](INSERT)
@@ -80,11 +82,12 @@ The
 
 - None
 
-### Links and Actions
+### Logic Flow Table
 
-| Location | Link / Button | Expected Action | Pass / Fail |
-| ----- | ----- | ----- | ----- |
-| Username Creation | Username not entered | Tell user to fill in the field | Pass |
+I have made a logic flow table to monitor the testing of the features.
+Due to the loops depending on the user input the steps can be labelled with an A, B, C, etc to indicate which step it has moved too.
+
+You can access it [here](logicflow.md)
 
 ### Validator Testing
 
