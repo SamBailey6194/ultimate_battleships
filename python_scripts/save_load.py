@@ -197,7 +197,7 @@ class Load_Games:
 
         user_selection = self.user_choose_save()
 
-        self.game_id = user_selection["Game Id"]
+        self.game_id = user_selection["Game ID"]
 
         # Restoring the colorama codes to the grid
         self.player_colour = self.restore_colour(

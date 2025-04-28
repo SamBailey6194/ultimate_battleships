@@ -172,45 +172,54 @@ def load_games_check(username):
     """
     Function that checks if user has any saved games
     """
-    while True:
-        print("-" * 35)
-        access_games = input(
-            f"{username}, would you like to access any of your"
-            " saved games?\n"
-            f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
-            f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
-            ).strip()
-        print("-" * 35)
+    games_saved, _ = loaded.load_saved_games()
 
-        if access_games not in ("Y", "N"):
-            print(
-                f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
-                f" '{Fore.RED}N{Style.RESET_ALL}' \n"
-                )
-            continue
-        elif access_games == "Y":
-            saved_game_data = loaded.access_saved_games()
-            player_board, computer_board, total_ships = (
-                saved_game_data[:3]
-            )
-            user_hits, computer_hits = (
-                saved_game_data[3:5]
-            )
-            if player_board and computer_board:
-                full_game(
-                    username,
-                    size=player_board.size,
-                    total_ships=total_ships,
-                    player_board=player_board,
-                    pc_board=computer_board,
-                    user_hits=user_hits,
-                    computer_hits=computer_hits
+    if games_saved:
+        while True:
+            print("-" * 35)
+            access_games = input(
+                f"{username}, would you like to access any of your"
+                " saved games?\n"
+                f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
+                f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
+                ).strip()
+            print("-" * 35)
+
+            if access_games not in ("Y", "N"):
+                print(
+                    f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
+                    f" '{Fore.RED}N{Style.RESET_ALL}' \n"
                     )
-        elif access_games == "N":
-            print("-" * 35)
-            print("Let's start a new game instead.")
-            print("-" * 35)
-            new_game(username)
+                continue
+            elif access_games == "Y":
+                saved_game_data = loaded.access_saved_games()
+                player_board, computer_board, total_ships = (
+                    saved_game_data[:3]
+                )
+                user_hits, computer_hits = (
+                    saved_game_data[3:5]
+                )
+                if player_board and computer_board:
+                    full_game(
+                        username,
+                        size=player_board.size,
+                        total_ships=total_ships,
+                        player_board=player_board,
+                        pc_board=computer_board,
+                        user_hits=user_hits,
+                        computer_hits=computer_hits
+                        )
+            elif access_games == "N":
+                print("-" * 35)
+                print("Let's start a new game instead.")
+                print("-" * 35)
+                new_game(username)
+
+    else:
+        print("-" * 35)
+        print(f"Currently no saved games for {loaded.username}")
+        print("-" * 35)
+        new_game(loaded.username)
 
 
 def main():
@@ -219,6 +228,7 @@ def main():
     """
     print(Style.BRIGHT + "Welcome to Ultimate Battleships!\n")
     intro()
+
     while loaded.username is None:
         loaded.username = user_choice()
         if loaded.username is None:
@@ -226,16 +236,7 @@ def main():
             print("Login failed. Please try again.")
             print("-" * 35)
 
-    games_saved, _ = loaded.load_saved_games()
-
-    if games_saved:
-        load_games_check(loaded.username)
-
-    else:
-        print("-" * 35)
-        print(f"Currently no saved games for {loaded.username}")
-        print("-" * 35)
-        new_game(loaded.username)
+    load_games_check(loaded.username)
 
 
 # Checks to see if code is being used as a module or main program
