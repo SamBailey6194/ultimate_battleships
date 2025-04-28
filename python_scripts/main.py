@@ -229,10 +229,10 @@ def main():
             print("Login failed. Please try again.")
             print("-" * 35)
 
-    games_saved = loaded.load_saved_games()
+    games_saved, _ = loaded.load_saved_games()
 
     if games_saved:
-        load_games_check(loaded, username)
+        load_games_check(username)
 
     else:
         print("-" * 35)

@@ -71,7 +71,7 @@ def check_username(data):
     elif re.search(r"\s", data):
         print("Username can't have any spaces\n")
         return False
-    elif re.fullmatch("[a-zA-Z]+", data):
+    elif re.fullmatch("[a-zA-Z0-9]+", data):
         print(f"{data} is a valid username\n")
         return True
     else:
@@ -147,9 +147,10 @@ def username_requirements():
     print("-" * 35)
     print(
         "Username requirements:\n"
-        "- Must be between 3-12 characters long"
+        "- Must be between 3-12 characters long\n"
         "- Contain at least 1 uppercase and lowercase character\n"
-        "- No spaces allowed"
+        "- Numbers are allowed\n"
+        "- No spaces or special characters allowed"
         )
     print("-" * 35)
 

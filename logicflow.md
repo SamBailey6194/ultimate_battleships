@@ -1,23 +1,23 @@
 # WELCOMING USER
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 1 | Welcome User | Invite to log in or create user | ?? |
-| 2 | User invited to log in or create user | Y = [Logging In](#user-logging-in), N = [User Creation](#user-creation) | ?? |
+| 1 | Welcome User | Invite to log in or create user | Pass |
+| 2 | User invited to log in or create user | Y = [Logging In](#user-logging-in), N = [User Creation](#user-creation), any other input repeats the question | Pass |
 
 # USER LOGGING IN
 ## IF USER GOES TO LOGGING IN
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 3 | Logging In | Username asked for | ?? |
-| 4 | Username Entered | Password asked for | ?? |
-| 5 | Password Entered | Checks database for username and password | ?? |
+| 3 | Logging In | Username asked for | Pass |
+| 4 | Username Entered | Password asked for | Pass |
+| 5 | Password Entered | Checks database for username and password | Pass |
 
 ## IF ONE MATCHES BUT OTHER DOESN'T OR NEITHER IS FOUND
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 6 | Error Message | Tell user the login is invalid and asks for then to try again | ?? |
+| 6 | Error Message | Asks user if they have a login or not | Pass |
 
-[See User Goes To Logging In](#if-user-goes-to-logging-in)
+See [Welcoming User](#welcoming-user)
 
 This step for security reasons doesn't provide which wasn't a match.
 This then means the user has to remember both parts of information.
@@ -25,8 +25,8 @@ This then means the user has to remember both parts of information.
 ## IF USERNAME AND PASSWORD MATCHES
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 6 | Username and Password Matched | Welcomes User back | ?? |
-| 7 | Checks for saved games database | If username found, asks user if they want to [load any games](#if-saved-games-finds-username), if username not found = starts a [new game](#gameplay-logic) | ?? |
+| 6 | Username and Password Matched | Welcomes User back | Pass |
+| 7 | Checks for saved games database | If username found, asks user if they want to [load any games](#if-saved-games-finds-username), if username not found = starts a [new game](#gameplay-logic) | Pass |
 
 ## IF SAVED GAMES FINDS USERNAME
 | Step | Action | Outcome | Pass / Fail |
@@ -52,18 +52,18 @@ For N = New Game, go to [gameplay flow chart](#gameplay-logic)
 ## IF USER GOES TO USER CREATION
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 3 | Asks user to create a username | Checks username meets requirements | ?? |
+| 3 | Asks user to create a username | Checks username meets requirements | Pass |
 
 ## IF USERNAME MEETS REQUIREMENTS
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 4 | Username meets requirements | Adds username to database and asks user to create a password | ?? |
-| 5 | Asks user to create a password | Checks password meets requirements | ?? |
+| 4 | Username meets requirements | Adds username to database and asks user to create a password | Pass |
+| 5 | Asks user to create a password | Checks password meets requirements | Pass |
 
 ## IF PASSWORD MEETS REQUIREMENTS
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 4 | Password meets requirements | Adds password to database and links it to username, then starts a [new game](#gameplay-logic) | ?? |
+| 4 | Password meets requirements | Adds password to database and links it to username, then starts a [new game](#gameplay-logic) | Pass |
 
 # GAMEPLAY LOGIC
 The steps in this are multinumbered because if you come from different points in the logic flow you will be at a different number. See the key below:
@@ -71,7 +71,7 @@ The steps in this are multinumbered because if you come from different points in
 | Accessed Game from | Last Step Number | Step Number Gameplay continues from |
 | ----- | ----- | ----- |
 | New user just created a username and password | 4 | 5 |
-| Username not found in database | 7 | 8 |
+| Username not found in saved game database | 7 | 8 |
 | User doesn't want to load from a saved game | 8 | 9 |
 | User loads a saved game state | 13 | 14 |
 
@@ -80,29 +80,29 @@ Therefore the step in the below table will look like 5 / 8 / 9 to associate with
 ## NEW GAME STARTS
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 5 / 8 / 9 | New game starts | Asks user for the board size they want to play on | ?? |
-| 6 / 9 / 10 | User selection validation | 1 = 5x5 Grid created and displayed, 2 = 10x10 Grid created and displayed, 3 = 15x15 Grid created and displayed, any other input will ask user to input correct number | ?? |
-| 7 / 10 / 11 | User Places Ships | From the user selection determines how many ships are available, the user enters the row first only when input is valid will it then ask for column. Once column is valid it will display the new board with the ship placed. | ?? |
+| 5 / 8 / 9 | New game starts | Asks user for the board size they want to play on | Pass |
+| 6 / 9 / 10 | User selection validation | 1 = 5x5 Grid created and displayed, 2 = 10x10 Grid created and displayed, 3 = 15x15 Grid created and displayed, any other input will ask user to input correct number | Pass |
+| 7 / 10 / 11 | User Places Ships | From the user selection determines how many ships are available, the user enters the row first only when input is valid will it then ask for column. Once column is valid it will display the new board with the ship placed. | Pass |
 
 Valid ship placement is from 0 to board size -1, and has to be a location that the user hasn't placed at yet when combining row and column. If user has already placed it will ask user to do row and column both again
 
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 8 / 11 / 12 | All ships placed | Once user has placed all ships their board is shown and the computer's ships are placed randomly, then both boards are displayed, users board shows ship placement and computers board doesn't show ships. | ?? |
+| 8 / 11 / 12 | All ships placed | Once user has placed all ships their board is shown and the computer's ships are placed randomly, then both boards are displayed, users board shows ship placement and computers board doesn't show ships. | Pass |
 
 ## TURNS
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 9 / 12 / 13 / 14 | Players Turn | User is now asked to shoot at row first, if valid input the column is asked for, if valid input user gets feedback on their shot | ?? |
+| 9 / 12 / 13 / 14 | Players Turn | User is now asked to shoot at row first, if valid input the column is asked for, if valid input user gets feedback on their shot | Pass |
 
 Valid coordinate are from 0 to board size -1, and where they haven't shot yet
 
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 10 / 13 / 14 / 15 | If valid coordinates user receives shot feedback | User is told if they Hit or Missed and how many ships are left to destroy | ?? |
-| 11 / 14 / 15 / 16 | Computer random shot | Computer generates a random shot and gets feedback if they Hit or Missed and how many ships are left to destroy | ?? |
-| 12 / 15 / 16 / 17 | Updated boards and scores displayed | User board is shown with computer shots, computer's board is shown with user shots, and both user and computer scores are shown | ?? |
-| 13 / 16 / 17 / 18 | Game over check | If both user and computer have destroyed the other players ships = game ends in a tie. If user has destroyed computer's ships = User declared winner. If computer has destroyed user's ships = Computer declared winner. If ships remain for both user and computer = [game continues](#game-continues) | ?? |
+| 10 / 13 / 14 / 15 | If valid coordinates user receives shot feedback | User is told if they Hit or Missed and how many ships are left to destroy | Pass |
+| 11 / 14 / 15 / 16 | Computer random shot | Computer generates a random shot and gets feedback if they Hit or Missed and how many ships are left to destroy | Pass |
+| 12 / 15 / 16 / 17 | Updated boards and scores displayed | User board is shown with computer shots, computer's board is shown with user shots, and both user and computer scores are shown | Pass |
+| 13 / 16 / 17 / 18 | Game over check | If both user and computer have destroyed the other players ships = game ends in a tie. If user has destroyed computer's ships = User declared winner. If computer has destroyed user's ships = Computer declared winner. If ships remain for both user and computer = [game continues](#game-continues) | Pass |
 
 If game is a tie or a winner declared then go to [game over](#game-over)
 

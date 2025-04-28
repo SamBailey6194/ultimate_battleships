@@ -91,14 +91,14 @@ class Board_After_Shots:
             board.grid[row][col] = miss
             return True
 
-    def update_board(self, general, board, row, col, game):
+    def update_board(self, general, board, row, col):
         """
         Function to update board that has been attacked
         """
         if not self.valid_shot(row, col, board):
             return False
 
-        if self.already_shot(board, row, col):
+        if self.already_shot(board, general, row, col):
             return False
 
         if self.hit(board, general, row, col):
@@ -158,7 +158,7 @@ class Board_After_Shots:
             )
         print("-" * 35)
 
-    def update_game_status(self, game):
+    def update_game_status(self):
         """
         Updates the game board after shots are taken
         """
@@ -189,20 +189,20 @@ class Shot_Tracker:
             (row, col) for row in range(size) for col in range(size)
         ]
 
-    def shots_fired(self, player_name, target_board, is_user, game):
+    def shots_fired(self, player_name, target_board, is_user):
         """
         This asks for user to fire their shots and takes a random
         shot for the computer
         """
         board = Board_Setup(
             self.game.player,
-            self.game.player_board.ships,
+            self.game.player_board.num_ships,
             self.game.player_board,
             self.game.pc_board
             )
         size = target_board.size
 
-        if self.available_coordinates is None:
+        if not self.available_coordinates:
             self.reset_coordinates(size)
 
         while True:
@@ -234,7 +234,7 @@ class Turn_Tracker:
     def __init__(self, game):
         self.game = game
 
-    def player_turn(self, game):
+    def player_turn(self):
         """
         Player turn taken
         """
@@ -246,14 +246,13 @@ class Turn_Tracker:
             self.game.player,
             self.game.pc_board,
             is_user=True,
-            game=game
             )
         self.game.user_hits = self.game.board_management.hit_counter(
             self.game.pc_board.grid
             )
         time.sleep(1.5)
 
-    def computer_turn(self, game):
+    def computer_turn(self):
         """
         Computer turn taken
         """
@@ -265,7 +264,6 @@ class Turn_Tracker:
             "Computer",
             self.game.player_board,
             is_user=False,
-            game=game
             )
         self.game.computer_hits = self.game.board_management.hit_counter(
             self.game.player_board.grid
@@ -276,7 +274,7 @@ class Gameplay:
     def __init__(self, game):
         self.game = game
 
-    def delete_game(self, game):
+    def delete_game(self):
         """
         Function that deletes a game from the database if it has been
         loaded in and completed
@@ -296,7 +294,7 @@ class Gameplay:
             if self.game.game_id != self.game.game_id
             ]
 
-    def game_over_check(self, game):
+    def game_over_check(self):
         """
         Checks after shots taken if the game is over and congratulates
         winner
@@ -322,7 +320,7 @@ class Gameplay:
         else:
             return False
 
-    def save_game(self, game):
+    def save_game(self):
         """
         Saves the game by calling the Save class
         """
@@ -336,14 +334,14 @@ class Gameplay:
         )
         return save_state.save_game_state()
 
-    def play_game(self, game):
+    def play_game(self):
         """
         Starts or resumes the game and checks when the game finishes
         """
         while not self.game_over_check():
-            self.game.player_turn()
-            self.game.computer_turn()
-            self.game.update_game_status()
+            self.game.turn.player_turn()
+            self.game.turn.computer_turn()
+            self.game.board_management.update_game_status()
 
             continue_save_exit = self.save_game()
             if continue_save_exit == "continue":
