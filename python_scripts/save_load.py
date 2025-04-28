@@ -96,7 +96,6 @@ class Load_Games:
         player_games = [
             game for game in data if game["Username"] == self.username
         ]
-
         return player_games, self.game_id
 
     def board_size(self, selected):
@@ -125,6 +124,7 @@ class Load_Games:
                 f" {self.username} Hits: {user_hits} |"
                 f" Computer Hits: {computer_hits}"
                 )
+        return self.user_choose_save()
 
     def user_choose_save(self):
         """
@@ -141,8 +141,10 @@ class Load_Games:
                     return self.games[option - 1]
                 else:
                     print("Invalid selection, please choose a game")
+                    return None
             except ValueError:
                 print("Please enter a number shown next to the game.")
+                return None
 
     def boards_rebuilt(self, user_selection):
         """
@@ -186,7 +188,7 @@ class Load_Games:
         Loads the list of saved games associated with the username logged in
         with
         """
-        self.games = self.load_saved_games()
+        self.games, _ = self.load_saved_games()
 
         if not self.games:
             return None
@@ -231,6 +233,8 @@ class Save:
             self,
             game_id,
             player,
+            size,
+            total_ships,
             player_board,
             pc_board,
             user_hits,
@@ -238,6 +242,8 @@ class Save:
             ):
         self.game_id = game_id
         self.player = player
+        self.size = size
+        self.total_ships = total_ships
         self.player_board = player_board
         self.pc_board = pc_board
         self.user_hits = user_hits
@@ -329,8 +335,8 @@ class Save:
             [
                 self.game_id,
                 self.player,
-                self.player_board.size,
-                self.player_board.num_ships,
+                self.size,
+                self.total_ships,
                 self.player_board,
                 self.pc_board,
                 self.user_hits,
@@ -349,8 +355,8 @@ class Save:
         saved_games.append_row([
             self.game_id,
             self.player,
-            self.player_board.size,
-            self.player_board.num_ships,
+            self.size,
+            self.total_ships,
             self.player_board,
             self.pc_board,
             self.user_hits,

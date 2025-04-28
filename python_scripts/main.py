@@ -219,12 +219,9 @@ def main():
     """
     print(Style.BRIGHT + "Welcome to Ultimate Battleships!\n")
     intro()
-
-    username = None
-
-    while username is None:
-        username = user_choice()
-        if username is None:
+    while loaded.username is None:
+        loaded.username = user_choice()
+        if loaded.username is None:
             print("-" * 35)
             print("Login failed. Please try again.")
             print("-" * 35)
@@ -232,13 +229,13 @@ def main():
     games_saved, _ = loaded.load_saved_games()
 
     if games_saved:
-        load_games_check(username)
+        load_games_check(loaded.username)
 
     else:
         print("-" * 35)
-        print(f"Currently no saved games for {username}")
+        print(f"Currently no saved games for {loaded.username}")
         print("-" * 35)
-        new_game(username)
+        new_game(loaded.username)
 
 
 # Checks to see if code is being used as a module or main program

@@ -31,14 +31,14 @@ This then means the user has to remember both parts of information.
 ## IF SAVED GAMES FINDS USERNAME
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 8 | User enters Y or N | Y = List of games saved displayed, N = New game starts, Any other input repeats asking user for Y or N to be inputted | ?? |
+| 8 | User enters Y or N | Y = List of games saved displayed, N = New game starts, Any other input repeats asking user for Y or N to be inputted | Pass |
 
 For N = New Game, go to [gameplay flow chart](#gameplay-logic)
 
 ## IF USER REQUESTS TO LOAD A SAVED GAME
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 9 | Asks user for game they want to reload | User enters the number associated with game they want to load | ?? |
+| 9 | Asks user for game they want to reload | User enters the number associated with game they want to load | Pass |
 | 10 | User input validation | If input entered is a number next to a game = [loads the associated game](#loaded-game), If input is not a number next to a game or not a number = error message and repeats asking for number associated with a game listed | ?? |
 
 ## LOADED GAME
@@ -116,7 +116,7 @@ Go to [exit game](#exit-game)
 ## GAME CONTINUES
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 14 / 17 / 18 / 19 | Used asked to select an option between continuing, saving or exiting | C = game continues and [turns](#turns) is repeated, S = game state is saved to Google Sheets and game is exited, E = game is exited, any other input the user is asked to put in a correct input | ?? |
+| 14 / 17 / 18 / 19 | Used asked to select an option between continuing, saving or exiting | C = game continues and [turns](#turns) is repeated, S = game state is saved to Google Sheets and game is exited, E = game is exited, any other input the user is asked to put in a correct input | Pass |
 
 If game is exited, go to [exit game](#exit-game)
 

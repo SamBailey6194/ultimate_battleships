@@ -327,6 +327,8 @@ class Gameplay:
         save_state = Save(
             self.game.game_id,
             self.game.player,
+            self.game.player_board.size,
+            self.game.player_board.num_ships,
             self.game.player_board,
             self.game.pc_board,
             self.game.user_hits,
