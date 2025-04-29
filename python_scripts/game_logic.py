@@ -348,7 +348,7 @@ class Gameplay:
 
             continue_save_exit = self.save_game()
             if continue_save_exit == "continue":
-                continue
+                return "continue"
             elif continue_save_exit == "save":
                 return "saved"
             elif continue_save_exit == "exit":

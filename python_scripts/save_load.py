@@ -228,6 +228,7 @@ class LoadGames:
 
         return (
             self.game_id,
+            self.username,
             self.player_board,
             self.computer_board,
             self.games,

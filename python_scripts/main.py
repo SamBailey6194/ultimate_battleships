@@ -125,7 +125,8 @@ def full_game(
     battleships = gameplay.play_game()
 
     if battleships == "saved" or battleships == "exit":
-        play_again_option(player)
+        if play_again_option(player):
+            return True
     elif battleships == "game over":
         leaderboard.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
@@ -181,6 +182,7 @@ def load_games_check(username, loads=None, saves=None):
                 saved_game_data = loads.access_saved_games()
                 (
                     game_id,
+                    username,
                     player_board,
                     computer_board,
                     _,
@@ -189,25 +191,29 @@ def load_games_check(username, loads=None, saves=None):
                     ) = saved_game_data
 
                 if player_board and computer_board:
-                    full_game(
-                        username,
-                        game_id=game_id,
-                        player_board=player_board,
-                        pc_board=computer_board,
-                        user_hits=user_hits,
-                        computer_hits=computer_hits
-                        )
+                    return True, {
+                        "game_id": game_id,
+                        "username": username,
+                        "player_board": player_board,
+                        "computer_board": computer_board,
+                        "user_hits": user_hits,
+                        "computer_hits": computer_hits,
+                        "size": player_board.size,
+                        "total_ships": player_board.num_ships
+                    }
             elif access_games == "N":
                 print("-" * 35)
                 print("Let's start a new game instead.")
                 print("-" * 35)
                 new_game(username)
+                return False, None
 
     else:
         print("-" * 35)
         print(f"Currently no saved games for {username}")
         print("-" * 35)
         new_game(username)
+        return False, None
 
 
 def main():
@@ -236,7 +242,26 @@ def main():
         )
     games_saved, _ = load_games.load_saved_games()
 
-    load_games_check(username, load_games, games_saved)
+    while True:
+        loaded_game, game_data = load_games_check(
+            username, load_games, games_saved
+            )
+        if loaded_game:
+            continue_loaded_game = full_game(
+                player=game_data["username"],
+                game_id=game_data["game_id"],
+                size=game_data["size"],
+                total_ships=game_data["total_ships"],
+                player_board=game_data["player_board"],
+                pc_board=game_data["computer_board"],
+                user_hits=game_data["user_hits"],
+                computer_hits=game_data["computer_hits"],
+            )
+        else:
+            continue_loaded_game = new_game(username)
+
+        if not continue_loaded_game:
+            break
 
 
 # Checks to see if code is being used as a module or main program
