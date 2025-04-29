@@ -118,9 +118,10 @@ Go to [exit game](#exit-game)
 | ----- | ----- | ----- | ----- |
 | 14 / 17 / 18 / 19 | Used asked to select an option between continuing, saving or exiting | C = game continues and [turns](#turns) is repeated, S = game state is saved to Google Sheets and game is exited, E = game is exited, any other input the user is asked to put in a correct input | Pass |
 
+When game is saved, if it was loaded in from a previous save it overwirtes that save, instead of saving a new game
 If game is exited, go to [exit game](#exit-game)
 
 ## EXIT GAME
-| 15 / 18 / 19 / 20 | Game is exited | To double check user wanted to exit the program or the game, user is asked if they want to play again or exit program | ?? |
-| 16 / 19 / 20 / 21 | User input validation | P = play again and user is asked about loading a saved game or not; see expected logic [here](#loaded-game); E = Program is exited  | ?? |
-| 17 / 20 / 21 / 22 | Program exited | Program is completely exited  | ?? |
+| 15 / 18 / 19 / 20 | Game is exited | To double check user wanted to exit the program or the game, user is asked if they want to play again or exit program | Pass |
+| 16 / 19 / 20 / 21 | User input validation | P = play again and user is asked about loading a saved game or not; see expected logic [here](#loaded-game); E = Program is exited  | Pass |
+| 17 / 20 / 21 / 22 | Program exited | Program is completely exited  | Pass |
