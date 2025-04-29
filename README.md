@@ -80,6 +80,7 @@ The
 - The available coordinates for the computer random shots wasn't resetting correctly, changed the if statement to have if not self.available_coordinates instead of if self.available_coordinates None
 - Loaded games not listed correctly to choose from, had to ensure the games were being listed correctly by adding , _ to the self_games variable in access_saved_games to enable it to have the two parameters listed, but the second we did not care about
 - Due to calling the wrong function from style.py the computer board wasn't placing ships properly, updated the function from style.py to be correct
+- User hits and computer hits were being increased to the total number of ships due to an unneeded variable that changed the hits incorrectly player turn and computer turn
 
 ### Unfixed Bugs
 
