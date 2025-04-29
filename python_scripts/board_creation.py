@@ -5,10 +5,7 @@ import time
 import datetime
 from random import randint
 # Imported other python scripts
-from style import StyledText, Symbols
-
-
-StyledText.init_styles()
+from style import Symbols
 
 
 class Board:

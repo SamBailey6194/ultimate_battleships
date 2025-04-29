@@ -9,9 +9,6 @@ from save_load import Save, LoadGames
 from board_creation import BoardSetup
 
 
-StyledText.init_styles()
-
-
 class BoardAfterShots:
     def __init__(self, game):
         self.game = game

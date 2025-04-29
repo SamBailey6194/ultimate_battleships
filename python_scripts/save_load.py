@@ -9,9 +9,6 @@ from style import StyledText, Symbols
 from board_creation import Board
 
 
-StyledText.init_styles()
-
-
 class LoadGames:
     """
     Class that loads the user games associated with the username
