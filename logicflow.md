@@ -39,13 +39,13 @@ For N = New Game, go to [gameplay flow chart](#gameplay-logic)
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
 | 9 | Asks user for game they want to reload | User enters the number associated with game they want to load | Pass |
-| 10 | User input validation | If input entered is a number next to a game = [loads the associated game](#loaded-game), If input is not a number next to a game or not a number = error message and repeats asking for number associated with a game listed | ?? |
+| 10 | User input validation | If input entered is a number next to a game = [loads the associated game](#loaded-game), If input is not a number next to a game or not a number = error message and repeats asking for number associated with a game listed | Pass |
 
 ## LOADED GAME
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 11 | Game ID Fetched | Game loads and the program retrieves the Game ID to help with saving later | ?? |
-| 12 | Game Boards Converted and Stylised | Game boards in the save file are converted back to a grid and the colours are added back in, then displayed | ?? |
+| 11 | Game ID Fetched | Game loads and the program retrieves the Game ID to help with saving later | Pass |
+| 12 | Game Boards Converted and Stylised | Game boards in the save file are converted back to a grid and the colours are added back in, then displayed | Pass |
 | 13 | Game continues | Game then continues, see [gameplay flow chart](#gameplay-logic) | ?? |
 
 # USER CREATION

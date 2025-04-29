@@ -2,24 +2,17 @@
 
 # Imported dependencies and modules
 from random import choice
-import colorama
-from colorama import Fore, Style
 import time
 # Imported other python scripts
-from save_load import Save, Load_Games
-from board_creation import Board_Setup
-
-# Initialise colorama
-colorama.init(autoreset=True)
-
-# Global Colorama variables for game_logic
-water = f"{Fore.BLUE}~{Style.RESET_ALL}"
-ship = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
-hit = f"{Fore.RED}H{Style.RESET_ALL}"
-miss = f"{Fore.GREEN}M{Style.RESET_ALL}"
+from style import StyledText, Symbols
+from save_load import Save, LoadGames
+from board_creation import BoardSetup
 
 
-class Board_After_Shots:
+StyledText.init_styles()
+
+
+class BoardAfterShots:
     def __init__(self, game):
         self.game = game
 
@@ -28,7 +21,7 @@ class Board_After_Shots:
         Counts the hits for each shot a player takes
         """
         return sum(
-            row.count(f"{Fore.RED}H{Style.RESET_ALL}") for row in grid
+            row.count(Symbols.water()) for row in grid
             )
 
     def valid_shot(self, row, col, board):
@@ -47,7 +40,7 @@ class Board_After_Shots:
         Refactored code to hold the explanation a shot has
         already been made there
         """
-        if board.grid[row][col] in (miss, hit):
+        if board.grid[row][col] in (Symbols.miss(), Symbols.hit()):
             time.sleep(1)
             print(
                 f"{general} you have already shot here, please pick a"
@@ -60,8 +53,9 @@ class Board_After_Shots:
         Refactored code to hold the processing of when
         a shot hits a ship
         """
-        if board.grid[row][col] == ship:
-            board.grid[row][col] = hit
+        hit_ship = StyledText.red("Hit")
+        if board.grid[row][col] == Symbols.ship():
+            board.grid[row][col] = Symbols.hit()
 
             if general == self.game.player:
                 self.game.user_hits += 1
@@ -71,7 +65,7 @@ class Board_After_Shots:
             ships = board.num_ships - self.hit_counter(board.grid)
             time.sleep(1)
             print(
-                f"{general} {Fore.RED}Hit{Style.RESET_ALL}!\n"
+                f"{general} {hit_ship}!\n"
                 f"Just {ships} left to destroy.", flush=True
                 )
             return True
@@ -81,14 +75,15 @@ class Board_After_Shots:
         Refactored code to hold the processing of when
         a shot misses
         """
-        if board.grid[row][col] == water:
+        miss_ship = StyledText.green("Miss")
+        if board.grid[row][col] == Symbols.water():
             ships = board.num_ships - self.hit_counter(board.grid)
             time.sleep(1)
             print(
-                f"{general} {Fore.GREEN}Miss{Style.RESET_ALL}!\n"
+                f"{general} {miss_ship}!\n"
                 f"Just {ships} left to destroy.", flush=True
                 )
-            board.grid[row][col] = miss
+            board.grid[row][col] = Symbols.miss()
             return True
 
     def update_board(self, general, board, row, col):
@@ -118,13 +113,23 @@ class Board_After_Shots:
         """
         Refactored code to hold the board key
         """
+        water_ = StyledText.blue("Water")
+        ship_ = StyledText.blue("Ship")
+        hit_ = StyledText.blue("Hit")
+        miss_ = StyledText.blue("Miss")
+
+        water_space = Symbols.water()
+        ship_space = Symbols.water()
+        hit_space = Symbols.water()
+        miss_space = Symbols.water()
+
         print("-" * 35)
         print(
             "Key:\n"
-            f"{water} = {Fore.BLUE}Water{Style.RESET_ALL} \n"
-            f"{ship} = {Fore.MAGENTA}Ship{Style.RESET_ALL}\n"
-            f"{hit} = {Fore.RED}Hit{Style.RESET_ALL}\n"
-            f"{miss} = {Fore.GREEN}Miss{Style.RESET_ALL}\n"
+            f"{water_space} = {water_} \n"
+            f"{ship_space} = {ship_}\n"
+            f"{hit_space} = {hit_}\n"
+            f"{miss_space} = {miss_}\n"
             )
         print("-" * 35)
 
@@ -144,18 +149,12 @@ class Board_After_Shots:
         Refactored code to display the game stats
         """
         print("-" * 35)
-        print(
-            f"{self.game.player} hits: {Fore.RED}{self.game.user_hits}"
-            f"{Style.RESET_ALL}/"
-            f"{Fore.MAGENTA}{self.game.pc_board.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
-        print(
-            f"Computer hits: {Fore.RED}{self.game.computer_hits}"
-            f"{Style.RESET_ALL}/"
-            f"{Fore.MAGENTA}{self.game.player_board.num_ships}"
-            f"{Style.RESET_ALL}"
-            )
+
+        user_hit = StyledText.red(str(self.game.user_hits))
+        computer_hits = StyledText.red(str(self.game.computer_hits))
+        total_ships = StyledText.magenta(str(self.game.player_board.num_ships))
+        print(f"{self.game.player} hits: {user_hit}/{total_ships}")
+        print(f"Computer hits: {computer_hits}/{total_ships}")
         print("-" * 35)
 
     def update_game_status(self):
@@ -169,7 +168,7 @@ class Board_After_Shots:
         time.sleep(1.5)
 
 
-class Shot_Tracker:
+class ShotTracker:
     def __init__(self, game):
         self.game = game
         self.available_coordinates = []
@@ -194,7 +193,7 @@ class Shot_Tracker:
         This asks for user to fire their shots and takes a random
         shot for the computer
         """
-        board = Board_Setup(
+        board = BoardSetup(
             self.game.player,
             self.game.player_board.num_ships,
             self.game.player_board,
@@ -230,7 +229,7 @@ class Shot_Tracker:
                 break
 
 
-class Turn_Tracker:
+class TurnTracker:
     def __init__(self, game):
         self.game = game
 
@@ -279,7 +278,7 @@ class Gameplay:
         Function that deletes a game from the database if it has been
         loaded in and completed
         """
-        games = Load_Games(
+        games = LoadGames(
             self.game.player,
             game_id=None,
             player_board=None,

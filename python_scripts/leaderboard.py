@@ -1,14 +1,11 @@
 # This script holds all functions to do with the
 # leaderboard logic.
 
-# Imported modules and dependencies
-import colorama
-from colorama import Style
 # Access to correct google sheets
+from style import StyledText
 from sheets import small_game_lb, medium_game_lb, big_game_lb
 
-# Initialise colorama
-colorama.init(autoreset=True)
+StyledText.init_styles()
 
 
 def update_lb(username, size, user_score, computer_score):
@@ -44,22 +41,24 @@ def lb_order(sorted_lb, size):
     else:
         title = "Leaderboard for Large Game (15x15)"
 
-    leaders = f"{Style.BRIGHT}{title}{Style.RESET_ALL}\n"
+    leaders = StyledText.bold(f"{title}\n")
     leaders += "-" * 35 + "\n"
 
     # Add column headings
     leaders += (
-        f"{Style.BRIGHT}Position | Username | User Score | Computer Score |"
-        f" Game Score\n{Style.RESET_ALL}"
+        StyledText.bold(
+            "Position | Username | User Score | Computer Score |"
+            " Game Score\n"
         )
+    )
     leaders += "-" * 35 + "\n"
 
     # Add leaderboard entries
     for position, username in enumerate(sorted_lb, 1):
         leaders += (
-            f"{Style.BRIGHT}{position:<4}{Style.RESET_ALL} |"
-            f" {Style.BRIGHT}{username['Username']:<8}{Style.RESET_ALL} |"
-            f" {username['User Score']:<4} | {username['Computer Score']:<4}"
+            StyledText.bold(f"{position:<4}") + " |" +
+            StyledText.bold(f" {username['Username']:<12}") + " |" +
+            f" {username['User Score']:<4} | {username['Computer Score']:<4}" +
             f" {username['Game Score']}\n"
         )
 

@@ -2,32 +2,16 @@
 # and then calls the functions in the correct order
 
 # Imported dependencies and modules
-import colorama
-from colorama import Fore, Style
 import time
 import sys
 # Imported other python scripts
+from style import StyledText
 from user import user_login, user_creation
-from board_creation import Board_Setup
+from board_creation import BoardSetup
 from game import Game
 from game_logic import Gameplay
-from save_load import Load_Games
+from save_load import LoadGames
 import leaderboard
-
-# Initialise colorama
-colorama.init(autoreset=True)
-
-# Global variables for main.py
-lb = leaderboard
-loaded = Load_Games(
-    username=None,
-    game_id=None,
-    player_board=None,
-    computer_board=None,
-    games=None,
-    player_colour=None,
-    computer_colour=None
-    )
 
 
 def intro():
@@ -54,16 +38,18 @@ def user_choice():
     Then takes them to login or user creation.
     """
     while True:
+        yes = StyledText.green("Y")
+        no = StyledText.red("N")
         login_option = input(
             "Have you already got a login?\n"
-            f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
-            f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
+            f"If yes please enter '{yes}', if no"
+            f" please enter '{no}':\n"
             ).strip()
 
         if login_option not in ("Y", "N"):
             print(
-                f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
-                f" '{Fore.RED}N{Style.RESET_ALL}' \n"
+                f"Please enter '{yes}' or"
+                f" '{no}' \n"
                   )
             continue
         elif login_option == "Y":
@@ -89,12 +75,18 @@ def play_again_option(player):
     Allows user to tell the program if they want to play again or exit the game
     """
     while True:
+        play = StyledText.green("P")
+        exit_ = StyledText.red("E")
         play_or_exit = input(
             "Would you like to play again or exit the game?\n"
-            f"Please enter '{Fore.GREEN}P{Style.RESET_ALL}' to play again or"
-            f"'{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
+            f"Please enter '{play}' to play again or"
+            f"'{exit_}' to exit: \n"
         )
         if play_or_exit not in ("P", "E"):
+            print(
+                f"Please enter '{play}' or"
+                f" '{exit_}' \n"
+                  )
             continue
         elif play_or_exit == "P":
             load_games_check(player)
@@ -111,7 +103,7 @@ def leaderboard_generation(player, size):
     print("-" * 35)
     print(f"{player}, see how you did on the leaderboard below")
     print("-" * 35)
-    lb.show_lb(size)
+    leaderboard.show_lb(size)
     print("-" * 35)
     print(
         "When you are done searching the leaderboard you can either play again"
@@ -120,28 +112,22 @@ def leaderboard_generation(player, size):
 
 
 def full_game(
-        player, size=None, total_ships=0,
+        player, game_id=None, size=None, total_ships=0,
         player_board=None, pc_board=None,
         user_hits=0, computer_hits=0
         ):
     """
     Starts or resumes the game and checks when the game finishes
     """
-    setup = Board_Setup(player, total_ships, player_board, pc_board)
+    setup = BoardSetup(player, size, total_ships, player_board, pc_board)
     game = Game(setup, user_hits, computer_hits)
     gameplay = Gameplay(game)
     battleships = gameplay.play_game()
 
-    if player_board:
-        if size is None:
-            size = player_board.size
-        if total_ships is None:
-            total_ships = player_board.num_ships
-
     if battleships == "saved" or battleships == "exit":
         play_again_option(player)
     elif battleships == "game over":
-        lb.update_lb(player, size, game.user_hits, game.computer_hits)
+        leaderboard.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
         gameplay.delete_game()
 
@@ -157,7 +143,7 @@ def new_game(
     saved games or the user wants to start a new game instead
     of continuing a saved game
     """
-    setup = Board_Setup(player, total_ships, player_board, pc_board)
+    setup = BoardSetup(player, total_ships, player_board, pc_board)
     user = setup.user_board()
     computer = setup.computer_board(user.size, user.num_ships)
     full_game(
@@ -168,42 +154,42 @@ def new_game(
         )
 
 
-def load_games_check(username):
+def load_games_check(username, load_games, games_saved):
     """
     Function that checks if user has any saved games
     """
-    games_saved, _ = loaded.load_saved_games()
-
     if games_saved:
         while True:
+            yes = StyledText.green("Y")
+            no = StyledText.red("N")
             print("-" * 35)
             access_games = input(
                 f"{username}, would you like to access any of your"
                 " saved games?\n"
-                f"If yes please enter '{Fore.GREEN}Y{Style.RESET_ALL}', if no"
-                f" please enter '{Fore.RED}N{Style.RESET_ALL}':\n"
+                f"If yes please enter '{yes}', if no"
+                f" please enter '{no}':\n"
                 ).strip()
             print("-" * 35)
 
             if access_games not in ("Y", "N"):
                 print(
-                    f"Please enter '{Fore.GREEN}Y{Style.RESET_ALL}' or"
-                    f" '{Fore.RED}N{Style.RESET_ALL}' \n"
+                    f"Please enter '{StyledText.green("Y")}' or"
+                    f" '{StyledText.red("N")}' \n"
                     )
                 continue
             elif access_games == "Y":
-                saved_game_data = loaded.access_saved_games()
-                player_board, computer_board, total_ships = (
-                    saved_game_data[:3]
+                saved_game_data = load_games.access_saved_games()
+                game_id, player_board, computer_board, _, = (
+                    saved_game_data[4:]
                 )
                 user_hits, computer_hits = (
-                    saved_game_data[3:5]
+                    saved_game_data[5:6]
                 )
+
                 if player_board and computer_board:
                     full_game(
                         username,
-                        size=player_board.size,
-                        total_ships=total_ships,
+                        game_id=game_id,
                         player_board=player_board,
                         pc_board=computer_board,
                         user_hits=user_hits,
@@ -217,28 +203,40 @@ def load_games_check(username):
 
     else:
         print("-" * 35)
-        print(f"Currently no saved games for {loaded.username}")
+        print(f"Currently no saved games for {username}")
         print("-" * 35)
-        new_game(loaded.username)
+        new_game(username)
 
 
 def main():
     """
     Run all program functions
     """
-    print(Style.BRIGHT + "Welcome to Ultimate Battleships!\n")
+    print(StyledText.bold("Welcome to Ultimate Battleships!\n"))
     intro()
 
-    while loaded.username is None:
-        loaded.username = user_choice()
-        if loaded.username is None:
+    load_games = LoadGames(
+        game_id=None,
+        username=None,
+        player_board=None,
+        computer_board=None,
+        games=None,
+        player_colour=None,
+        computer_colour=None
+        )
+    games_saved, _ = load_games.load_saved_games()
+
+    while load_games.username is None:
+        load_games.username = user_choice()
+        if load_games.username is None:
             print("-" * 35)
             print("Login failed. Please try again.")
             print("-" * 35)
 
-    load_games_check(loaded.username)
+    load_games_check(load_games.username, load_games, games_saved)
 
 
 # Checks to see if code is being used as a module or main program
 if __name__ == "__main__":
+    StyledText.init_styles()
     main()

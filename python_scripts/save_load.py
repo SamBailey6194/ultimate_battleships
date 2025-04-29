@@ -2,25 +2,17 @@
 # saving games functions
 
 # Imported dependencies and modules
-import colorama
-from colorama import Fore, Style
 from sheets import saved_games
 import re
 # Imported other python scripts
+from style import StyledText, Symbols
 from board_creation import Board
 
-# Initialise colorama
-colorama.init(autoreset=True)
 
-# Global variables for board_creation
-save = saved_games
-water = f"{Fore.BLUE}~{Style.RESET_ALL}"
-ship = f"{Fore.MAGENTA}S{Style.RESET_ALL}"
-hit = f"{Fore.RED}H{Style.RESET_ALL}"
-miss = f"{Fore.GREEN}M{Style.RESET_ALL}"
+StyledText.init_styles()
 
 
-class Load_Games:
+class LoadGames:
     """
     Class that loads the user games associated with the username
     and asks if they want to load any saved games they have
@@ -40,6 +32,8 @@ class Load_Games:
             ):
         self.game_id = game_id
         self.username = username
+        self.size = 0
+        self.num_ships = 0
         self.player_board = player_board
         self.computer_board = computer_board
         self.games = games
@@ -67,19 +61,24 @@ class Load_Games:
         """
         Restoring colour to the boards after loading in the data
         """
+        water_space = Symbols.water()
+        ship_space = Symbols.water()
+        hit_space = Symbols.water()
+        miss_space = Symbols.water()
+
         loaded_grid = []
 
         for row in grid:
             grid_row = []
             for cell in row:
                 if cell == "~":
-                    grid_row.append(water)
+                    grid_row.append(water_space)
                 elif cell == "S":
-                    grid_row.append(ship)
+                    grid_row.append(ship_space)
                 elif cell == "H":
-                    grid_row.append(hit)
+                    grid_row.append(hit_space)
                 elif cell == "M":
-                    grid_row.append(miss)
+                    grid_row.append(miss_space)
                 else:
                     grid_row.append(cell)
 
@@ -102,9 +101,10 @@ class Load_Games:
         """
         Helper function to check board size
         """
-        size = int(selected["Board Size"])
-        board = Board(size=size)
-        board.grid = [[water] * size for _ in range(size)]
+        water_space = Symbols.water()
+        self.size = int(selected["Board Size"])
+        board = Board(size=self.size)
+        board.grid = [[water_space] * self.size for _ in range(self.size)]
         return board
 
     def list_saves(self):
@@ -115,16 +115,20 @@ class Load_Games:
         print("-" * 35)
         print(f"{self.username} saved games available:")
         for i, save_data in enumerate(self.games):
-            size = save_data["Board Size"]
-            num_ships = save_data["Number of Ships"]
+            self.size = save_data["Board Size"]
+            self.num_ships = save_data["Number of Ships"]
             user_hits = save_data["User Hits"]
             computer_hits = save_data["Computer Hits"]
+            size_colour = StyledText.blue(self.size)
+            ships_colour = StyledText.magenta(self.num_ships)
+            user_hits_colour = StyledText.green(user_hits)
+            computer_hits_colour = StyledText.red(computer_hits)
             print(
-                f"{i + 1}. Size: {size} | Number of Ships: {num_ships} |"
-                f" {self.username} Hits: {user_hits} |"
-                f" Computer Hits: {computer_hits}"
+                f"{i + 1}. Size: {size_colour} |"
+                f" Number of Ships: {ships_colour} |"
+                f" {self.username} Hits: {user_hits_colour} |"
+                f" Computer Hits: {computer_hits_colour}"
                 )
-        return self.user_choose_save()
 
     def user_choose_save(self):
         """
@@ -198,6 +202,8 @@ class Load_Games:
         user_selection = self.user_choose_save()
 
         self.game_id = user_selection["Game ID"]
+        self.size = user_selection["Board Size"]
+        self.num_ships = user_selection["Number of Ships"]
 
         # Restoring the colorama codes to the grid
         self.player_colour = self.restore_colour(
@@ -218,7 +224,6 @@ class Load_Games:
             self.player_board,
             self.computer_board,
             self.games,
-            self.player_board.num_ships,
             user_selection["User Hits"],
             user_selection["Computer Hits"]
             )
@@ -253,6 +258,10 @@ class Save:
         """
         Refactored function to hold the user prompt
         """
+        continue_ = StyledText.green("C")
+        save_ = StyledText.yellow("S")
+        exit_ = StyledText.red("E")
+
         allowed_inputs = {
             "C": "continue",
             "S": "save",
@@ -262,18 +271,18 @@ class Save:
             save_continue = input(
                 f"{self.player} would you like to continue or save the game"
                 " and return later? \n"
-                f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}' for"
-                f" continue, '{Fore.YELLOW}S{Style.RESET_ALL}' for save or"
-                f" '{Fore.RED}E{Style.RESET_ALL}' to exit: \n"
+                f"Please enter '{continue_}' for"
+                f" continue, '{save_}' for save or"
+                f" '{exit_}' to exit: \n"
             ).strip().upper()
 
             if save_continue in allowed_inputs:
                 return allowed_inputs[save_continue]
 
             print(
-                    f"Please enter '{Fore.GREEN}C{Style.RESET_ALL}',"
-                    f" '{Fore.YELLOW}S{Style.RESET_ALL}' or"
-                    f" '{Fore.RED}E{Style.RESET_ALL}'"
+                    f"Please enter '{continue_}',"
+                    f" '{save_}' or"
+                    f" '{exit_}'"
                     )
 
     def convert_board(self, board):
