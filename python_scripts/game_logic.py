@@ -122,14 +122,14 @@ class BoardAfterShots:
         Refactored code to hold the board key
         """
         water_ = StyledText.blue("Water")
-        ship_ = StyledText.blue("Ship")
-        hit_ = StyledText.blue("Hit")
-        miss_ = StyledText.blue("Miss")
+        ship_ = StyledText.magenta("Ship")
+        hit_ = StyledText.red("Hit")
+        miss_ = StyledText.green("Miss")
 
         water_space = Symbols.water()
-        ship_space = Symbols.water()
-        hit_space = Symbols.water()
-        miss_space = Symbols.water()
+        ship_space = Symbols.ship()
+        hit_space = Symbols.hit()
+        miss_space = Symbols.miss()
 
         print("-" * 35)
         print(
