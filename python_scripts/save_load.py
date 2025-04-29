@@ -8,6 +8,8 @@ import re
 from style import StyledText, Symbols
 from board_creation import Board
 
+StyledText.init_styles()
+
 
 class LoadGames:
     """
@@ -29,13 +31,14 @@ class LoadGames:
             ):
         self.game_id = game_id
         self.username = username
-        self.size = 0
-        self.num_ships = 0
         self.player_board = player_board
         self.computer_board = computer_board
         self.games = games
         self.player_colour = player_colour
         self.computer_colour = computer_colour
+        self.size = 0
+        self.num_ships = 0
+        self.grid = []
 
     def convert_board_to_grid(self, game_board):
         """
@@ -45,28 +48,29 @@ class LoadGames:
             line for line in game_board.strip().split("\n")
             if line.strip()
             ]
-        grid = [row.split(",") for row in lines]
-        max_len = max(len(row) for row in grid)
+        self.grid = [row.split(",") for row in lines]
+        max_len = max(len(row) for row in self.grid)
 
-        for row in grid:
+        for row in self.grid:
             if len(row) != max_len:
                 raise ValueError("Inconsistent row length in saved game grid.")
 
-        return grid
+        return self.grid
 
     def restore_colour(self, grid):
         """
         Restoring colour to the boards after loading in the data
         """
-        water_space = Symbols.water()
-        ship_space = Symbols.water()
-        hit_space = Symbols.water()
-        miss_space = Symbols.water()
-
         loaded_grid = []
 
         for row in grid:
             grid_row = []
+
+            water_space = Symbols.water()
+            ship_space = Symbols.water()
+            hit_space = Symbols.water()
+            miss_space = Symbols.water()
+
             for cell in row:
                 if cell == "~":
                     grid_row.append(water_space)
@@ -116,10 +120,12 @@ class LoadGames:
             self.num_ships = save_data["Number of Ships"]
             user_hits = save_data["User Hits"]
             computer_hits = save_data["Computer Hits"]
+
             size_colour = StyledText.blue(self.size)
             ships_colour = StyledText.magenta(self.num_ships)
             user_hits_colour = StyledText.green(user_hits)
             computer_hits_colour = StyledText.red(computer_hits)
+
             print(
                 f"{i + 1}. Size: {size_colour} |"
                 f" Number of Ships: {ships_colour} |"
@@ -210,9 +216,8 @@ class LoadGames:
             self.convert_board_to_grid(user_selection["Computer Board"])
         )
 
-        self.player_board, self.computer_board = self.boards_rebuilt(
-            user_selection
-            )
+        self.player_board = self.boards_rebuilt(self.player_colour)
+        self.computer_board = self.boards_rebuilt(self.computer_colour)
 
         self.display_boards()
 

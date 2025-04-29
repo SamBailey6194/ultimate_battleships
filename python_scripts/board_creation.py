@@ -5,7 +5,9 @@ import time
 import datetime
 from random import randint
 # Imported other python scripts
-from style import Symbols
+from style import StyledText, Symbols
+
+StyledText.init_styles()
 
 
 class Board:
@@ -27,13 +29,14 @@ class Board:
         """
         grid_nums = "  "+" ".join(f"{num}" for num in range(self.size))
         water_space = Symbols.water()
+        ship_space = Symbols.ship()
         print(grid_nums)
 
         for position, row in enumerate(self.grid):
             displayed_row = []
             for cell in row:
                 # Replace ships "S" with "~"
-                if not show_ships and 'S' in cell:
+                if not show_ships and cell == ship_space:
                     displayed_row.append(water_space)
                 else:
                     # Show full board with ships
@@ -137,20 +140,20 @@ class BoardSetup:
         """
         return randint(0, size-1)
 
-    def validate_coordinates(self, prompt):
+    def validate_coordinates(self, prompt, size):
         """
         Validates user inputs when asking for coordinates
         """
         while True:
             try:
                 value = int(input(prompt))
-                if 0 <= value < self.size:
+                if 0 <= value < size:
                     return value
                 else:
                     print(
                         "Please remember to enter a coordinate in the correct"
                         " range.\n"
-                        f"It must be a number between 0 and {self.size - 1}."
+                        f"It must be a number between 0 and {size - 1}."
                         )
             except (ValueError, IndexError):
                 print(
@@ -163,7 +166,7 @@ class BoardSetup:
         Allows player to place their ships where they choose too
         """
         water_space = Symbols.water()
-        ship_space = Symbols.water()
+        ship_space = Symbols.ship()
         print("-" * 35)
         print(
             "Now you have chosen the size board you want to play on.\n"
@@ -208,7 +211,7 @@ class BoardSetup:
         Places the ships randomly on the board
         """
         water_space = Symbols.water()
-        ship_space = Symbols.water()
+        ship_space = Symbols.ship()
         self.ships_placed = 0
         while self.ships_placed < self.pc_board.num_ships:
             row = self.random_point(self.pc_board.size)

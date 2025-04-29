@@ -154,11 +154,11 @@ def new_game(
         )
 
 
-def load_games_check(username, load_games, games_saved):
+def load_games_check(username, loads=None, saves=None):
     """
     Function that checks if user has any saved games
     """
-    if games_saved:
+    if saves:
         while True:
             yes = StyledText.green("Y")
             no = StyledText.red("N")
@@ -178,13 +178,15 @@ def load_games_check(username, load_games, games_saved):
                     )
                 continue
             elif access_games == "Y":
-                saved_game_data = load_games.access_saved_games()
-                game_id, player_board, computer_board, _, = (
-                    saved_game_data[4:]
-                )
-                user_hits, computer_hits = (
-                    saved_game_data[5:6]
-                )
+                saved_game_data = loads.access_saved_games()
+                (
+                    game_id,
+                    player_board,
+                    computer_board,
+                    _,
+                    user_hits,
+                    computer_hits
+                    ) = saved_game_data
 
                 if player_board and computer_board:
                     full_game(
@@ -215,9 +217,17 @@ def main():
     print(StyledText.bold("Welcome to Ultimate Battleships!\n"))
     intro()
 
+    username = None
+    while username is None:
+        username = user_choice()
+        if username is None:
+            print("-" * 35)
+            print("Login failed. Please try again.")
+            print("-" * 35)
+
     load_games = LoadGames(
         game_id=None,
-        username=None,
+        username=username,
         player_board=None,
         computer_board=None,
         games=None,
@@ -226,14 +236,7 @@ def main():
         )
     games_saved, _ = load_games.load_saved_games()
 
-    while load_games.username is None:
-        load_games.username = user_choice()
-        if load_games.username is None:
-            print("-" * 35)
-            print("Login failed. Please try again.")
-            print("-" * 35)
-
-    load_games_check(load_games.username, load_games, games_saved)
+    load_games_check(username, load_games, games_saved)
 
 
 # Checks to see if code is being used as a module or main program

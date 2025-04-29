@@ -8,6 +8,8 @@ from style import StyledText, Symbols
 from save_load import Save, LoadGames
 from board_creation import BoardSetup
 
+StyledText.init_styles()
+
 
 class BoardAfterShots:
     def __init__(self, game):
@@ -59,7 +61,11 @@ class BoardAfterShots:
             else:
                 self.game.computer_hits += 1
 
-            ships = board.num_ships - self.hit_counter(board.grid)
+            ships = (
+                self.game.player_board.num_ships - self.hit_counter(
+                    board.grid
+                    )
+                )
             time.sleep(1)
             print(
                 f"{general} {hit_ship}!\n"
@@ -74,7 +80,11 @@ class BoardAfterShots:
         """
         miss_ship = StyledText.green("Miss")
         if board.grid[row][col] == Symbols.water():
-            ships = board.num_ships - self.hit_counter(board.grid)
+            ships = (
+                self.game.player_board.num_ships - self.hit_counter(
+                    board.grid
+                    )
+                    )
             time.sleep(1)
             print(
                 f"{general} {miss_ship}!\n"
