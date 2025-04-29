@@ -39,6 +39,8 @@ class LoadGames:
         self.size = 0
         self.num_ships = 0
         self.grid = []
+        self.user_hits = 0
+        self.computer_hits = 0
 
     def convert_board_to_grid(self, game_board):
         """
@@ -65,21 +67,15 @@ class LoadGames:
 
         for row in grid:
             grid_row = []
-
-            water_space = Symbols.water()
-            ship_space = Symbols.water()
-            hit_space = Symbols.water()
-            miss_space = Symbols.water()
-
             for cell in row:
                 if cell == "~":
-                    grid_row.append(water_space)
+                    grid_row.append(Symbols.water())
                 elif cell == "S":
-                    grid_row.append(ship_space)
+                    grid_row.append(Symbols.ship())
                 elif cell == "H":
-                    grid_row.append(hit_space)
+                    grid_row.append(Symbols.hit())
                 elif cell == "M":
-                    grid_row.append(miss_space)
+                    grid_row.append(Symbols.miss())
                 else:
                     grid_row.append(cell)
 
@@ -103,7 +99,7 @@ class LoadGames:
         Helper function to check board size
         """
         water_space = Symbols.water()
-        self.size = int(selected["Board Size"])
+        self.size = selected["Board Size"]
         board = Board(size=self.size)
         board.grid = [[water_space] * self.size for _ in range(self.size)]
         return board
@@ -153,7 +149,7 @@ class LoadGames:
                 print("Please enter a number shown next to the game.")
                 return None
 
-    def boards_rebuilt(self, user_selection):
+    def boards_rebuilt(self, user_selection, player_board, computer_board):
         """
         One of the refactoring original access_saved_games function into
         smaller function to handle rebuilding the boards from the
@@ -207,17 +203,26 @@ class LoadGames:
         self.game_id = user_selection["Game ID"]
         self.size = user_selection["Board Size"]
         self.num_ships = user_selection["Number of Ships"]
+        self.user_hits = user_selection["User Hits"]
+        self.computer_hits = user_selection["Computer Hits"]
+
+        # Converting board strings to grid
+        player_board_grid = self.convert_board_to_grid(
+            user_selection["User Board"]
+            )
+        computer_board_grid = self.convert_board_to_grid(
+            user_selection["Computer Board"]
+            )
 
         # Restoring the colorama codes to the grid
-        self.player_colour = self.restore_colour(
-            self.convert_board_to_grid(user_selection["User Board"])
-        )
-        self.computer_colour = self.restore_colour(
-            self.convert_board_to_grid(user_selection["Computer Board"])
-        )
+        self.player_colour = self.restore_colour(player_board_grid)
+        self.computer_colour = self.restore_colour(computer_board_grid)
 
-        self.player_board = self.boards_rebuilt(self.player_colour)
-        self.computer_board = self.boards_rebuilt(self.computer_colour)
+        self.player_board, self.computer_board = self.boards_rebuilt(
+            user_selection,
+            self.player_colour,
+            self.computer_colour
+            )
 
         self.display_boards()
 
@@ -226,8 +231,8 @@ class LoadGames:
             self.player_board,
             self.computer_board,
             self.games,
-            user_selection["User Hits"],
-            user_selection["Computer Hits"]
+            self.user_hits,
+            self.computer_hits
             )
 
 
