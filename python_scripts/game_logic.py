@@ -20,7 +20,7 @@ class BoardAfterShots:
         Counts the hits for each shot a player takes
         """
         return sum(
-            row.count(Symbols.water()) for row in grid
+            row.count(Symbols.ship()) for row in grid
             )
 
     def valid_shot(self, row, col, board):
@@ -61,15 +61,15 @@ class BoardAfterShots:
             else:
                 self.game.computer_hits += 1
 
-            ships = (
-                self.game.player_board.num_ships - self.hit_counter(
-                    board.grid
-                    )
+            ships_left = (
+                self.game.total_ships - self.game.user_hits
+                if general == self.game.player
+                else self.game.total_ships - self.game.computer_hits
                 )
             time.sleep(1)
             print(
                 f"{general} {hit_ship}!\n"
-                f"Just {ships} left to destroy.", flush=True
+                f"Just {ships_left} left to destroy.", flush=True
                 )
             return True
 
@@ -79,16 +79,17 @@ class BoardAfterShots:
         a shot misses
         """
         miss_ship = StyledText.green("Miss")
+
         if board.grid[row][col] == Symbols.water():
-            ships = (
-                self.game.player_board.num_ships - self.hit_counter(
-                    board.grid
-                    )
-                    )
+            ships_left = (
+                self.game.total_ships - self.game.user_hits
+                if general == self.game.player
+                else self.game.total_ships - self.game.computer_hits
+                )
             time.sleep(1)
             print(
                 f"{general} {miss_ship}!\n"
-                f"Just {ships} left to destroy.", flush=True
+                f"Just {ships_left} left to destroy.", flush=True
                 )
             board.grid[row][col] = Symbols.miss()
             return True
@@ -157,10 +158,11 @@ class BoardAfterShots:
         """
         print("-" * 35)
 
-        user_hit = StyledText.red(str(self.game.user_hits))
+        user_hits = StyledText.red(str(self.game.user_hits))
         computer_hits = StyledText.red(str(self.game.computer_hits))
         total_ships = StyledText.magenta(str(self.game.player_board.num_ships))
-        print(f"{self.game.player} hits: {user_hit}/{total_ships}")
+
+        print(f"{self.game.player} hits: {user_hits}/{total_ships}")
         print(f"Computer hits: {computer_hits}/{total_ships}")
         print("-" * 35)
 
@@ -253,9 +255,6 @@ class TurnTracker:
             self.game.pc_board,
             is_user=True,
             )
-        self.game.user_hits = self.game.board_management.hit_counter(
-            self.game.pc_board.grid
-            )
         time.sleep(1.5)
 
     def computer_turn(self):
@@ -270,9 +269,6 @@ class TurnTracker:
             "Computer",
             self.game.player_board,
             is_user=False,
-            )
-        self.game.computer_hits = self.game.board_management.hit_counter(
-            self.game.player_board.grid
             )
 
 
@@ -305,19 +301,18 @@ class Gameplay:
         Checks after shots taken if the game is over and congratulates
         winner
         """
-        player_hits_count = self.game.user_hits == self.game.total_ships
-        computer_hits_count = (
+        if (
+            self.game.user_hits == self.game.total_ships and
             self.game.computer_hits == self.game.total_ships
-            )
-        if player_hits_count and computer_hits_count:
+        ):
             print("Both players took out each other. Game is a tie")
             return True
-        elif player_hits_count:
+        elif self.game.user_hits == self.game.total_ships:
             print(
                 f"{self.game.player}, you win!!!! You beat the computer."
                 )
             return True
-        elif computer_hits_count:
+        elif self.game.computer_hits == self.game.total_ships:
             print(
                 f"Computer wins!!! Unlucky {self.game.player},"
                 " maybe next time."
