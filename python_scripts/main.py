@@ -119,7 +119,14 @@ def full_game(
     """
     Starts or resumes the game and checks when the game finishes
     """
-    setup = BoardSetup(player, size, total_ships, player_board, pc_board)
+    setup = BoardSetup(
+        player,
+        size,
+        total_ships,
+        player_board,
+        pc_board,
+        game_id=game_id
+        )
     game = Game(setup, user_hits, computer_hits)
     gameplay = Gameplay(game)
     battleships = gameplay.play_game()
@@ -130,7 +137,6 @@ def full_game(
     elif battleships == "game over":
         leaderboard.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
-        gameplay.delete_game()
 
 
 def new_game(

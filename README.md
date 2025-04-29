@@ -32,7 +32,11 @@ Below are the features for the website and at the end is listed any features tha
 
 ### Features Left to Implement
 
-- Create
+- Count the shots it took for the game to finish
+- Only update the leaderboard if the users score is higher than their previous
+- Show the user directly where they ended up on the leaderboard
+- Have a search function on the leaderboard
+- Once a loaded game is finished have it deleted from database
 
 ## Testing
 

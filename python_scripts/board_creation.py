@@ -117,10 +117,13 @@ class BoardSetup:
             total_ships=0,
             player_board=None,
             pc_board=None,
+            game_id=None
             ):
         # Provides each game with a unique ID so when saving a loaded game
         # it overwirtes the correct game
-        self.game_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        self.game_id = (
+            game_id or datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            )
         self.player = player
         self.size = size
         self.total_ships = total_ships

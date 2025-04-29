@@ -2,9 +2,9 @@
 # saving games functions
 
 # Imported dependencies and modules
-from sheets import saved_games
 import re
 # Imported other python scripts
+from sheets import saved_games
 from style import StyledText, Symbols
 from board_creation import Board
 
@@ -340,7 +340,7 @@ class Save:
         Refactored code to check if the game exists
         """
         for game_data, row in enumerate(saved_games.get_all_values()):
-            if row[0] == self.game_id:
+            if row and str(row[0]).strip() == str(self.game_id).strip():
                 return True, game_data + 1
         return False, None
 
@@ -348,7 +348,7 @@ class Save:
         """
         Refactor function that overwrites a loaded in game
         """
-        saved_games.update(f"A{game_row}:G{game_row}", [
+        saved_games.update(f"A{game_row}:H{game_row}", [
             [
                 self.game_id,
                 self.player,

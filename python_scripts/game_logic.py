@@ -5,7 +5,7 @@ from random import choice
 import time
 # Imported other python scripts
 from style import StyledText, Symbols
-from save_load import Save, LoadGames
+from save_load import Save
 from board_creation import BoardSetup
 
 StyledText.init_styles()
@@ -276,26 +276,6 @@ class Gameplay:
     def __init__(self, game):
         self.game = game
 
-    def delete_game(self):
-        """
-        Function that deletes a game from the database if it has been
-        loaded in and completed
-        """
-        games = LoadGames(
-            self.game.player,
-            game_id=None,
-            player_board=None,
-            computer_board=None,
-            games=None,
-            player_colour=None,
-            computer_colour=None
-            )
-        all_games = games.load_saved_games()
-        all_games = [
-            game for game in all_games
-            if self.game.game_id != self.game.game_id
-            ]
-
     def game_over_check(self):
         """
         Checks after shots taken if the game is over and congratulates
@@ -335,23 +315,28 @@ class Gameplay:
             self.game.user_hits,
             self.game.computer_hits
         )
+
         return save_state.save_game_state()
 
     def play_game(self):
         """
         Starts or resumes the game and checks when the game finishes
         """
-        while not self.game_over_check():
+        while True:
+            if self.game_over_check():
+                return "game over"
+
             self.game.turn.player_turn()
             self.game.turn.computer_turn()
             self.game.board_management.update_game_status()
 
+            if self.game_over_check():
+                return "game over"
+
             continue_save_exit = self.save_game()
             if continue_save_exit == "continue":
-                return "continue"
+                continue
             elif continue_save_exit == "save":
                 return "saved"
             elif continue_save_exit == "exit":
                 return "exit"
-
-        return "game over"
