@@ -81,6 +81,7 @@ The
 - Loaded games not listed correctly to choose from, had to ensure the games were being listed correctly by adding , _ to the self_games variable in access_saved_games to enable it to have the two parameters listed, but the second we did not care about
 - Due to calling the wrong function from style.py the computer board wasn't placing ships properly, updated the function from style.py to be correct
 - User hits and computer hits were being increased to the total number of ships due to an unneeded variable that changed the hits incorrectly player turn and computer turn
+- Loaded in games weren't continuing, required adding if statements adn return statements into main.py load_games_check() and main() so it would continue from where it left off
 
 ### Unfixed Bugs
 
