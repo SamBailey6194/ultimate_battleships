@@ -79,7 +79,7 @@ The
 - Validating password creation was not allowing passwords that were 8 characters long due to the >= 8, so removed the = signs from that if statement
 - The available coordinates for the computer random shots wasn't resetting correctly, changed the if statement to have if not self.available_coordinates instead of if self.available_coordinates None
 - Loaded games not listed correctly to choose from, had to ensure the games were being listed correctly by adding , _ to the self_games variable in access_saved_games to enable it to have the two parameters listed, but the second we did not care about
-- 
+- Due to calling the wrong function from style.py the computer board wasn't placing ships properly, updated the function from style.py to be correct
 
 ### Unfixed Bugs
 
