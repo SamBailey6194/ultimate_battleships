@@ -40,7 +40,7 @@ Below are the features for the website and at the end is listed any features tha
 
 ## Testing
 
-The 
+The app was tested in powershell 7 within VS Code and then deployed to Heroku and tested by other people who reported if there were any bugs or changes needed.
 
 ### Fixed Bugs
 
