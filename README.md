@@ -102,7 +102,29 @@ You can access it [here](logicflow.md)
 
 - PEP8
 
-## Creating the Heroku app
+## Deployment
+
+The app deployed via Heroku [here]() following the below steps
+
+### Version Notes
+Before going to Heroku make sure the .python-version is at the correct version.
+
+You can check this by:
+1. Typing python --version or python3 --version in your terminal
+2. Update the file .python-version to the correct version
+   1. The python version for this project as of 30/04/2025 is 3.13.3
+
+Important note, before upgrading to latest python version, check all the dependencies and modules are accepted by that version.
+
+Once you have the correct version of python installed and noted, you then need to install the correct versions of the dependencies and update requirements.txt.
+
+To do the above follow below:
+1. Install the correct versions of the dependencies and modules
+2. For the correct dependencies use pip install "dependency/module name" or pip3 install "dependency/module name"
+   1. If the dependency or module is an older version add =="version"
+3. Then type pip freeze > requirements.txt or pip3 freeze > requirements.txt to update requirements.txt
+
+### Creating the Heroku App
 To create the app Heroku was used. In Heroku two buildpacks were needed and were accessed from the _Settings_ tab in Heroku. After adding the individual buildpacks the settings were saved. The two packs used and their ordering is as follows:
 
 1. `heroku/python`
@@ -111,7 +133,7 @@ To create the app Heroku was used. In Heroku two buildpacks were needed and were
 Then 2 config vars were needed and were created by going to _Settings_ tab in Heroku and scrolling down to _Config Var_ section. After each individual config var was added the settings were saved Then the following config vars were created: 
 
 1. One called `PORT` and set to `8000` was created
-2. creds.json
+2. CREDS
 
 Then the GitHub repository was connected by following the below steps:
 
@@ -120,8 +142,6 @@ Then the GitHub repository was connected by following the below steps:
 3. Confirm we wanted to connect GitHub
 4. Then search for the ultimate_battleships repository and connected it
 5. Then in Manual deploy, select the main branch and click Deploy Branch, this should then deploy the app
-
-Please note that you can choose to manually deploy the branch you want from the repository
 
 ## Cloning
 
