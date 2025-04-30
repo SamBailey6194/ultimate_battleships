@@ -79,9 +79,9 @@ class LoadGames:
                 else:
                     grid_row.append(StyledText.white_bg(cell))
 
-            loaded_grid.append(grid_row)
+            white_grid = StyledText.white_bg(loaded_grid.append(grid_row))
 
-        return loaded_grid
+        return white_grid
 
     def load_saved_games(self):
         """
