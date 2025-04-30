@@ -86,11 +86,11 @@ class Board:
             "Each size has a different amount of"
             " battleships to place.\n Your options are as follows:\n"
             f"- {StyledText.green('1')} = {StyledText.green('5x5')} with"
-            f" {Symbols.ship('4')} battleships\n"
+            f" {StyledText.magenta('4')} battleships\n"
             f"- {StyledText.yellow('2')} = {StyledText.yellow("10x10")} with"
-            f" {Symbols.ship('8')} battleships\n"
+            f" {StyledText.magenta('8')} battleships\n"
             f"- {StyledText.red('3')} = {StyledText.red('15x15')} with"
-            f" {Symbols.ship('12')} battleships\n")
+            f" {StyledText.magenta('12')} battleships\n")
         print("-" * 35)
 
         while True:
