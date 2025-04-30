@@ -16,7 +16,7 @@ function socket() {
     this.on('open', function (client) {
 
         // Spawn terminal
-        client.tty = Pty.spawn('python3', ['main.py'], {
+        client.tty = Pty.spawn('python3', [path.join('python_scripts', 'main.py')], {
             name: 'xterm-color',
             cols: 80,
             rows: 24,
