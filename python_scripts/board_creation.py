@@ -41,7 +41,12 @@ class Board:
                 else:
                     # Show full board with ships
                     displayed_row.append(StyledText.white_bg(cell))
-            print(f"{position} " + " ".join(displayed_row))
+            white_grid = (
+                f"{StyledText.white_bg(str(position))} " + " ".join(
+                    displayed_row
+                    )
+                )
+            print(white_grid)
 
     def board_creation(self):
         """
