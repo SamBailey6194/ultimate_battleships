@@ -18,7 +18,7 @@ creds_json = os.environ.get('CREDS')
 if not creds_json:
     raise ValueError("Missing CREDS environment variable")
 
-CREDS = Credentials.from_service_account_file(json.loads(creds_json))
+CREDS = Credentials.from_service_account_info(json.loads(creds_json))
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('ultimate_battleships')
