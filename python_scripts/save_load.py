@@ -69,19 +69,19 @@ class LoadGames:
             grid_row = []
             for cell in row:
                 if cell == "~":
-                    grid_row.append(StyledText.white_bg(Symbols.water()))
+                    grid_row.append(Symbols.water())
                 elif cell == "S":
-                    grid_row.append(StyledText.white_bg(Symbols.ship()))
+                    grid_row.append(Symbols.ship())
                 elif cell == "H":
-                    grid_row.append(StyledText.white_bg(Symbols.hit()))
+                    grid_row.append(Symbols.hit())
                 elif cell == "M":
-                    grid_row.append(StyledText.white_bg(Symbols.miss()))
+                    grid_row.append(Symbols.miss())
                 else:
-                    grid_row.append(StyledText.white_bg(cell))
+                    grid_row.append(cell)
 
-            white_grid = StyledText.white_bg(loaded_grid.append(grid_row))
+            loaded_grid.append(grid_row)
 
-        return white_grid
+        return loaded_grid
 
     def load_saved_games(self):
         """

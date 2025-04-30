@@ -2,7 +2,7 @@
 
 # Imported dependencies and modules
 import colorama
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 
 class StyledText:
@@ -19,27 +19,23 @@ class StyledText:
 
     @staticmethod
     def yellow(text):
-        return f"{Fore.YELLOW}{text}{Style.RESET_ALL}"
+        return f"{Fore.LIGHTYELLOW_EX}{text}{Style.RESET_ALL}"
 
     @staticmethod
     def green(text):
-        return f"{Fore.GREEN}{text}{Style.RESET_ALL}"
+        return f"{Fore.LIGHTGREEN_EX}{text}{Style.RESET_ALL}"
 
     @staticmethod
     def blue(text):
-        return f"{Fore.BLUE}{text}{Style.RESET_ALL}"
+        return f"{Fore.LIGHTBLUE_EX}{text}{Style.RESET_ALL}"
 
     @staticmethod
     def magenta(text):
-        return f"{Fore.MAGENTA}{text}{Style.RESET_ALL}"
+        return f"{Fore.LIGHTMAGENTA_EX}{text}{Style.RESET_ALL}"
 
     @staticmethod
     def red(text):
-        return f"{Fore.RED}{text}{Style.RESET_ALL}"
-
-    @staticmethod
-    def white_bg(grid):
-        return f"{Back.WHITE}{grid}{Style.RESET_ALL}"
+        return f"{Fore.LIGHTRED_EX}{text}{Style.RESET_ALL}"
 
 
 class Symbols:
