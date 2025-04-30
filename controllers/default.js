@@ -1,5 +1,6 @@
 const Pty = require('node-pty');
 const fs = require('fs');
+const path = require('path');
 
 exports.install = function () {
 
@@ -15,8 +16,9 @@ function socket() {
 
     this.on('open', function (client) {
 
+        const scriptPath = path.join(__dirname, '..', 'python_scripts', 'main.py')
         // Spawn terminal
-        client.tty = Pty.spawn('python3', [path.join('python_scripts', 'main.py')], {
+        client.tty = Pty.spawn('python3', [scriptPath], {
             name: 'xterm-color',
             cols: 80,
             rows: 24,
