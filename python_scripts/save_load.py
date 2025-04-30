@@ -69,15 +69,15 @@ class LoadGames:
             grid_row = []
             for cell in row:
                 if cell == "~":
-                    grid_row.append(Symbols.water())
+                    grid_row.append(StyledText.white_bg(Symbols.water()))
                 elif cell == "S":
-                    grid_row.append(Symbols.ship())
+                    grid_row.append(StyledText.white_bg(Symbols.ship()))
                 elif cell == "H":
-                    grid_row.append(Symbols.hit())
+                    grid_row.append(StyledText.white_bg(Symbols.hit()))
                 elif cell == "M":
-                    grid_row.append(Symbols.miss())
+                    grid_row.append(StyledText.white_bg(Symbols.miss()))
                 else:
-                    grid_row.append(cell)
+                    grid_row.append(StyledText.white_bg(cell))
 
             loaded_grid.append(grid_row)
 

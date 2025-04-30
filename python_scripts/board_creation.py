@@ -37,10 +37,10 @@ class Board:
             for cell in row:
                 # Replace ships "S" with "~"
                 if not show_ships and cell == ship_space:
-                    displayed_row.append(water_space)
+                    displayed_row.append(StyledText.white_bg(water_space))
                 else:
                     # Show full board with ships
-                    displayed_row.append(cell)
+                    displayed_row.append(StyledText.white_bg(cell))
             print(f"{position} " + " ".join(displayed_row))
 
     def board_creation(self):
