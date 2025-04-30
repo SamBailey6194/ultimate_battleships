@@ -119,7 +119,7 @@ Then the GitHub repository was connected by following the below steps:
 2. Select GitHub as the deployment method
 3. Confirm we wanted to connect GitHub
 4. Then search for the ultimate_battleships repository and connected it
-5. Then Enable Automatic Deploys for the main branch was selected to ensure all changes to the code were deployed to the app
+5. Then in Manual deploy, select the main branch and click Deploy Branch, this should then deploy the app
 
 Please note that you can choose to manually deploy the branch you want from the repository
 
