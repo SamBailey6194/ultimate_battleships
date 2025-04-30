@@ -85,15 +85,20 @@ class Board:
             "All options are a square grid.\n"
             "Each size has a different amount of"
             " battleships to place.\n Your options are as follows:\n"
-            "- 1 = 5x5 with 4 battleships\n"
-            "- 2 = 10x10 with 8 battleships\n"
-            "- 3 = 15x15 with 12 battleships\n")
+            f"- {StyledText.green('1')} = {StyledText.green('5x5')} with"
+            f" {Symbols.ship('4')} battleships\n"
+            f"- {StyledText.yellow('2')} = {StyledText.yellow("10x10")} with"
+            f" {Symbols.ship('8')} battleships\n"
+            f"- {StyledText.red('3')} = {StyledText.red('15x15')} with"
+            f" {Symbols.ship('12')} battleships\n")
         print("-" * 35)
 
         while True:
             try:
                 size = int(input(
-                    "Please enter 1, 2 or 3\n depending on the size board you"
+                    f"Please enter {StyledText.green('1')},"
+                    f" {StyledText.yellow('2')} or {StyledText.red('3')}\n"
+                    "depending on the size board you"
                     " would like to play on: \n"
                     ))
                 if self.validate_board_size(size):
@@ -103,7 +108,10 @@ class Board:
                     self.display_board()
                     break
             except ValueError:
-                print("Please input 1, 2, or 3.")
+                print(
+                    f"Please input {StyledText.green('1')},"
+                    f" {StyledText.yellow('2')} or {StyledText.red('3')}\n"
+                    )
         return size
 
 
