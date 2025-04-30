@@ -7,6 +7,15 @@ exports.install = function () {
     ROUTE('/');
     WEBSOCKET('/', socket, ['raw']);
 
+    // Handle SIGTERM (graceful shutdown)
+    process.on('SIGTERM', () => {
+        console.log('Received SIGTERM, cleaning up...');
+        if (client.tty) {
+            client.tty.kill(9);
+            console.log('Terminal process killed');
+        }
+        process.exit(0);
+    })
 };
 
 function socket() {
