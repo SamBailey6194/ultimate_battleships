@@ -5,14 +5,14 @@ import colorama
 from colorama import Fore, Style
 
 
+def init_styles():
+    colorama.init(autoreset=True)
+
+
 class StyledText:
     """
     Class that holds the static methods for colorama
     """
-    @staticmethod
-    def init_styles():
-        colorama.init(autoreset=True)
-
     @staticmethod
     def bold(text):
         return f"{Style.BRIGHT}{text}{Style.RESET_ALL}"

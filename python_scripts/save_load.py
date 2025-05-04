@@ -8,8 +8,6 @@ from sheets import saved_games
 from style import StyledText, Symbols
 from board_creation import Board
 
-StyledText.init_styles()
-
 
 class LoadGames:
     """

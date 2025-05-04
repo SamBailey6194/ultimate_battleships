@@ -5,7 +5,7 @@
 import time
 import sys
 # Imported other python scripts
-from style import StyledText
+from style import init_styles, StyledText
 from user import user_login, user_creation
 from board_creation import BoardSetup
 from game import Game
@@ -272,5 +272,5 @@ def main():
 
 # Checks to see if code is being used as a module or main program
 if __name__ == "__main__":
-    StyledText.init_styles()
+    init_styles()
     main()

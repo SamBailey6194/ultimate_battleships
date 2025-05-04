@@ -7,8 +7,6 @@ from random import randint
 # Imported other python scripts
 from style import StyledText, Symbols
 
-StyledText.init_styles()
-
 
 class Board:
     """
