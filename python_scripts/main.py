@@ -199,7 +199,8 @@ def load_games_check(username, loads=None, saves=None):
                     computer_board,
                     _,
                     user_hits,
-                    computer_hits
+                    computer_hits,
+                    available_coordinates
                     ) = saved_game_data
 
                 if player_board and computer_board:
@@ -211,7 +212,8 @@ def load_games_check(username, loads=None, saves=None):
                         "user_hits": user_hits,
                         "computer_hits": computer_hits,
                         "size": player_board.size,
-                        "total_ships": player_board.num_ships
+                        "total_ships": player_board.num_ships,
+                        "available_coordinates": available_coordinates
                     }
             elif access_games == "n":
                 print("Let's start a new game instead.")
