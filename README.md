@@ -71,6 +71,7 @@ Below are the features for the website and at the end is listed any features tha
     - If user wants to play again they are asked if they want to load a saved game or start a new game, much like [Load Saved Games](#load-saved-games)
     - If user wants to exit the whole programme is exited
 - If the user and/or the computer have hit all the ships, they are shown a message declaring a winner or tie, then a leaderboard is shown and the user is asked if they want to play again or exit the whole program
+  - If the game was a loaded save, it is then deleted from the database
 
 ### Features Left to Implement
 
@@ -78,7 +79,6 @@ Below are the features for the website and at the end is listed any features tha
 - Only update the leaderboard if the users score is higher than their previous
 - Show the user directly where they ended up on the leaderboard
 - Have a search function on the leaderboard
-- Once a loaded game is finished have it deleted from database
 
 ## Testing
 

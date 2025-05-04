@@ -274,7 +274,7 @@ def main():
             if play_again_option(username) == "play again":
                 continue
             else:
-                exit_game()
+                exit_game(username)
                 sys.exit()
 
 
