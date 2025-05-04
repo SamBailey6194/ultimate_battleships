@@ -18,7 +18,7 @@ Please note that in features and testing there are extra parts to the logic flow
 
 ## Responsive Design
 
-![Responsive Mockup](INSERT)
+![Responsive Mockup](assets/readmeimgs/responsive_design_screenshot.png)
 
 ## Features
 
@@ -139,7 +139,6 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 | Shorten lines for better display on mobile | Y / N | Added \n at appropriate points to display on a mobile device |
 | Leaderboard layout not properly readable for users | Y | Display only the Game Score and separate out the columns appropriately so they match up |
 
-
 ### Unfixed Bugs
 
 - None
@@ -157,7 +156,7 @@ You can access it [here](logicflow.md)
 
 ## Deployment
 
-The app deployed via Heroku [here]() following the below steps
+The app deployed via Heroku [here](https://ultimate-battleships-sb-dc59e658fbd6.herokuapp.com/) following the below steps
 
 ### Version Notes
 Before going to Heroku make sure the .python-version is at the correct version.
