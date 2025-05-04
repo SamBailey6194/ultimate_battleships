@@ -209,7 +209,7 @@ class ShotTracker:
         size = target_board.size
 
         if not self.available_coordinates:
-            self.reset_coordinates(size)
+            self.reset_coordinates(target_board.size)
 
         while True:
             if is_user:

@@ -9,7 +9,6 @@ from style import init_styles, StyledText
 from user import user_login, user_creation
 from board_creation import BoardSetup
 from game import Game
-from game_logic import Gameplay
 from save_load import LoadGames
 import leaderboard
 
@@ -133,9 +132,9 @@ def full_game(
         game_id=game_id
         )
     game = Game(setup, user_hits, computer_hits)
-    gameplay = Gameplay(game)
-    print(f"Available coordinates: {gameplay.game.shot.available_coordinates}")
-    battleships = gameplay.play_game()
+    game.shot.reset_coordinates(size)
+    print(f"Available Coordinates: {game.shot.available_coordinates}")
+    battleships = game.gameplay.play_game()
     size = game.player_board.size
 
     if battleships == "saved" or battleships == "exit":
@@ -203,8 +202,6 @@ def load_games_check(username, loads=None, saves=None):
                     computer_hits,
                     available_coordinates
                     ) = saved_game_data
-
-                print("Loaded available coordinates:", available_coordinates)
 
                 if player_board and computer_board:
                     return True, {
