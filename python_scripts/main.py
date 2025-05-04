@@ -22,12 +22,14 @@ def intro():
     print("-" * 35)
     print(
         "Battleships is a strategy guessing \n"
-        "game for two players. This program allows you \n"
-        "to play against a computer to practice.\n"
+        "game for two players. This program \n"
+        "allows you to play against a computer \n"
+        "to practice.\n"
         "Once the game starts you will be \n"
-        "able to pick a point to hit on the computers board.\n"
-        "The aim of the game is to hit all of \n"
-        "the computers battleships before they hit all of yours."
+        "able to pick a point to hit on the \n"
+        "computers board. The aim of the game \n"
+        "is to hit all of the computers \n"
+        "battleships before they hit all of yours.\n"
         )
     print("-" * 35)
     time.sleep(1.5)
@@ -65,8 +67,9 @@ def exit_game(player):
     """
     print("-" * 35)
     print(
-        f"Thanks for playing {player}. Feel free to come back and access"
-        " any saved games you have."
+        f"Thanks for playing {player}. \n"
+        "Feel free to come back and access any \n"
+        "saved games you have."
         )
     print("-" * 35)
 
@@ -83,14 +86,14 @@ def play_again_option(player):
             "exit the game?\n"
             f"Please enter '{play}' to play again or\n"
             f"'{exit_}' to exit: \n"
-        )
-        if play_or_exit not in ("P", "E"):
+        ).strip().lower()
+        if play_or_exit not in ("p", "e"):
             print(
                 f"Please enter '{play}' or"
                 f" '{exit_}' \n"
                   )
             continue
-        elif play_or_exit == "P":
+        elif play_or_exit == "p":
             load_games_check(player)
             continue
         else:

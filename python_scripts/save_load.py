@@ -122,7 +122,7 @@ class LoadGames:
 
             print(
                 f"{i + 1}. Size: {size_colour} |"
-                f" Number of Ships: {ships_colour} |"
+                f" Number of Ships: {ships_colour} |\n"
                 f" {self.username} Hits: {user_hits_colour} |"
                 f" Computer Hits: {computer_hits_colour}"
                 )
@@ -135,8 +135,8 @@ class LoadGames:
         while True:
             try:
                 option = int(input(
-                    "Enter the number next to the game"
-                    " you would like to load: \n"
+                    "Enter the number next to the game \n"
+                    "you would like to load: \n"
                     ))
                 if 1 <= option <= len(self.games):
                     return self.games[option - 1]
@@ -277,7 +277,8 @@ class Save:
             save_continue = input(
                 f"{self.player} would you like to continue or \n"
                 "save the game and return later? \n"
-                f"Please enter '{continue_}' for continue, \n"
+                f"Please enter: \n"
+                f"'{continue_}' for continue, \n"
                 f"'{save_}' for save or \n"
                 f"'{exit_}' to exit: \n"
             ).strip().upper()

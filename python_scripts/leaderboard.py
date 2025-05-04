@@ -68,7 +68,7 @@ def lb_order(sorted_lb, size):
         leaders += (
             StyledText.bold(f"{position:<{position_width}}") + " |" +
             StyledText.bold(f" {username['Username']:<{username_width}}") +
-            " |" + f"{username['Game Score']:<{score_width}}\n"
+            " |" + f" {username['Game Score']:<{score_width}}\n"
         )
 
     return leaders
