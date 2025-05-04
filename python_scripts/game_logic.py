@@ -193,7 +193,9 @@ class ShotTracker:
         """
         self.available_coordinates = [
             (row, col) for row in range(size) for col in range(size)
-            if self.game.player_board.grid[row][col] == Symbols.water()
+            if self.game.player_board.grid[row][col] == (
+                Symbols.water() or Symbols.ship()
+                )
         ]
 
     def shots_fired(self, player_name, target_board, is_user):
