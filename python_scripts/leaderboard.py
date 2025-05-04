@@ -12,22 +12,34 @@ def update_lb(username, size, user_score, computer_score):
     """
     Updates the leaderboard according to the size from the game
     """
+    print(f"Upating leaderboard for {username} - size: {size}")
     game_score = user_score - computer_score
-    if size == 5:
-        small_game_lb.append_row([
-            username, user_score, computer_score,
-            game_score
-            ])
-    elif size == 10:
-        medium_game_lb.append_row([
-            username, user_score, computer_score,
-            game_score
-            ])
-    elif size == 15:
-        big_game_lb.append_row([
-            username, user_score, computer_score,
-            game_score
-            ])
+    print(
+        f"Scores: User={user_score}, Computer={computer_score},"
+        f" Game={game_score}"
+        )
+
+    try:
+        if size == 5:
+            small_game_lb.append_row([
+                username, user_score, computer_score,
+                game_score
+                ])
+        elif size == 10:
+            medium_game_lb.append_row([
+                username, user_score, computer_score,
+                game_score
+                ])
+        elif size == 15:
+            big_game_lb.append_row([
+                username, user_score, computer_score,
+                game_score
+                ])
+        print(f"LEaderboard for {username} updated")
+    except Exception as e:
+        print(
+            f"Failed to update leaderboard for {username}: {e}"
+            )
 
 
 def lb_order(sorted_lb, size):
