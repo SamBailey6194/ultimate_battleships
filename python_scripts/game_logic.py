@@ -283,7 +283,7 @@ class Gameplay:
 
         for id, row in enumerate(saves, start=2):
             if row["Game ID"] == self.game.game_id:
-                saved_games.delete_row(id)
+                saved_games.delete_rows(id)
                 break
 
     def game_over_check(self):
@@ -323,7 +323,8 @@ class Gameplay:
             self.game.player_board,
             self.game.pc_board,
             self.game.user_hits,
-            self.game.computer_hits
+            self.game.computer_hits,
+            self.game.shot.available_coordinates
         )
 
         return save_state.save_game_state()

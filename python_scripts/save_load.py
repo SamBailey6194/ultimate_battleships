@@ -38,7 +38,8 @@ class LoadGames:
         self.num_ships = 0
         self.grid = []
         self.user_hits = 0
-        self.computer_hits = 0
+        self.computer_hits = 0,
+        self.available_coordinates = []
 
     def convert_board_to_grid(self, game_board):
         """
@@ -203,6 +204,10 @@ class LoadGames:
         self.num_ships = user_selection["Number of Ships"]
         self.user_hits = user_selection["User Hits"]
         self.computer_hits = user_selection["Computer Hits"]
+        self.available_coordinates = [
+            tuple(map(int, coord.split(",")))
+            for coord in user_selection["Available Coordinates"].split(";")
+            ]
 
         # Converting board strings to grid
         player_board_grid = self.convert_board_to_grid(
@@ -231,7 +236,8 @@ class LoadGames:
             self.computer_board,
             self.games,
             self.user_hits,
-            self.computer_hits
+            self.computer_hits,
+            self.available_coordinates
             )
 
 
@@ -249,7 +255,8 @@ class Save:
             player_board,
             pc_board,
             user_hits,
-            computer_hits
+            computer_hits,
+            available_coordinates
             ):
         self.game_id = game_id
         self.player = player
@@ -259,6 +266,9 @@ class Save:
         self.pc_board = pc_board
         self.user_hits = user_hits
         self.computer_hits = computer_hits
+        self.available_coordinates = (
+            ";".join([f"{row},{col}" for row, col in available_coordinates])
+            )
 
     def prompt_user_save(self):
         """
@@ -347,7 +357,7 @@ class Save:
         """
         Refactor function that overwrites a loaded in game
         """
-        saved_games.update(f"A{game_row}:H{game_row}", [
+        saved_games.update(f"A{game_row}:I{game_row}", [
             [
                 self.game_id,
                 self.player,
@@ -356,7 +366,8 @@ class Save:
                 self.player_board,
                 self.pc_board,
                 self.user_hits,
-                self.computer_hits
+                self.computer_hits,
+                self.available_coordinates
                 ]
                 ])
         print(
@@ -376,7 +387,8 @@ class Save:
             self.player_board,
             self.pc_board,
             self.user_hits,
-            self.computer_hits
+            self.computer_hits,
+            self.available_coordinates
             ])
         print(
             "New game has been saved.\n"
