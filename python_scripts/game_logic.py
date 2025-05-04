@@ -64,10 +64,11 @@ class BoardAfterShots:
                 if general == self.game.player
                 else self.game.total_ships - self.game.computer_hits
                 )
+            remaining_ships = StyledText.red(ships_left)
             time.sleep(1)
             print(
                 f"{general} {hit_ship}!\n"
-                f"Just {ships_left} left to destroy.", flush=True
+                f"Just {remaining_ships} left to destroy.", flush=True
                 )
             return True
 
@@ -84,10 +85,11 @@ class BoardAfterShots:
                 if general == self.game.player
                 else self.game.total_ships - self.game.computer_hits
                 )
+            remaining_ships = StyledText.red(ships_left)
             time.sleep(1)
             print(
                 f"{general} {miss_ship}!\n"
-                f"Just {ships_left} left to destroy.", flush=True
+                f"Just {remaining_ships} left to destroy.", flush=True
                 )
             board.grid[row][col] = Symbols.miss()
             return True
