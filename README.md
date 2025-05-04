@@ -90,13 +90,13 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 ### Players Feedback and Fixes or Future Features
 | Feedback | Solved (Y = Yes/N = No/FF = Future Feature) | Fix |
 | ----- | ----- | ----- |
-| Accept lowercase inputs when asking for letter inputs, e.g. Y and N | Y / N | ad .strip().lower() to each of them |
-| When a user continues the game, have the latest boards displayed for friendly user experience | Y / N | Use display_baord after continue request |
+| Accept lowercase inputs when asking for letter inputs, e.g. Y and N | Y | add .strip().lower() or .strip().upper() to each of them |
+| When a user continues the game, have the latest boards displayed for friendly user experience | Y | Use display_baord after continue request |
 | Forgotten Password Function | FF | Would require account management and taking email addresses |
 | Leaderboard not updating or showing if user plays a new game | Y | full_game() was setting size as none when playing a new game, amended full_game() to have a size value instead of None |
 | iPhone users report issues with entering inputs | N | Due to how Heroku's CLI works this project without a Frontend won't work on mobile, to enable to work would have to build a frontend part to the game using HTML, CSS and JavaScript |
 | Shorten lines for better display on mobile | Y / N | Added \n at appropriate points to display on a mobile device |
-| Leaderboard layout not properly readable for users | Y / N | Display only the Game Score and separate out the columns appropriately so they match up |
+| Leaderboard layout not properly readable for users | Y | Display only the Game Score and separate out the columns appropriately so they match up |
 
 
 ### Unfixed Bugs
