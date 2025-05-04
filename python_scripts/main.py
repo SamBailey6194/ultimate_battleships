@@ -21,12 +21,13 @@ def intro():
     """
     print("-" * 35)
     print(
-        "Battleships is a strategy guessing game for two players.\n"
-        "This program allows you to play against a computer to practice.\n"
-        "Once the game starts you will be able to pick a point to hit on the\n"
-        "computers board.\n"
-        "The aim of the game is to hit all of the computers battleships\n"
-        "before they hit all of yours."
+        "Battleships is a strategy guessing \n"
+        "game for two players. This program allows you \n"
+        "to play against a computer to practice.\n"
+        "Once the game starts you will be \n"
+        "able to pick a point to hit on the computers board.\n"
+        "The aim of the game is to hit all of \n"
+        "the computers battleships before they hit all of yours."
         )
     print("-" * 35)
     time.sleep(1.5)
@@ -42,19 +43,19 @@ def user_choice():
         no = StyledText.red("N")
         login_option = input(
             "Have you already got a login?\n"
-            f"If yes please enter '{yes}', if no"
-            f" please enter '{no}':\n"
-            ).strip()
+            f"If yes please enter '{yes}',\n"
+            f" if no please enter '{no}':\n"
+            ).strip().lower()
 
-        if login_option not in ("Y", "N"):
+        if login_option not in ("y", "n"):
             print(
                 f"Please enter '{yes}' or"
                 f" '{no}' \n"
                   )
             continue
-        elif login_option == "Y":
+        elif login_option == "y":
             return user_login()
-        elif login_option == "N":
+        elif login_option == "n":
             return user_creation()
 
 
@@ -78,8 +79,9 @@ def play_again_option(player):
         play = StyledText.green("P")
         exit_ = StyledText.red("E")
         play_or_exit = input(
-            "Would you like to play again or exit the game?\n"
-            f"Please enter '{play}' to play again or"
+            "Would you like to play again or\n"
+            "exit the game?\n"
+            f"Please enter '{play}' to play again or\n"
             f"'{exit_}' to exit: \n"
         )
         if play_or_exit not in ("P", "E"):
@@ -104,9 +106,9 @@ def leaderboard_generation(player, size):
     print(f"{player}, see how you did on the leaderboard below")
     print("-" * 35)
     leaderboard.show_lb(size)
-    print("-" * 35)
     print(
-        "When you are done searching the leaderboard you can either play again"
+        "When you are done searching the\n"
+        "leaderboard you can either play again"
         " or exit.\n")
     play_again_option(player)
 
@@ -172,20 +174,20 @@ def load_games_check(username, loads=None, saves=None):
             no = StyledText.red("N")
             print("-" * 35)
             access_games = input(
-                f"{username}, would you like to access any of your"
-                " saved games?\n"
-                f"If yes please enter '{yes}', if no"
-                f" please enter '{no}':\n"
-                ).strip()
+                f"{username}, would you like to access any of \n"
+                "your saved games?\n"
+                f"If yes please enter '{yes}', \n"
+                f"if no please enter '{no}':\n"
+                ).strip().lower()
             print("-" * 35)
 
-            if access_games not in ("Y", "N"):
+            if access_games not in ("y", "n"):
                 print(
                     f"Please enter '{StyledText.green("Y")}' or"
                     f" '{StyledText.red("N")}' \n"
                     )
                 continue
-            elif access_games == "Y":
+            elif access_games == "y":
                 saved_game_data = loads.access_saved_games()
                 (
                     game_id,
@@ -208,8 +210,7 @@ def load_games_check(username, loads=None, saves=None):
                         "size": player_board.size,
                         "total_ships": player_board.num_ships
                     }
-            elif access_games == "N":
-                print("-" * 35)
+            elif access_games == "n":
                 print("Let's start a new game instead.")
                 print("-" * 35)
                 new_game(username)

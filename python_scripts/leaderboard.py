@@ -10,34 +10,23 @@ def update_lb(username, size, user_score, computer_score):
     """
     Updates the leaderboard according to the size from the game
     """
-    print(f"Upating leaderboard for {username} - size: {size}")
     game_score = user_score - computer_score
-    print(
-        f"Scores: User={user_score}, Computer={computer_score},"
-        f" Game={game_score}"
-        )
 
-    try:
-        if size == 5:
-            small_game_lb.append_row([
-                username, user_score, computer_score,
-                game_score
-                ])
-        elif size == 10:
-            medium_game_lb.append_row([
-                username, user_score, computer_score,
-                game_score
-                ])
-        elif size == 15:
-            big_game_lb.append_row([
-                username, user_score, computer_score,
-                game_score
-                ])
-        print(f"LEaderboard for {username} updated")
-    except Exception as e:
-        print(
-            f"Failed to update leaderboard for {username}: {e}"
-            )
+    if size == 5:
+        small_game_lb.append_row([
+            username, user_score, computer_score,
+            game_score
+            ])
+    elif size == 10:
+        medium_game_lb.append_row([
+            username, user_score, computer_score,
+            game_score
+            ])
+    elif size == 15:
+        big_game_lb.append_row([
+            username, user_score, computer_score,
+            game_score
+            ])
 
 
 def lb_order(sorted_lb, size):
@@ -54,22 +43,32 @@ def lb_order(sorted_lb, size):
     leaders = StyledText.bold(f"{title}\n")
     leaders += "-" * 35 + "\n"
 
+    # Giving the columns a dynamic width
+    position_width = 4
+    username_width = 12
+    score_width = 10
+
+    # Leaderboard full width
+    # (3 * 2) is for the 2 separators with characters ' | '
+    leaderboard_width = (
+        position_width + username_width + score_width + (3 * 2)
+        )
+
     # Add column headings
     leaders += (
         StyledText.bold(
-            "Position | Username | User Score | Computer Score |"
-            " Game Score\n"
+            f"{'Pos.':<{position_width}} | {'Username':<{username_width}} |"
+            f" {'Game Score':<{score_width}}\n"
         )
     )
-    leaders += "-" * 35 + "\n"
+    leaders += "-" * leaderboard_width + "\n"
 
     # Add leaderboard entries
     for position, username in enumerate(sorted_lb, 1):
         leaders += (
-            StyledText.bold(f"{position:<4}") + " |" +
-            StyledText.bold(f" {username['Username']:<12}") + " |" +
-            f" {username['User Score']:<4} | {username['Computer Score']:<4}" +
-            f" {username['Game Score']}\n"
+            StyledText.bold(f"{position:<{position_width}}") + " |" +
+            StyledText.bold(f" {username['Username']:<{username_width}}") +
+            " |" + f"{username['Game Score']:<{score_width}}\n"
         )
 
     return leaders

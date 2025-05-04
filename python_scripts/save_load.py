@@ -275,11 +275,11 @@ class Save:
             }
         while True:
             save_continue = input(
-                f"{self.player} would you like to continue or save the game"
-                " and return later? \n"
-                f"Please enter '{continue_}' for"
-                f" continue, '{save_}' for save or"
-                f" '{exit_}' to exit: \n"
+                f"{self.player} would you like to continue or \n"
+                "save the game and return later? \n"
+                f"Please enter '{continue_}' for continue, \n"
+                f"'{save_}' for save or \n"
+                f"'{exit_}' to exit: \n"
             ).strip().upper()
 
             if save_continue in allowed_inputs:

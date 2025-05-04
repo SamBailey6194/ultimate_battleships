@@ -32,7 +32,7 @@ def user_login():
     password = str(input("Password: "))
     result = login_credentials(username, password)
     if result == "Login successful":
-        print(f"Welcome back {username}! Time to play the game.")
+        print(f"Welcome back {username}! \nTime to play the game.")
         return username
     else:
         return None

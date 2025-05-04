@@ -76,13 +76,14 @@ class Board:
         then generates the board and the number of ships for each
         size board.
         """
-        print("-" * 35)
         print(
-            "Now you are logged in. You can play the game.\n First though you"
-            " need to select what size board you want to play on.\n"
+            "Now you are logged in. \n"
+            "You can play the game. First though you \n"
+            "need to select what size board you want to play on.\n"
             "All options are a square grid.\n"
-            "Each size has a different amount of"
-            " battleships to place.\n Your options are as follows:\n"
+            "Each size has a different amount of\n"
+            "battleships to place.\n"
+            "Your options are as follows:\n"
             f"- {StyledText.green('1')} = {StyledText.green('5x5')} with"
             f" {StyledText.magenta('4')} battleships\n"
             f"- {StyledText.yellow('2')} = {StyledText.yellow("10x10")} with"
@@ -96,9 +97,10 @@ class Board:
                 size = int(input(
                     f"Please enter {StyledText.green('1')},"
                     f" {StyledText.yellow('2')} or {StyledText.red('3')}\n"
-                    "depending on the size board you"
-                    " would like to play on: \n"
+                    "depending on the size board you\n"
+                    "would like to play on: \n"
                     ))
+                print("-" * 35)
                 if self.validate_board_size(size):
                     time.sleep(0.5)
                     print("Generating board . . .")
@@ -180,13 +182,14 @@ class BoardSetup:
         ship_space = Symbols.ship()
         print("-" * 35)
         print(
-            "Now you have chosen the size board you want to play on.\n"
-            "Please place your ships. Each ship takes up one space.\n"
+            "Now you have chosen the size board\n"
+            "you want to play on. Please place your ships.\n"
+            "Each ship takes up one space.\n"
             "The top left corner is row: 0, col: 0.\n"
-            "Please bear that in mind when entering rows and columns.\n"
+            "Please bear that in mind when entering\n"
+            "rows and columns.\n"
             f"'{ship_space}' = Ship placement."
             )
-        print("-" * 35)
         self.ships_placed = 0
         while self.ships_placed < self.player_board.num_ships:
             try:
@@ -194,7 +197,6 @@ class BoardSetup:
                 row = self.validate_coordinates(
                     "Enter row to place ship at: \n", self.player_board.size
                     )
-                print("-" * 35)
                 print("-" * 35)
                 col = self.validate_coordinates(
                     "Enter col to place ship at: \n", self.player_board.size

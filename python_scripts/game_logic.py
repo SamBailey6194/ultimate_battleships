@@ -247,7 +247,6 @@ class TurnTracker:
         time.sleep(1.5)
         print("-" * 35)
         print("Time to take your shot! Fire!!!!!!")
-        print("-" * 35)
         self.game.shot.shots_fired(
             self.game.player,
             self.game.pc_board,
@@ -320,6 +319,7 @@ class Gameplay:
         """
         Starts or resumes the game and checks when the game finishes
         """
+        updated_game_state = BoardAfterShots(self.game)
         while True:
             if self.game_over_check():
                 return "game over"
@@ -333,6 +333,7 @@ class Gameplay:
 
             continue_save_exit = self.save_game()
             if continue_save_exit == "continue":
+                updated_game_state.boards_shown()
                 continue
             elif continue_save_exit == "save":
                 return "saved"
