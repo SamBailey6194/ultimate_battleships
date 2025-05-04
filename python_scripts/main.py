@@ -133,7 +133,6 @@ def full_game(
         )
     game = Game(setup, user_hits, computer_hits)
     game.shot.reset_coordinates(size)
-    print(f"Available Coordinates: {game.shot.available_coordinates}")
     battleships = game.gameplay.play_game()
     size = game.player_board.size
 
