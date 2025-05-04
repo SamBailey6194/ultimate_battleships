@@ -134,10 +134,11 @@ def full_game(
     size = game.player_board.size
 
     if battleships == "saved" or battleships == "exit":
-        return True
+        return "exit game"
     elif battleships == "game over":
         leaderboard.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
+        return "game completed"
 
 
 def new_game(
@@ -160,6 +161,7 @@ def new_game(
         player_board=user,
         pc_board=computer
         )
+    return full_game()
 
 
 def load_games_check(username, loads=None, saves=None):
@@ -255,7 +257,7 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            full_game(
+            game_result = full_game(
                 player=game_data["username"],
                 game_id=game_data["game_id"],
                 size=game_data["size"],
@@ -266,13 +268,14 @@ def main():
                 computer_hits=game_data["computer_hits"],
             )
         else:
-            new_game(username)
+            game_result = new_game(username)
 
-        if play_again_option(username) == "play again":
-            continue
-        else:
-            exit_game()
-            sys.exit()
+        if game_result in ("exit game", "game completed"):
+            if play_again_option(username) == "play again":
+                continue
+            else:
+                exit_game()
+                sys.exit()
 
 
 # Checks to see if code is being used as a module or main program
