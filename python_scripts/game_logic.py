@@ -4,6 +4,7 @@
 from random import choice
 import time
 # Imported other python scripts
+from sheets import saved_games
 from style import StyledText, Symbols
 from save_load import Save
 from board_creation import BoardSetup
@@ -273,6 +274,18 @@ class Gameplay:
     def __init__(self, game):
         self.game = game
 
+    def delete_game(self):
+        """
+        Function that deletes a game from the database if it has been
+        loaded in and completed
+        """
+        saves = saved_games.get_all_records()
+
+        for id, row in enumerate(saves, start=2):
+            if row["Game ID"] == self.game.game_id:
+                saved_games.delete_row(id)
+                break
+
     def game_over_check(self):
         """
         Checks after shots taken if the game is over and congratulates
@@ -322,6 +335,7 @@ class Gameplay:
         updated_game_state = BoardAfterShots(self.game)
         while True:
             if self.game_over_check():
+                self.delete_game()
                 return "game over"
 
             self.game.turn.player_turn()
