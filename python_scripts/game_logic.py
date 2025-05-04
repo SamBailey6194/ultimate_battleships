@@ -285,8 +285,8 @@ class Gameplay:
         loaded in and completed
         """
         games = LoadGames(
-            self.game.player,
             game_id=None,
+            username=self.game.player,
             player_board=None,
             computer_board=None,
             games=None,

@@ -38,7 +38,7 @@ class LoadGames:
         self.num_ships = 0
         self.grid = []
         self.user_hits = 0
-        self.computer_hits = 0,
+        self.computer_hits = 0
         self.available_coordinates = []
 
     def convert_board_to_grid(self, game_board):
