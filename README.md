@@ -126,7 +126,7 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 - Due to calling the wrong function from style.py the computer board wasn't placing ships properly, updated the function from style.py to be correct
 - User hits and computer hits were being increased to the total number of ships due to an unneeded variable that changed the hits incorrectly player turn and computer turn
 - Loaded in games weren't continuing, required adding if statements adn return statements into main.py load_games_check() and main() so it would continue from where it left off
-- Loaded games led to computer's available coordinates to be reset, added available coordinates to saved games and have them load back in with the data as well by adding available_coordinates or self.available_coordinates variables to the correct functions and return the values properly and stringifying the coordinates
+- Loaded games led to computer's available coordinates to be reset, added available coordinates to saved games and have them load back in with the data as well by adding available_coordinates or self.available_coordinates variables to the correct functions and return the values properly and stringifying the coordinates. I also had to ensure reset_coordinates was making sure the function was only including water and ship places.
 
 ### Players Feedback and Fixes or Future Features
 | Feedback | Solved (Y = Yes/N = No/FF = Future Feature) | Fix |
