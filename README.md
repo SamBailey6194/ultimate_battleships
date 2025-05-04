@@ -42,7 +42,7 @@ Below are the features for the website and at the end is listed any features tha
 
 The app was tested in powershell 7 within VS Code and then deployed to Heroku and tested by other people who reported if there were any bugs or changes needed.
 
-### Fixed Bugs
+### Fixed Bugs From VS Code Testing
 
 - In user_create the password and username weren't being stored in Google Sheets properly as there was no return within username_create and password_create
 - Username creation was duplicating usernames in database due to structure of if, elif check_username function, therefore restuctured to put the check for username already in database first
@@ -86,6 +86,18 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 - Due to calling the wrong function from style.py the computer board wasn't placing ships properly, updated the function from style.py to be correct
 - User hits and computer hits were being increased to the total number of ships due to an unneeded variable that changed the hits incorrectly player turn and computer turn
 - Loaded in games weren't continuing, required adding if statements adn return statements into main.py load_games_check() and main() so it would continue from where it left off
+
+### Players Feedback and Fixes or Future Features
+| Feedback | Solved (Y = Yes/N = No/FF = Future Feature) | Fix |
+| ----- | ----- | ----- |
+| Accept lowercase inputs when asking for letter inputs, e.g. Y and N | Y / N | ad .strip().lower() to each of them |
+| When a user continues the game, have the latest boards displayed for friendly user experience | Y / N | Use display_baord after continue request |
+| Forgotten Password Function | FF | Would require account management and taking email addresses |
+| Leaderboard not updating or showing if user plays a new game | Y | full_game() was setting size as none when playing a new game, amended full_game() to have a size value instead of None |
+| iPhone users report issues with entering inputs | N | Due to how Heroku's CLI works this project without a Frontend won't work on mobile, to enable to work would have to build a frontend part to the game using HTML, CSS and JavaScript |
+| Shorten lines for better display on mobile | Y / N | Added \n at appropriate points to display on a mobile device |
+| Leaderboard layout not properly readable for users | Y / N | Display only the Game Score and separate out the columns appropriately so they match up |
+
 
 ### Unfixed Bugs
 
