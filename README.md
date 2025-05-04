@@ -26,9 +26,49 @@ Below are the features for the website and at the end is listed any features tha
 
 ### Existing Features
 
-#### Username Creation
+#### Welcome
 
-- When 
+- When starting the game the user is welcomed and the game is explained
+
+#### Login Check
+
+- User is asked if they have a login or not
+- If user declares they have a login, they are invited to enter the login credentials
+- If user declares they don't have a login, they are invited to create a username and password
+
+- #### Load Saved Games
+
+- If user has any saved they games they are asked if they want to load a game or start a new game, if no games they are found it starts a new game
+- If user wants to load a saved game they are shown a list of games they have saved and asked to choose one, game then continues with user taking a shot
+
+#### Game
+
+##### Board Selection
+
+- When starting a new game they are invited to select a board size which determines the number of ships in the game
+
+##### Place Ships
+
+- User is then asked to place ships by choosing the row and then column until all ships are placed
+- The computers board then has randomly placed ships
+- The user is shown their board with placed ships and the computer's baord is shown but with ship placement hidden
+
+##### Take Shots
+
+- User is then asked to take a shot by choosing the row and then column
+- User is informed if they hit, missed or have shot their already
+  - If hit or missed they are told the amount of ships left to destroy
+  - If they shot their already then they are invited to shoot again
+- The computers board then has a random shot generated
+- User is informed if the computer hit or missed and the amount of ships left to destroy
+- The user is shown a key, their board and computer's board updated
+  - The user's board has the ships, hits and misses the computer has done are shown
+  - The computer's board has the hits and misses the user has done are shown
+- If neither user nor computer have hit all the ships, they are then invited as to whether they want to continue, save, or exit that game
+  - If continued they are shown the updated boards and then user takes shot again and the above repeats
+  - If saved, the game is saved to the database and the user is asked to clarify if they want to play again or exit the whole program
+  - If exit, the game is exited and the user is asked to clarify if they want to play again or exit the whole program
+- If the user and/or the computer have hit all the ships, they are shown a message declaring a winner or tie, then a leaderboard is shown and the user is asked if they want to play again or exit the whole program
 
 ### Features Left to Implement
 
@@ -166,7 +206,7 @@ This section describes how other software developers can clone the code to edit 
   - Ensure you are on 'local' and have 'https' selected, then copy the URL by clicking the symbol next to the URL box
   - Once copied in the search bar on your taskbar type in 'cmd' and open 'Command Prompt' or 'Comman Line'
   - In command line type 'git clone' and paste the url next to it
-  - In file explorer locate 'This PC' down the side, then 'local disk' (usually the :C drive), then 'users', then your user, then find the folder called 'photo-guides'
+  - In file explorer locate 'This PC' down the side, then 'local disk' (usually the :C drive), then 'users', then your user, then find the folder called 'ultimate_battleships'
   - You now have access to all the code and files locally
   - If you want to edit the code, please ensure you creat a new branch in the software you are using enabling us to potentially see the edits you have done before uploading them to the original GitHub repository
   - To create a new branch that depends on the software you are using, please google how to do this for your software

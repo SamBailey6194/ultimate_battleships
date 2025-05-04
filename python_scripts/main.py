@@ -134,6 +134,7 @@ def full_game(
         )
     game = Game(setup, user_hits, computer_hits)
     gameplay = Gameplay(game)
+    print(f"Available coordinates: {gameplay.game.shot.available_coordinates}")
     battleships = gameplay.play_game()
     size = game.player_board.size
 
@@ -202,6 +203,8 @@ def load_games_check(username, loads=None, saves=None):
                     computer_hits,
                     available_coordinates
                     ) = saved_game_data
+
+                print("Loaded available coordinates:", available_coordinates)
 
                 if player_board and computer_board:
                     return True, {
