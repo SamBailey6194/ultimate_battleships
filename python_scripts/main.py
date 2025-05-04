@@ -93,11 +93,9 @@ def play_again_option(player):
                   )
             continue
         elif play_or_exit == "p":
-            load_games_check(player)
-            continue
+            return "play again"
         else:
-            exit_game(player)
-            sys.exit()
+            return "exit programme"
 
 
 def leaderboard_generation(player, size):
@@ -259,7 +257,7 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            continue_loaded_game = full_game(
+            full_game(
                 player=game_data["username"],
                 game_id=game_data["game_id"],
                 size=game_data["size"],
@@ -270,10 +268,13 @@ def main():
                 computer_hits=game_data["computer_hits"],
             )
         else:
-            continue_loaded_game = new_game(username)
+            new_game(username)
 
-        if not continue_loaded_game:
-            break
+        if play_again_option(username) == "play again":
+            continue
+        else:
+            exit_game()
+            sys.exit()
 
 
 # Checks to see if code is being used as a module or main program
