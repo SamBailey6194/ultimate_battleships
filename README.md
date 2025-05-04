@@ -68,6 +68,8 @@ Below are the features for the website and at the end is listed any features tha
   - If continued they are shown the updated boards and then user takes shot again and the above repeats
   - If saved, the game is saved to the database and the user is asked to clarify if they want to play again or exit the whole program
   - If exit, the game is exited and the user is asked to clarify if they want to play again or exit the whole program
+    - If user wants to play again they are asked if they want to load a saved game or start a new game, much like [Load Saved Games](#load-saved-games)
+    - If user wants to exit the whole programme is exited
 - If the user and/or the computer have hit all the ships, they are shown a message declaring a winner or tie, then a leaderboard is shown and the user is asked if they want to play again or exit the whole program
 
 ### Features Left to Implement
@@ -127,6 +129,7 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 - User hits and computer hits were being increased to the total number of ships due to an unneeded variable that changed the hits incorrectly player turn and computer turn
 - Loaded in games weren't continuing, required adding if statements adn return statements into main.py load_games_check() and main() so it would continue from where it left off
 - Loaded games led to computer's available coordinates to be reset, added available coordinates to saved games and have them load back in with the data as well by adding available_coordinates or self.available_coordinates variables to the correct functions and return the values properly and stringifying the coordinates. I also had to ensure reset_coordinates was making sure the function was only including water and ship places.
+- After user chooses to play again, the programme declares no saved games available when there are saved games available. Added return statements to play again option function and include an if and else statement in the while true loop in the main function.
 
 ### Players Feedback and Fixes or Future Features
 | Feedback | Solved (Y = Yes/N = No/FF = Future Feature) | Fix |
