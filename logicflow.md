@@ -109,7 +109,7 @@ If game is a tie or a winner declared then go to [game over](#game-over)
 ## GAME OVER
 | Step | Action | Outcome | Pass / Fail |
 | ----- | ----- | ----- | ----- |
-| 14 / 17 / 18 / 19 | Game is over | Scores are added to leaderboard and user is shown the updated leaderboard to see where they are | ?? |
+| 14 / 17 / 18 / 19 | Game is over | Scores are added to leaderboard and user is shown the updated leaderboard to see where they are | Pass |
 
 Go to [exit game](#exit-game)
 
