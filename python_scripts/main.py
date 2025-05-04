@@ -130,6 +130,7 @@ def full_game(
     game = Game(setup, user_hits, computer_hits)
     gameplay = Gameplay(game)
     battleships = gameplay.play_game()
+    size = game.player_board.size
 
     if battleships == "saved" or battleships == "exit":
         if play_again_option(player):
