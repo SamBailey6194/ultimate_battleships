@@ -5,8 +5,6 @@
 from style import StyledText
 from sheets import small_game_lb, medium_game_lb, big_game_lb
 
-StyledText.init_styles()
-
 
 def update_lb(username, size, user_score, computer_score):
     """
