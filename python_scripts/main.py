@@ -110,7 +110,6 @@ def leaderboard_generation(player, size):
         "When you are done searching the\n"
         "leaderboard you can either play again"
         " or exit.\n")
-    play_again_option(player)
 
 
 def full_game(
@@ -135,8 +134,7 @@ def full_game(
     size = game.player_board.size
 
     if battleships == "saved" or battleships == "exit":
-        if play_again_option(player):
-            return True
+        return True
     elif battleships == "game over":
         leaderboard.update_lb(player, size, game.user_hits, game.computer_hits)
         leaderboard_generation(player, size)
