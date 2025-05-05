@@ -36,12 +36,20 @@ Below are the features for the website and at the end is listed any features tha
 - If user declares they have a login, they are invited to enter the login credentials
 - If user declares they don't have a login, they are invited to create a username and password
 
-![Welcome message and login check]()
+![Welcome message and login check](assets/readmeimgs/welcome_login.png)
+
+![Successful login and load games option](assets/readmeimgs/login_games_saved.png)
+
+![User creation](assets/readmeimgs/user_creation.png)
+
+![Successful User Creation](assets/readmeimgs/user_creation_success.png)
 
 - #### Load Saved Games
 
 - If user has any saved they games they are asked if they want to load a game or start a new game, if no games they are found it starts a new game
 - If user wants to load a saved game they are shown a list of games they have saved and asked to choose one, game then continues with user taking a shot
+
+![Loaded game resumed](assets/readmeimgs/loaded_game.png)
 
 #### Game
 
@@ -49,11 +57,17 @@ Below are the features for the website and at the end is listed any features tha
 
 - When starting a new game they are invited to select a board size which determines the number of ships in the game
 
+![New game created](assets/readmeimgs/game_created.png)
+
 ##### Place Ships
 
 - User is then asked to place ships by choosing the row and then column until all ships are placed
 - The computers board then has randomly placed ships
 - The user is shown their board with placed ships and the computer's baord is shown but with ship placement hidden
+
+![Ships placed](assets/readmeimgs/place_ships.png)
+
+![All Ships placed](assets/readmeimgs/all_ships_placed.png)
 
 ##### Take Shots
 
@@ -74,6 +88,24 @@ Below are the features for the website and at the end is listed any features tha
     - If user wants to exit the whole programme is exited
 - If the user and/or the computer have hit all the ships, they are shown a message declaring a winner or tie, then a leaderboard is shown and the user is asked if they want to play again or exit the whole program
   - If the game was a loaded save, it is then deleted from the database
+
+![Take shots](assets/readmeimgs/shots_fired.png)
+
+![Updated boards after shots](assets/readmeimgs/updated_boards.png)
+
+![Scores and Continue option](assets/readmeimgs/scores_update_continue_save_exit.png)
+
+![Game Continued](assets/readmeimgs/game_continue.png)
+
+![Game Saved](assets/readmeimgs/save_game.png)
+
+![Play Again Option](assets/readmeimgs/play_again.png)
+
+![Exit Game](assets/readmeimgs/exit_game.png)
+
+![Game Over and Winner Declared](assets/readmeimgs/game_over.png)
+
+![Leaderboard and PLay Again Option](assets/readmeimgs/leaderboard.png)
 
 ### Features Left to Implement
 
