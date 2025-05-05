@@ -36,6 +36,8 @@ Below are the features for the website and at the end is listed any features tha
 - If user declares they have a login, they are invited to enter the login credentials
 - If user declares they don't have a login, they are invited to create a username and password
 
+![Welcome message and login check]()
+
 - #### Load Saved Games
 
 - If user has any saved they games they are asked if they want to load a game or start a new game, if no games they are found it starts a new game
@@ -230,7 +232,7 @@ Below are my credits for where I got inspiration for some of the code.
   - [Battleship Game Guide 3](https://llego.dev/posts/how-code-simple-battleship-game-python/)
 - Using the Love Sandwiches project I learnt how to use Google APIs and therefore used the steps to be able to use Google Sheets as my database
 - Code Institutes Battleships example introduced me to random and randint
-- Various stack overflow posts introduced me to sys and datetime module and how to use them both, there were too many to remember which ones were truly helpful
+- Various stack overflow posts introduced me to sys and time module and how to use them both, there were too many to remember which ones were truly helpful
 - My mentor mentioned to me about colorama module and this video helped me understand it, [Colorama Guide](https://www.youtube.com/watch?v=u51Zjlnui4Y)
 - My mentor also intorduced me to using staticmethod for colorama functions
 - This post on stack overflow helped me grasp the idea of how to strip ANSI codes from the saved baords, [ANSI Codes Guide](https://superuser.com/questions/380772/removing-ansi-color-codes-from-text-stream/1388860#1388860)

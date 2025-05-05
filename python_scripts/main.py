@@ -112,15 +112,35 @@ def leaderboard_generation(player, size):
         " or exit.\n")
 
 
-def full_game(
-        player, game_id=None, size=0, total_ships=0,
-        player_board=None, pc_board=None,
-        user_hits=0, computer_hits=0
+def game_is_save(
+        game_id,
+        player_board,
+        pc_board
         ):
     """
-    Starts or resumes the game and checks when the game finishes
+    Refactored code to make full_game and new_game run better
+    This handles checking whether a game is being resumed or not
     """
-    setup = BoardSetup(
+    return (
+        game_id is not None and
+        player_board is not None and
+        pc_board is not None
+        )
+
+
+def save_setup(
+        player,
+        game_id,
+        size,
+        total_ships,
+        player_board,
+        pc_board
+        ):
+    """
+    Refactored code to make full_game and new_game run better
+    This handles setting up the saved game properly.
+    """
+    return BoardSetup(
         player,
         size,
         total_ships,
@@ -128,9 +148,49 @@ def full_game(
         pc_board,
         game_id=game_id
         )
+
+
+def new_game(
+        player,
+        total_ships
+        ):
+    """
+    Function ensures a new game is set up if there are no
+    saved games or the user wants to start a new game instead
+    of continuing a saved game
+    """
+    setup = BoardSetup(player, total_ships)
+    player_baord = setup.user_board()
+    pc_board = setup.computer_board(player_baord.size, player_baord.num_ships)
+    return setup, player_baord, pc_board
+
+
+def game_starts(
+        setup,
+        user_hits,
+        computer_hits
+        ):
+    """
+    Refactored code to make full_game and new_game run better
+    This handles starting the game and allowing the user to play
+    the game.
+    """
     game = Game(setup, user_hits, computer_hits)
-    game.shot.reset_coordinates(size)
+    game.shot.reset_coordinates(setup.user_board().size)
     battleships = game.gameplay.play_game()
+    game.battleships = battleships
+    return game
+
+
+def game_result(
+        game,
+        player
+        ):
+    """
+    Refactored code to make full_game and new_game run better
+    This handles checking the result of the game.
+    """
+    battleships = game.battleships
     size = game.player_board.size
 
     if battleships == "saved" or battleships == "exit":
@@ -141,27 +201,34 @@ def full_game(
         return "game completed"
 
 
-def new_game(
+def full_game(
         player,
+        game_id=None,
+        size=0,
         total_ships=0,
         player_board=None,
         pc_board=None,
+        user_hits=0,
+        computer_hits=0
         ):
     """
-    Function ensures a new game is set up if there are no
-    saved games or the user wants to start a new game instead
-    of continuing a saved game
+    Refactored code to make full_game and new_game run better
+    This handles the starting point of the game and the result.
     """
-    setup = BoardSetup(player, total_ships, player_board, pc_board)
-    user = setup.user_board()
-    computer = setup.computer_board(user.size, user.num_ships)
-    main_game = full_game(
-        player,
-        total_ships=user.num_ships,
-        player_board=user,
-        pc_board=computer
-        )
-    return main_game
+    if game_is_save(game_id, player_board, pc_board):
+        setup = save_setup(
+            player,
+            game_id,
+            size,
+            total_ships,
+            player_board,
+            pc_board
+            )
+    else:
+        setup, player_board, pc_board = new_game(player, total_ships)
+
+    game = game_starts(setup, user_hits, computer_hits)
+    return game_result(game, player)
 
 
 def load_games_check(username, loads=None, saves=None):
@@ -215,14 +282,12 @@ def load_games_check(username, loads=None, saves=None):
             elif access_games == "n":
                 print("Let's start a new game instead.")
                 print("-" * 35)
-                new_game(username)
                 return False, None
 
     else:
         print("-" * 35)
         print(f"Currently no saved games for {username}")
         print("-" * 35)
-        new_game(username)
         return False, None
 
 
@@ -257,20 +322,11 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            game_result = full_game(
-                player=game_data["username"],
-                game_id=game_data["game_id"],
-                size=game_data["size"],
-                total_ships=game_data["total_ships"],
-                player_board=game_data["player_board"],
-                pc_board=game_data["computer_board"],
-                user_hits=game_data["user_hits"],
-                computer_hits=game_data["computer_hits"],
-            )
+            result = full_game(**game_data)
         else:
-            game_result = new_game(username)
+            result = full_game(username)
 
-        if game_result in ("exit game", "game completed"):
+        if result == "exit game" or result == "game completed":
             if play_again_option(username) == "play again":
                 continue
             else:
