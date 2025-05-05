@@ -155,13 +155,13 @@ def new_game(
     setup = BoardSetup(player, total_ships, player_board, pc_board)
     user = setup.user_board()
     computer = setup.computer_board(user.size, user.num_ships)
-    full_game(
+    main_game = full_game(
         player,
         total_ships=user.num_ships,
         player_board=user,
         pc_board=computer
         )
-    return full_game()
+    return main_game
 
 
 def load_games_check(username, loads=None, saves=None):
