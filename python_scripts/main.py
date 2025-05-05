@@ -329,7 +329,16 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            result = full_game(**game_data)
+            result = full_game(
+                player=game_data["username"],
+                game_id=game_data["game_id"],
+                size=game_data["size"],
+                total_ships=game_data["total_ships"],
+                player_board=game_data["player_board"],
+                pc_board=game_data["computer_board"],
+                user_hits=game_data["user_hits"],
+                computer_hits=game_data["computer_hits"]
+            )
         else:
             result = full_game(username)
 
