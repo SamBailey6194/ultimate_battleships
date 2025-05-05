@@ -322,9 +322,9 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            result = full_game(**game_data)
+            result = full_game(player=game_data["Username"], **game_data)
         else:
-            result = full_game(username)
+            result = full_game(player=username)
 
         if result == "exit game" or result == "game completed":
             if play_again_option(username) == "play again":
