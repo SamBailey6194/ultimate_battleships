@@ -44,7 +44,7 @@ Below are the features for the website and at the end is listed any features tha
 
 ![Successful User Creation](assets/readmeimgs/user_creation_success.png)
 
-- #### Load Saved Games
+#### Load Saved Games
 
 - If user has any saved they games they are asked if they want to load a game or start a new game, if no games they are found it starts a new game
 - If user wants to load a saved game they are shown a list of games they have saved and asked to choose one, game then continues with user taking a shot
