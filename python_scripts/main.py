@@ -167,8 +167,9 @@ def new_game(
 
 def game_starts(
         setup,
+        size,
         user_hits,
-        computer_hits
+        computer_hits,
         ):
     """
     Refactored code to make full_game and new_game run better
@@ -176,7 +177,7 @@ def game_starts(
     the game.
     """
     game = Game(setup, user_hits, computer_hits)
-    game.shot.reset_coordinates(setup.user_board().size)
+    game.shot.reset_coordinates(size)
     battleships = game.gameplay.play_game()
     game.battleships = battleships
     return game
@@ -232,6 +233,7 @@ def full_game(
 
     game = game_starts(
         setup,
+        player_board.size,
         user_hits,
         computer_hits
         )
