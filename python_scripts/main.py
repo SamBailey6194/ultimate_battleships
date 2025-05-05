@@ -322,7 +322,7 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            result = full_game(player=game_data["Username"], **game_data)
+            result = full_game(player=game_data["username"], **game_data)
         else:
             result = full_game(player=username)
 
