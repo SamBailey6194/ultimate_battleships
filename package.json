@@ -23,5 +23,8 @@
     "node-static": "^0.7.11",
     "node-pty": "^0.10.1",
     "total4": "^0.0.45"
-  }
+  },
+  "description": "**Ultimate Battleshis** is a Command Line Interface (CLI) game. The aim of this CLI is to provide users with a way of practicing a game of Battleships, which is a game that requires outwitting your opponent.",
+  "keywords": [],
+  "type": "commonjs"
 }
