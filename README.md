@@ -230,6 +230,20 @@ Below are my credits for where I got inspiration for some of the code.
   - [Battleship Game Guide 3](https://llego.dev/posts/how-code-simple-battleship-game-python/)
 - Using the Love Sandwiches project I learnt how to use Google APIs and therefore used the steps to be able to use Google Sheets as my database
 - Code Institutes Battleships example introduced me to random and randint
-- Various stack overflow posts introduced me to sys and time module and how to use them both, there were too many to remember which ones were truly helpful
+- Various stack overflow posts introduced me to sys and datetime module and how to use them both, there were too many to remember which ones were truly helpful
 - My mentor mentioned to me about colorama module and this video helped me understand it, [Colorama Guide](https://www.youtube.com/watch?v=u51Zjlnui4Y)
+- My mentor also intorduced me to using staticmethod for colorama functions
 - This post on stack overflow helped me grasp the idea of how to strip ANSI codes from the saved baords, [ANSI Codes Guide](https://superuser.com/questions/380772/removing-ansi-color-codes-from-text-stream/1388860#1388860)
+- I used this guide from [Geek for Geeks - Convert List to String](https://www.geeksforgeeks.org/python-program-to-convert-a-list-to-string/?utm_source=chatgpt.com) to help me do the following:
+  - When creating the boards for the game initially to take the string and make it into a 2D grid
+  - When converting the 2D grids into a string for the Google Sheets file
+  - When converting the saved string back into a 2D grid when a user loads a saved game
+- Chatting with my mentor and reading this [Stack Overflow - Maximum Length of Function](https://softwareengineering.stackexchange.com/questions/27798/what-is-proven-as-a-good-maximum-length-of-a-function) I worked out that good practice is to have your functions as small as necessary, e.g. can you read a function top to bottom wihtout scrolling. So using this idea I refactored a lot of my code and using classes and functions as modules in different scripts. There are times where this isn't possibly due to making the parameters of a function readable.
+- To find out how to delete an individual row I used the below guides for it:
+  - [Stack Overflow delete_row()](https://stackoverflow.com/questions/14625617/how-to-delete-remove-row-from-the-google-spreadsheet-using-gspread-lib-in-pytho)
+  - [Gspread 5.1 Documentation](https://docs.gspread.org/en/v5.1.1/api.html?highlight=delete_row#gspread.worksheet.Worksheet.delete_row)
+  - [Gspread 6 Documentation](https://docs.gspread.org/en/v6.0.0/api/models/worksheet.html#gspread.worksheet.Worksheet.delete_rows)
+    - Looking at the stack overflow post I discovered delete_row but it wasn't working
+    - So looked at the gspread 5.1 and saw there was delete_row and delete_rows functions
+    - After checking my requirements.txt I noticed I was using gspread 6.2
+    - So looked at gspread 6 documentation and saw delete_row had been removed, but delete_rows was still available
