@@ -202,37 +202,38 @@ def game_result(
 
 
 def full_game(
-        game_data
+        player,
+        game_id=None,
+        size=0,
+        total_ships=0,
+        player_board=None,
+        pc_board=None,
+        user_hits=0,
+        computer_hits=0
         ):
     """
     Refactored code to make full_game and new_game run better
     This handles the starting point of the game and the result.
     """
-    player = game_data['username']
-
-    if game_is_save(
-        game_data.get('game_id'),
-        game_data.get('player_board'),
-        game_data.get('pc_board')
-    ):
+    if game_is_save(game_id, player_board, pc_board):
         setup = save_setup(
             player,
-            game_data['game_id'],
-            game_data['size'],
-            game_data['total_ships'],
-            game_data['player_board'],
-            game_data['pc_board']
+            game_id,
+            size,
+            total_ships,
+            player_board,
+            pc_board
             )
     else:
         setup, player_board, pc_board = new_game(
             player,
-            game_data['total_ships']
+            total_ships
             )
 
     game = game_starts(
         setup,
-        game_data['user_hits'],
-        game_data['computer_hits']
+        user_hits,
+        computer_hits
         )
     return game_result(game, player)
 
@@ -328,9 +329,9 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            result = full_game(game_data)
+            result = full_game(**game_data)
         else:
-            result = full_game({"username": username})
+            result = full_game(username)
 
         if result == "exit game" or result == "game completed":
             if play_again_option(username) == "play again":
