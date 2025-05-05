@@ -59,20 +59,3 @@ function socket() {
         client.tty && client.tty.write(msg);
     });
 }
-
-// const credsPath = path.join(__dirname, '..', 'creds.json');
-// if (process.env.CREDS != null) {
-//     console.log("Creating creds.json file.");
-//     fs.writeFile(credsPath, process.env.CREDS, 'utf8', function (err) {
-//         if (err) {
-//             console.log('Error writing file: ', err);
-//             socket.emit("console_output", "Error saving credentials: " + err);
-//         } else {
-//             console.log('creds.json written successfully');
-//             fs.access(credsPath, fs.constants.F_OK, (err) => {
-//                 if (err) console.log('File NOT found after writing:', err);
-//                 else console.log('Confirmed creds.json exists at:', credsPath)
-//             })
-//         }
-//     });
-// }
