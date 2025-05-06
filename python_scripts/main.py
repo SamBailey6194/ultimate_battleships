@@ -344,8 +344,7 @@ def main():
             )
         if loaded_game:
             print(
-                f"Game ID type after loaded game: {game_data[type('game_id')]}"
-                f" and value: {game_data['game_id']}"
+                f"Game ID value: {game_data['game_id']}"
                 )
             result = full_game(
                 player=game_data["username"],
