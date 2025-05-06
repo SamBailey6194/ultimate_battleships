@@ -206,7 +206,7 @@ def game_result(
 
 def full_game(
         player,
-        game_id=None,
+        game_id,
         size=0,
         total_ships=0,
         player_board=None,
@@ -219,6 +219,7 @@ def full_game(
     This handles the starting point of the game and the result.
     """
     if game_is_save(game_id, player_board, pc_board):
+        print(f"Game ID: {game_id}")
         setup = save_setup(
             player,
             size,
@@ -227,13 +228,12 @@ def full_game(
             pc_board,
             game_id=game_id
             )
+        print(f"Game ID: {game_id}")
     else:
         setup, player_board, pc_board, total_ships = new_game(
             player,
             total_ships
             )
-
-    print(f"Total Ships: {total_ships}")
 
     game = game_starts(
         setup,
@@ -243,7 +243,6 @@ def full_game(
         total_ships=total_ships
         )
 
-    print(f"Total Ships: {total_ships}")
     return game_result(game, player)
 
 
@@ -295,6 +294,7 @@ def load_games_check(username, loads=None, saves=None):
                         "total_ships": player_board.total_ships,
                         "available_coordinates": available_coordinates
                     }
+                print(f"Game ID: {game_id}")
             elif access_games == "n":
                 print("Let's start a new game instead.")
                 print("-" * 35)
@@ -338,6 +338,7 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
+            print(f"Game ID: {game_data['game_id']}")
             result = full_game(
                 player=game_data["username"],
                 total_ships=game_data["total_ships"],
@@ -348,6 +349,7 @@ def main():
                 user_hits=game_data["user_hits"],
                 computer_hits=game_data["computer_hits"]
             )
+            print(f"Game ID: {game_data['game_id']}")
         else:
             result = full_game(username)
 

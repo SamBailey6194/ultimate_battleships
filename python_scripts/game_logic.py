@@ -51,7 +51,6 @@ class BoardAfterShots:
         Helper function that calculates how many ships remain
         left to hit.
         """
-        print(f"Total Ships: {self.game.total_ships}")
         ships_left = (
             self.game.total_ships - self.game.user_hits
             if general == self.game.player
@@ -63,7 +62,6 @@ class BoardAfterShots:
             f"{general} {marker}!\n"
             f"Just {remaining_ships} left to destroy.", flush=True
             )
-        print(f"Remaining ships: {remaining_ships}")
 
     def hit(self, board, general, row, col):
         """
