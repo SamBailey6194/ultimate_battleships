@@ -230,7 +230,7 @@ def full_game(
             pc_board
             )
     else:
-        setup, player_board, pc_board = new_game(
+        setup, player_board, pc_board, total_ships = new_game(
             player,
             total_ships
             )

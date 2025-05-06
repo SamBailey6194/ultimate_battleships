@@ -211,7 +211,7 @@ class BoardSetup:
                     self.ships_placed += 1
                     print(
                         f"Ships Placed: {self.ships_placed} of"
-                        f" Total Ships: {self.player_board.total_ships}"
+                        f" {self.player_board.total_ships}"
                     )
                     print(f"Ship placed at {row}, {col}")
                     self.player_board.display_board(show_ships=True)
