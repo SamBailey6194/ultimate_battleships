@@ -161,7 +161,9 @@ class BoardAfterShots:
 
         user_hits = StyledText.red(str(self.game.user_hits))
         computer_hits = StyledText.red(str(self.game.computer_hits))
-        total_ships = StyledText.magenta(str(self.game.player_board.num_ships))
+        total_ships = StyledText.magenta(
+            str(self.game.player_board.total_ships)
+            )
 
         print(f"{self.game.player} hits: {user_hits}/{total_ships}")
         print(f"Computer hits: {computer_hits}/{total_ships}")
@@ -208,7 +210,7 @@ class ShotTracker:
         """
         board = BoardSetup(
             self.game.player,
-            self.game.player_board.num_ships,
+            self.game.player_board.total_ships,
             self.game.player_board,
             self.game.pc_board
             )
@@ -340,7 +342,7 @@ class Gameplay:
             self.game.game_id,
             self.game.player,
             self.game.player_board.size,
-            self.game.player_board.num_ships,
+            self.game.player_board.total_ships,
             self.game.player_board,
             self.game.pc_board,
             self.game.user_hits,

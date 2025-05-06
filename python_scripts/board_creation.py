@@ -14,9 +14,9 @@ class Board:
     generates a computers board, and allows user to make guesses,
     while generates a random guess for the computer.
     """
-    def __init__(self, size=0, num_ships=0):
+    def __init__(self, size=0, total_ships=0):
         self.size = size
-        self.num_ships = num_ships
+        self.total_ships = total_ships
         self.grid = []
 
     def display_board(self, show_ships=False):
@@ -59,11 +59,11 @@ class Board:
         Validates board size input by user
         """
         if data == 1:
-            self.size, self.num_ships = 5, 4
+            self.size, self.total_ships = 5, 4
         elif data == 2:
-            self.size, self.num_ships = 10, 8
+            self.size, self.total_ships = 10, 8
         elif data == 3:
-            self.size, self.num_ships = 15, 12
+            self.size, self.total_ships = 15, 12
         else:
             print("Invalid option please pick a valid option of 1, 2 or 3.")
             return False
@@ -191,7 +191,7 @@ class BoardSetup:
             f"'{ship_space}' = Ship placement."
             )
         self.ships_placed = 0
-        while self.ships_placed < self.player_board.num_ships:
+        while self.ships_placed < self.player_board.total_ships:
             try:
                 print("-" * 35)
                 row = self.validate_coordinates(
@@ -226,7 +226,7 @@ class BoardSetup:
         water_space = Symbols.water()
         ship_space = Symbols.ship()
         self.ships_placed = 0
-        while self.ships_placed < self.pc_board.num_ships:
+        while self.ships_placed < self.pc_board.total_ships:
             row = self.random_point(self.pc_board.size)
             col = self.random_point(self.pc_board.size)
             if self.pc_board.grid[row][col] == water_space:
@@ -251,7 +251,7 @@ class BoardSetup:
         Generates a board with random placement of ships
         """
         self.pc_board.size = user_size
-        self.pc_board.num_ships = user_ships
+        self.pc_board.total_ships = user_ships
         self.pc_board.board_creation()
         self.random_ship_placement()
         print("-" * 35)

@@ -35,7 +35,7 @@ class LoadGames:
         self.player_colour = player_colour
         self.computer_colour = computer_colour
         self.size = 0
-        self.num_ships = 0
+        self.total_ships = 0
         self.grid = []
         self.user_hits = 0
         self.computer_hits = 0
@@ -112,12 +112,12 @@ class LoadGames:
         print(f"{self.username} saved games available:")
         for i, save_data in enumerate(self.games):
             self.size = save_data["Board Size"]
-            self.num_ships = save_data["Number of Ships"]
+            self.total_ships = save_data["Number of Ships"]
             user_hits = save_data["User Hits"]
             computer_hits = save_data["Computer Hits"]
 
             size_colour = StyledText.blue(self.size)
-            ships_colour = StyledText.magenta(self.num_ships)
+            ships_colour = StyledText.magenta(self.total_ships)
             user_hits_colour = StyledText.green(user_hits)
             computer_hits_colour = StyledText.red(computer_hits)
 
@@ -157,12 +157,12 @@ class LoadGames:
         # Rebuild user board for selected game
         player_board = self.board_size(user_selection)
         player_board.grid = self.player_colour
-        player_board.num_ships = user_selection["Number of Ships"]
+        player_board.total_ships = user_selection["Number of Ships"]
 
         # Rebuild computer board for selected game
         computer_board = self.board_size(user_selection)
         computer_board.grid = self.computer_colour
-        computer_board.num_ships = user_selection["Number of Ships"]
+        computer_board.total_ships = user_selection["Number of Ships"]
 
         return player_board, computer_board
 
@@ -201,7 +201,7 @@ class LoadGames:
 
         self.game_id = user_selection["Game ID"]
         self.size = user_selection["Board Size"]
-        self.num_ships = user_selection["Number of Ships"]
+        self.total_ships = user_selection["Number of Ships"]
         self.user_hits = user_selection["User Hits"]
         self.computer_hits = user_selection["Computer Hits"]
         self.available_coordinates = [

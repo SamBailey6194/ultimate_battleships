@@ -152,7 +152,7 @@ def save_setup(
 
 def new_game(
         player,
-        total_ships
+        total_ships=0
         ):
     """
     Function ensures a new game is set up if there are no
@@ -161,7 +161,9 @@ def new_game(
     """
     setup = BoardSetup(player, total_ships)
     player_baord = setup.user_board()
-    pc_board = setup.computer_board(player_baord.size, player_baord.num_ships)
+    pc_board = setup.computer_board(
+        player_baord.size, player_baord.total_ships
+        )
     return setup, player_baord, pc_board
 
 
@@ -170,6 +172,7 @@ def game_starts(
         size,
         user_hits,
         computer_hits,
+        total_ships=0,
         ):
     """
     Refactored code to make full_game and new_game run better
@@ -285,7 +288,7 @@ def load_games_check(username, loads=None, saves=None):
                         "user_hits": user_hits,
                         "computer_hits": computer_hits,
                         "size": player_board.size,
-                        "total_ships": player_board.num_ships,
+                        "total_ships": player_board.total_ships,
                         "available_coordinates": available_coordinates
                     }
             elif access_games == "n":

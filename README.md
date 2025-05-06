@@ -154,8 +154,8 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 - No size set in full_game function for leaderboard_generation function to be called, therefore, added a size=None parameter in the full_game function.
 - After cleaning up the code in the Game class and in main.py user_board and computer_board were accessing functions the wrong way, leading to not asking the user to place the ships and having blank boards. To fix the issue the requirement was to use self.player_board and self.pc_board variables in them instead of calling Board class.
 - The user_hits and computer_hits in full_game and new_game were set to None rather than 0 as an integer.
-- Saved data wasn't saving number of ships correctly due to passing None as the attribute and not 0 as a integer and ensure the num_ships was being used in the update and append_row part of the save_game_state function
-- new_game function wasn't collecting the number of ships from selected game correctly, added total_ships=user.num_ships to the parameters of full_game within new_game.
+- Saved data wasn't saving number of ships correctly due to passing None as the attribute and not 0 as a integer and ensure the total_ships was being used in the update and append_row part of the save_game_state function
+- new_game function wasn't collecting the number of ships from selected game correctly, added total_ships=user.total_ships to the parameters of full_game within new_game.
 - Validating password creation was not allowing passwords that were 8 characters long due to the >= 8, so removed the = signs from that if statement
 - The available coordinates for the computer random shots wasn't resetting correctly, changed the if statement to have if not self.available_coordinates instead of if self.available_coordinates None
 - Loaded games not listed correctly to choose from, had to ensure the games were being listed correctly by adding , _ to the self_games variable in access_saved_games to enable it to have the two parameters listed, but the second we did not care about
