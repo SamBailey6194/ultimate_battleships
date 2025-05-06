@@ -3,6 +3,7 @@
 # Imported dependencies and modules
 import re
 import bcrypt
+import getpass
 # Giving access to google drive and google sheets
 from sheets import user_logins_worksheet
 
@@ -29,7 +30,7 @@ def user_login():
     or start a new game from scratch or access the leaderbaord.
     """
     username = str(input("Username: "))
-    password = str(input("Password: "))
+    password = getpass.getpass("Password: ")
     result = login_credentials(username, password)
     if result == "Login successful":
         print(f"Welcome back {username}! \nTime to play the game.")
@@ -84,7 +85,7 @@ def check_password(data):
     Checks password meets criteria
     """
     if (len(data) < 8):
-        print(f"{data} must be at least 8 characters long\n")
+        print("Password must be at least 8 characters long\n")
         return False
     elif re.search("[A-Z]", data) is None:
         print("Password must contain 1 uppercase character\n")
@@ -104,10 +105,10 @@ def check_password(data):
     elif re.fullmatch(
         r"[a-zA-Z0-9!\"@#$£%^&'()*+,\-./:;<=>?@\[\]^_`{|}~]{8,}", data
             ):
-        print(f"{data} is a valid password\n")
+        print("Password is a valid password\n")
         return True
     else:
-        print(f"{data} is an invalid password\n")
+        print("Invalid password, please try again.\n")
         return False
 
 
@@ -134,7 +135,7 @@ def password_create():
     Password creation for first time user
     """
     while True:
-        password = str(input("Create Password: "))
+        password = getpass.getpass("Create Password: ")
         if check_password(password):
             return password
 

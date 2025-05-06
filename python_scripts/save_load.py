@@ -285,8 +285,8 @@ class Save:
             }
         while True:
             save_continue = input(
-                f"{self.player} would you like to continue or \n"
-                "save the game and return later? \n"
+                f"{self.player} would you like to continue, \n"
+                "save the game or exit this game and return later? \n"
                 f"Please enter: \n"
                 f"'{continue_}' for continue, \n"
                 f"'{save_}' for save or \n"
