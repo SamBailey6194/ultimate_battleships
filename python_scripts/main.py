@@ -160,11 +160,11 @@ def new_game(
     of continuing a saved game
     """
     setup = BoardSetup(player, total_ships)
-    player_baord = setup.user_board()
+    player_board = setup.user_board()
     pc_board = setup.computer_board(
-        player_baord.size, player_baord.total_ships
+        player_board.size, player_board.total_ships
         )
-    return setup, player_baord, pc_board
+    return setup, player_board, pc_board
 
 
 def game_starts(
