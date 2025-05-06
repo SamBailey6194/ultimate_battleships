@@ -58,9 +58,15 @@ class BoardAfterShots:
             )
         remaining_ships = StyledText.red(ships_left)
         time.sleep(1)
-        print(
-            f"{general} {marker}!\n"
-            f"Just {remaining_ships} left to destroy.", flush=True
+        if ships_left == 0:
+            print(
+                f"{general} {marker}!\n"
+                "All ships destoryed!!!", flush=True
+            )
+        else:
+            print(
+                f"{general} {marker}!\n"
+                f"Just {remaining_ships} left to destroy.", flush=True
             )
 
     def hit(self, board, general, row, col):
