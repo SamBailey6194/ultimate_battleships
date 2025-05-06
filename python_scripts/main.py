@@ -114,7 +114,6 @@ def leaderboard_generation(player, size):
 
 def game_is_save(
         game_id,
-        total_ships,
         player_board,
         pc_board
         ):
@@ -124,7 +123,6 @@ def game_is_save(
     """
     return (
         game_id is not None and
-        total_ships is not None and
         player_board is not None and
         pc_board is not None
         )
