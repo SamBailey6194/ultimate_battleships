@@ -60,12 +60,15 @@ class BoardAfterShots:
             else:
                 self.game.computer_hits += 1
 
+            print(f"Total Ships: {self.game.total_ships}")
+
             ships_left = (
                 self.game.total_ships - self.game.user_hits
                 if general == self.game.player
                 else self.game.total_ships - self.game.computer_hits
                 )
             remaining_ships = StyledText.red(ships_left)
+            print(f"Remaining ships: {remaining_ships}")
             time.sleep(1)
             print(
                 f"{general} {hit_ship}!\n"
@@ -81,12 +84,15 @@ class BoardAfterShots:
         miss_ship = StyledText.green("Miss")
 
         if board.grid[row][col] == Symbols.water():
+
+            print(f"Total Ships: {self.game.total_ships}")
             ships_left = (
                 self.game.total_ships - self.game.user_hits
                 if general == self.game.player
                 else self.game.total_ships - self.game.computer_hits
                 )
             remaining_ships = StyledText.red(ships_left)
+            print(f"Remaining ships: {remaining_ships}")
             time.sleep(1)
             print(
                 f"{general} {miss_ship}!\n"

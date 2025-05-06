@@ -231,15 +231,20 @@ def full_game(
     else:
         setup, player_board, pc_board = new_game(
             player,
-            total_ships
+            total_ships=setup.total_ships
             )
+
+    print(f"Total Ships: {total_ships}")
 
     game = game_starts(
         setup,
         player_board.size,
         user_hits,
-        computer_hits
+        computer_hits,
+        total_ships=total_ships
         )
+
+    print(f"Total Ships: {total_ships}")
     return game_result(game, player)
 
 
