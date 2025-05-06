@@ -126,7 +126,6 @@ class BoardSetup:
             self,
             player,
             size,
-            total_ships=0,
             player_board=None,
             pc_board=None,
             game_id=None
@@ -138,7 +137,6 @@ class BoardSetup:
             )
         self.player = player
         self.size = size
-        self.total_ships = total_ships
         self.ships_placed = 0
 
         if player_board and pc_board:
@@ -255,12 +253,12 @@ class BoardSetup:
         print(f"Total Ships: {self.player_board.total_ships}")
         return self.player_board
 
-    def computer_board(self, user_size, user_ships):
+    def computer_board(self):
         """
         Generates a board with random placement of ships
         """
-        self.pc_board.size = user_size
-        self.pc_board.total_ships = user_ships
+        self.pc_board.size = self.player_board.size
+        self.pc_board.total_ships = self.player_board.total_ships
         self.pc_board.board_creation()
         self.random_ship_placement()
         print("-" * 35)
