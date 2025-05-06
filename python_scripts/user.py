@@ -141,7 +141,8 @@ def password_create():
     while True:
         print(
             "Note: for security the password is hidden.\n"
-            "Type in your password and hit enter when done."
+            "Type in the password you want to create,\n"
+            "and hit enter when done."
         )
         password = getpass.getpass("Create Password: ")
         if check_password(password):
