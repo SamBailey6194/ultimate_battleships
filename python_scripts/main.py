@@ -134,7 +134,7 @@ def save_setup(
         total_ships,
         player_board,
         pc_board,
-        game_id=None,
+        game_id
         ):
     """
     Refactored code to make full_game and new_game run better
@@ -150,7 +150,7 @@ def save_setup(
         total_ships,
         player_board,
         pc_board,
-        game_id=game_id
+        game_id
         )
 
 
@@ -233,7 +233,7 @@ def full_game(
             total_ships,
             player_board,
             pc_board,
-            game_id=game_id
+            game_id
             )
     else:
         setup, player_board, pc_board, total_ships = new_game(
