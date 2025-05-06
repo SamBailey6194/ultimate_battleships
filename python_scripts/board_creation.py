@@ -114,7 +114,7 @@ class Board:
                     f"Please input {StyledText.green('1')},"
                     f" {StyledText.yellow('2')} or {StyledText.red('3')}\n"
                     )
-        return size
+        return size, self.total_ships
 
 
 class BoardSetup:
