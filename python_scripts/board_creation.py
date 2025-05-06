@@ -198,7 +198,8 @@ class BoardSetup:
             try:
                 print("-" * 35)
                 print(
-                    f"{self.ships_placed} or {self.player_board.total_ships}"
+                    f"Ships Placed: {self.ships_placed} of"
+                    f" Total Ships: {self.player_board.total_ships}"
                     )
                 row = self.validate_coordinates(
                     "Enter row to place ship at: \n", self.player_board.size
