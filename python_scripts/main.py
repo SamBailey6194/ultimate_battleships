@@ -7,7 +7,7 @@ import sys
 # Imported other python scripts
 from style import init_styles, StyledText
 from user import user_login, user_creation
-from board_creation import Board, BoardSetup
+from board_creation import BoardSetup
 from game import Game
 from save_load import LoadGames
 import leaderboard
@@ -135,7 +135,6 @@ def save_setup(
         size,
         player_board,
         pc_board,
-        total_ships=0,
         game_id=None
         ):
     """
@@ -148,15 +147,13 @@ def save_setup(
         f"size: {size},\n"
         f"game_id: {game_id}"
         )
-    board = Board(size=size, total_ships=total_ships)
-    total_ships = board.player_board.total_ships
     return BoardSetup(
         player,
         size,
         player_board,
         pc_board,
         game_id=game_id
-        ), total_ships
+        )
 
 
 def new_game(
@@ -231,14 +228,13 @@ def full_game(
         f"Game ID type in full game: {type(game_id)}"
         f" and value: {game_id}"
         )
-    if game_is_save(game_id, total_ships, player_board, pc_board):
+    if game_is_save(game_id, player_board, pc_board):
         setup = save_setup(
             player,
             size,
             player_board,
             pc_board,
             game_id=game_id,
-            total_ships=total_ships
             )
         print(
             f"Game ID type passed to save_setup: {type(game_id)}"
