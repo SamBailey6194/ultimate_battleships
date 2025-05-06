@@ -130,6 +130,8 @@ class BoardSetup:
             ):
         # Provides each game with a unique ID so when saving a loaded game
         # it overwirtes the correct game
+        print(f"Game ID type in BoardSetup {type(game_id)}"
+              f" and value: {game_id}")
         self.game_id = (
             game_id or datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             )

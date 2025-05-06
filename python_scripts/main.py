@@ -140,6 +140,10 @@ def save_setup(
     Refactored code to make full_game and new_game run better
     This handles setting up the saved game properly.
     """
+    print(
+        f"Game ID type in save setup: {type(game_id)}"
+        f" and value: {game_id}"
+        )
     return BoardSetup(
         player,
         size,
@@ -218,8 +222,11 @@ def full_game(
     Refactored code to make full_game and new_game run better
     This handles the starting point of the game and the result.
     """
+    print(
+        f"Game ID type in full game: {type(game_id)}"
+        f" and value: {game_id}"
+        )
     if game_is_save(game_id, player_board, pc_board):
-        print(f"Game ID: {game_id}")
         setup = save_setup(
             player,
             size,
@@ -228,7 +235,6 @@ def full_game(
             pc_board,
             game_id=game_id
             )
-        print(f"Game ID: {game_id}")
     else:
         setup, player_board, pc_board, total_ships = new_game(
             player,
@@ -294,7 +300,6 @@ def load_games_check(username, loads=None, saves=None):
                         "total_ships": player_board.total_ships,
                         "available_coordinates": available_coordinates
                     }
-                print(f"Game ID: {game_id}")
             elif access_games == "n":
                 print("Let's start a new game instead.")
                 print("-" * 35)
@@ -338,7 +343,10 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            print(f"Game ID: {game_data['game_id']}")
+            print(
+                f"Game ID type after loaded game: {game_data[type('game_id')]}"
+                f" and value: {game_data['game_id']}"
+                )
             result = full_game(
                 player=game_data["username"],
                 total_ships=game_data["total_ships"],
@@ -349,7 +357,6 @@ def main():
                 user_hits=game_data["user_hits"],
                 computer_hits=game_data["computer_hits"]
             )
-            print(f"Game ID: {game_data['game_id']}")
         else:
             result = full_game(username)
 
