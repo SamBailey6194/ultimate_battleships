@@ -84,7 +84,7 @@ def play_again_option(player):
             "Would you like to play again or\n"
             "exit the game?\n"
             "If you choose play again, you can either\n"
-            "start a new game or load a saved game."
+            "start a new game or load a saved game.\n"
             f"Please enter '{play}' to play again or\n"
             f"'{exit_}' to exit: \n"
         ).strip().lower()
