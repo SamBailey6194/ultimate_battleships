@@ -235,6 +235,10 @@ def full_game(
             pc_board,
             game_id
             )
+        print(
+            f"Game ID type passed to save_setup: {type(game_id)}"
+            f" and value: {game_id}"
+        )
     else:
         setup, player_board, pc_board, total_ships = new_game(
             player,
