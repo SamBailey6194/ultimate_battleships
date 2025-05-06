@@ -164,7 +164,8 @@ def new_game(
     pc_board = setup.computer_board(
         player_board.size, player_board.total_ships
         )
-    return setup, player_board, pc_board
+    total_ships = player_board.total_ships
+    return setup, player_board, pc_board, total_ships
 
 
 def game_starts(
