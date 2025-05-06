@@ -197,10 +197,6 @@ class BoardSetup:
         while self.ships_placed < self.player_board.total_ships:
             try:
                 print("-" * 35)
-                print(
-                    f"Ships Placed: {self.ships_placed} of"
-                    f" Total Ships: {self.player_board.total_ships}"
-                    )
                 row = self.validate_coordinates(
                     "Enter row to place ship at: \n", self.player_board.size
                     )
@@ -213,6 +209,10 @@ class BoardSetup:
                 if self.player_board.grid[row][col] == water_space:
                     self.player_board.grid[row][col] = ship_space
                     self.ships_placed += 1
+                    print(
+                        f"Ships Placed: {self.ships_placed} of"
+                        f" Total Ships: {self.player_board.total_ships}"
+                    )
                     print(f"Ship placed at {row}, {col}")
                     self.player_board.display_board(show_ships=True)
                 elif self.player_board.grid[row][col] == ship_space:
