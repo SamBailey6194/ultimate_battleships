@@ -30,6 +30,10 @@ def user_login():
     or start a new game from scratch or access the leaderbaord.
     """
     username = str(input("Username: "))
+    print(
+        "Note: for security the password is hidden.\n"
+        "Type in your password and hit enter when done."
+        )
     password = getpass.getpass("Password: ")
     result = login_credentials(username, password)
     if result == "Login successful":
@@ -135,6 +139,10 @@ def password_create():
     Password creation for first time user
     """
     while True:
+        print(
+            "Note: for security the password is hidden.\n"
+            "Type in your password and hit enter when done."
+        )
         password = getpass.getpass("Create Password: ")
         if check_password(password):
             return password
