@@ -46,6 +46,25 @@ class BoardAfterShots:
                 )
             return False
 
+    def ships_remain(self, general, marker):
+        """
+        Helper function that calculates how many ships remain
+        left to hit.
+        """
+        print(f"Total Ships: {self.game.total_ships}")
+        ships_left = (
+            self.game.total_ships - self.game.user_hits
+            if general == self.game.player
+            else self.game.total_ships - self.game.computer_hits
+            )
+        remaining_ships = StyledText.red(ships_left)
+        time.sleep(1)
+        print(
+            f"{general} {marker}!\n"
+            f"Just {remaining_ships} left to destroy.", flush=True
+            )
+        print(f"Remaining ships: {remaining_ships}")
+
     def hit(self, board, general, row, col):
         """
         Refactored code to hold the processing of when
@@ -60,20 +79,7 @@ class BoardAfterShots:
             else:
                 self.game.computer_hits += 1
 
-            print(f"Total Ships: {self.game.total_ships}")
-
-            ships_left = (
-                self.game.total_ships - self.game.user_hits
-                if general == self.game.player
-                else self.game.total_ships - self.game.computer_hits
-                )
-            remaining_ships = StyledText.red(ships_left)
-            print(f"Remaining ships: {remaining_ships}")
-            time.sleep(1)
-            print(
-                f"{general} {hit_ship}!\n"
-                f"Just {remaining_ships} left to destroy.", flush=True
-                )
+            self.ships_remain(general, hit_ship)
             return True
 
     def miss(self, board, general, row, col):
@@ -84,21 +90,8 @@ class BoardAfterShots:
         miss_ship = StyledText.green("Miss")
 
         if board.grid[row][col] == Symbols.water():
-
-            print(f"Total Ships: {self.game.total_ships}")
-            ships_left = (
-                self.game.total_ships - self.game.user_hits
-                if general == self.game.player
-                else self.game.total_ships - self.game.computer_hits
-                )
-            remaining_ships = StyledText.red(ships_left)
-            print(f"Remaining ships: {remaining_ships}")
-            time.sleep(1)
-            print(
-                f"{general} {miss_ship}!\n"
-                f"Just {remaining_ships} left to destroy.", flush=True
-                )
             board.grid[row][col] = Symbols.miss()
+            self.ships_remain(general, miss_ship)
             return True
 
     def update_board(self, general, board, row, col):
