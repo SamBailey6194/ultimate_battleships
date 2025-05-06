@@ -103,9 +103,11 @@ class Board:
                 print("-" * 35)
                 if self.validate_board_size(size):
                     time.sleep(0.5)
+                    print(f"Total Ships: {self.total_ships}")
                     print("Generating board . . .")
                     time.sleep(0.5)
                     self.display_board()
+                    print(f"Total Ships: {self.total_ships}")
                     break
             except ValueError:
                 print(
@@ -191,6 +193,7 @@ class BoardSetup:
             f"'{ship_space}' = Ship placement."
             )
         self.ships_placed = 0
+        print(f"Total Ships: {self.player_board.total_ships}")
         while self.ships_placed < self.player_board.total_ships:
             try:
                 print("-" * 35)
@@ -243,7 +246,9 @@ class BoardSetup:
         self.player_place_ships()
         print("-" * 35)
         print(f"{self.player}'s final board \n")
+        print(f"Total Ships: {self.player_board.total_ships}")
         self.player_board.display_board(show_ships=True)
+        print(f"Total Ships: {self.player_board.total_ships}")
         return self.player_board
 
     def computer_board(self, user_size, user_ships):

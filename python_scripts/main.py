@@ -341,9 +341,9 @@ def main():
         if loaded_game:
             result = full_game(
                 player=game_data["username"],
+                total_ships=game_data["total_ships"],
                 game_id=game_data["game_id"],
                 size=game_data["size"],
-                total_ships=game_data["total_ships"],
                 player_board=game_data["player_board"],
                 pc_board=game_data["computer_board"],
                 user_hits=game_data["user_hits"],
