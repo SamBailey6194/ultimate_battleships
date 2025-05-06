@@ -231,7 +231,7 @@ def full_game(
     else:
         setup, player_board, pc_board = new_game(
             player,
-            total_ships=player_board.total_ships
+            total_ships
             )
 
     print(f"Total Ships: {total_ships}")
