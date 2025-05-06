@@ -45,7 +45,7 @@ def user_choice():
         login_option = input(
             "Have you already got a login?\n"
             f"If yes please enter '{yes}',\n"
-            f" if no please enter '{no}':\n"
+            f"if no please enter '{no}':\n"
             ).strip().lower()
 
         if login_option not in ("y", "n"):
@@ -139,12 +139,6 @@ def save_setup(
     Refactored code to make full_game and new_game run better
     This handles setting up the saved game properly.
     """
-    print(
-        "Debug - Calling BoardSetup with\n"
-        f"player: {player},\n"
-        f"size: {size},\n"
-        f"game_id: {game_id}"
-        )
     return BoardSetup(
         player,
         size,
@@ -222,10 +216,6 @@ def full_game(
     Refactored code to make full_game and new_game run better
     This handles the starting point of the game and the result.
     """
-    print(
-        f"Game ID type in full game: {type(game_id)}"
-        f" and value: {game_id}"
-        )
     if game_is_save(game_id, player_board, pc_board):
         setup = save_setup(
             player,
@@ -234,10 +224,6 @@ def full_game(
             pc_board,
             game_id=game_id,
             )
-        print(
-            f"Game ID type passed to save_setup: {type(game_id)}"
-            f" and value: {game_id}"
-        )
     else:
         setup, player_board, pc_board, total_ships = new_game(
             player,
@@ -346,9 +332,6 @@ def main():
             username, load_games, games_saved
             )
         if loaded_game:
-            print(
-                f"Game ID value: {game_data['game_id']}"
-                )
             result = full_game(
                 player=game_data["username"],
                 total_ships=game_data["total_ships"],
