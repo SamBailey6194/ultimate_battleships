@@ -20,15 +20,19 @@ def intro():
     """
     print("-" * 35)
     print(
-        "Battleships is a strategy guessing \n"
-        "game for two players. This program \n"
-        "allows you to play against a computer \n"
-        "to practice.\n"
+        f"{StyledText.bold('Ultimate Battleships')} is a\n"
+        "strategy guessing game for two players.\n"
+        "\n"
+        "This program allows you to play \n"
+        "against a computer to practice.\n"
+        "\n"
         "Once the game starts you will be \n"
         "able to pick a point to hit on the \n"
-        "computers board. The aim of the game \n"
-        "is to hit all of the computers \n"
-        "battleships before they hit all of yours.\n"
+        "computers board.\n"
+        "\n"
+        "The aim of the game is to hit all \n"
+        f"of the computers {StyledText.magenta('battleships')} before\n"
+        "they hit all of yours.\n"
         )
     print("-" * 35)
     time.sleep(1.5)
@@ -81,12 +85,11 @@ def play_again_option(player):
         play = StyledText.green("P")
         exit_ = StyledText.red("E")
         play_or_exit = input(
-            "Would you like to play again or\n"
-            "exit the game?\n"
+            f"Please enter '{play}' to play again or\n"
+            f"'{exit_}' to exit\n"
+            "\n"
             "If you choose play again, you can either\n"
             "start a new game or load a saved game.\n"
-            f"Please enter '{play}' to play again or\n"
-            f"'{exit_}' to exit: \n"
         ).strip().lower()
         if play_or_exit not in ("p", "e"):
             print(
@@ -110,8 +113,8 @@ def leaderboard_generation(player, size):
     leaderboard.show_lb(size)
     print(
         "When you are done searching the\n"
-        "leaderboard you can either play again"
-        " or exit.\n")
+        "leaderboard you can either play again\n"
+        "or exit.\n")
 
 
 def game_is_save(
@@ -255,6 +258,7 @@ def load_games_check(username, loads=None, saves=None):
             access_games = input(
                 f"{username}, would you like to access any of \n"
                 "your saved games?\n"
+                "\n"
                 f"If yes please enter '{yes}', \n"
                 f"if no please enter '{no}':\n"
                 ).strip().lower()

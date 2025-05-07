@@ -6,6 +6,7 @@ import bcrypt
 import getpass
 # Giving access to google drive and google sheets
 from sheets import user_logins_worksheet
+from style import StyledText
 
 
 # Section that asks user for login information and verifies login credentials
@@ -20,7 +21,10 @@ def login_credentials(username, password):
             encrypt_pw = user["Password"].encode()
             if bcrypt.checkpw(password.encode(), encrypt_pw):
                 return "Login successful"
-    print("Invalid login credentials, please enter correct details.")
+    print(
+        "Invalid login credentials,\n"
+        "please enter correct details."
+        )
     return None
 
 
@@ -31,13 +35,19 @@ def user_login():
     """
     username = str(input("Username: "))
     print(
-        "Note: for security the password is hidden.\n"
+        f"{StyledText.red(
+            'Note: for security the password is hidden.'
+            )}\n"
+        "\n"
         "Type in your password and hit enter when done."
-        )
+    )
     password = getpass.getpass("Password: ")
     result = login_credentials(username, password)
     if result == "Login successful":
-        print(f"Welcome back {username}! \nTime to play the game.")
+        print(
+            f"Welcome back {username}! \n"
+            "Time to play the game."
+            )
         return username
     else:
         return None
@@ -140,9 +150,11 @@ def password_create():
     """
     while True:
         print(
-            "Note: for security the password is hidden.\n"
-            "Type in the password you want to create,\n"
-            "and hit enter when done."
+            f"{StyledText.red(
+                'Note: for security the password is hidden.'
+                )}\n"
+            "\n"
+            "Type in your password and hit enter when done."
         )
         password = getpass.getpass("Create Password: ")
         if check_password(password):
@@ -193,6 +205,9 @@ def user_creation():
     password = password_create()
     save_user(username, password)
     print("-" * 35)
-    print(f"Login created. Welcome {username}! Time to play the game.\n")
+    print(
+        f"Login created. Welcome {username}!\n"
+        "Time to play the game.\n"
+          )
     print("-" * 35)
     return username

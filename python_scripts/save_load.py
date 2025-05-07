@@ -142,10 +142,18 @@ class LoadGames:
                 if 1 <= option <= len(self.games):
                     return self.games[option - 1]
                 else:
-                    print("Invalid selection, please choose a game")
+                    print(
+                        f"{StyledText.red(
+                            'Invalid selection, please choose a game'
+                            )}"
+                        )
                     return None
             except ValueError:
-                print("Please enter a number shown next to the game.")
+                print(
+                    f"{StyledText.red(
+                        'Please enter a number shown next to the game.'
+                        )}"
+                    )
                 return None
 
     def boards_rebuilt(self, user_selection, player_board, computer_board):
@@ -285,9 +293,7 @@ class Save:
             }
         while True:
             save_continue = input(
-                f"{self.player} would you like to continue, \n"
-                "save the game or exit this game and return later? \n"
-                f"Please enter: \n"
+                f"{self.player} please enter: \n"
                 f"'{continue_}' for continue, \n"
                 f"'{save_}' for save or \n"
                 f"'{exit_}' to exit: \n"
@@ -371,6 +377,7 @@ class Save:
                 ]
                 ])
         print(
+            f"{StyledText.green('Success:')}\n"
             "Loaded game has been saved over.\n"
             "You can access this game next time you log in."
             )
@@ -391,6 +398,7 @@ class Save:
             self.available_coordinates
             ])
         print(
+            f"{StyledText.green('Success:')}\n"
             "New game has been saved.\n"
             "You can access this game next time you log in."
             )
@@ -405,6 +413,7 @@ class Save:
             print("-" * 35)
             print(
                 "No winner yet. Game continues.\n"
+                "\n"
                 f"Come on {self.player} you can win!!!"
                 )
             print("-" * 35)

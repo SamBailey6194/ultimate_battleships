@@ -29,7 +29,10 @@ class BoardAfterShots:
         if not (
             0 <= row < len(board.grid) and 0 <= col < len(board.grid[0])
         ):
-            print(f"Invalid coordinates: ({row}, {col})")
+            print(
+                f"{StyledText.red('Invalid')} coordinates:"
+                f" ({StyledText.yellow(row)}, {StyledText.yellow(col)})"
+                )
             return False
         return True
 
@@ -41,8 +44,9 @@ class BoardAfterShots:
         if board.grid[row][col] in (Symbols.miss(), Symbols.hit()):
             time.sleep(1)
             print(
-                f"{general} you have already shot here, please pick a"
-                " new spot."
+                StyledText.red(
+                    f"{general} you have already shot here, please pick a"
+                    " new spot.")
                 )
             return False
 
@@ -61,7 +65,7 @@ class BoardAfterShots:
         if ships_left == 0:
             print(
                 f"{general} {marker}!\n"
-                "All ships destoryed!!!", flush=True
+                f"All ships {StyledText.red('destroyed!!!')}", flush=True
             )
         else:
             print(
@@ -116,9 +120,11 @@ class BoardAfterShots:
 
         time.sleep(1)
         print(
-            "Remember: The top left corner is row: 0, col: 0.\n"
+            f"{StyledText.red('Remember: The top left corner is')}\n"
+            f"row: {StyledText.yellow('0')}\n"
+            f"col: {StyledText.yellow('0')}.\n"
             "Please bear that in mind when entering rows and columns."
-            )
+        )
         return False
 
     def key(self):
@@ -257,7 +263,8 @@ class TurnTracker:
         """
         time.sleep(1.5)
         print("-" * 35)
-        print("Time to take your shot! Fire!!!!!!")
+        print(
+            f"Time to take your shot! {StyledText.red('Fire!!!!!!')}")
         self.game.shot.shots_fired(
             self.game.player,
             self.game.pc_board,
@@ -325,13 +332,16 @@ class Gameplay:
             return True
         elif self.game.user_hits == self.game.total_ships:
             print(
-                f"{self.game.player}, you win!!!! You beat the computer."
+                f"{self.game.player} you win!!!!\n"
+                f"{StyledText.green('You beat the computer.')}"
                 )
             return True
         elif self.game.computer_hits == self.game.total_ships:
             print(
-                f"Computer wins!!! Unlucky {self.game.player},"
-                " maybe next time."
+                f"Computer wins!!!\n"
+                f"{StyledText.red(
+                    f'Unlucky {self.game.player}, maybe next time.'
+                    )}"
                 )
             return True
         else:

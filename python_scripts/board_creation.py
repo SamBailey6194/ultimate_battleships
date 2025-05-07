@@ -78,17 +78,20 @@ class Board:
         """
         print(
             "Now you are logged in. \n"
-            "You can play the game. First though you \n"
-            "need to select what size board you want to play on.\n"
+            "You can play the game. \n"
+            "\n"
+            "First though you need to select\n"
+            "what size board you want to play on.\n"
+            "\n"
             "All options are a square grid.\n"
-            "Each size has a different amount of\n"
-            "battleships to place.\n"
             "Your options are as follows:\n"
-            f"- {StyledText.green('1')} = {StyledText.green('5x5')} with"
+            f"{StyledText.green('1')} = {StyledText.green('5x5')} with"
             f" {StyledText.magenta('4')} battleships\n"
-            f"- {StyledText.yellow('2')} = {StyledText.yellow("10x10")} with"
+            "\n"
+            f"{StyledText.yellow('2')} = {StyledText.yellow("10x10")} with"
             f" {StyledText.magenta('8')} battleships\n"
-            f"- {StyledText.red('3')} = {StyledText.red('15x15')} with"
+            "\n"
+            f"{StyledText.red('3')} = {StyledText.red('15x15')} with"
             f" {StyledText.magenta('12')} battleships\n")
         print("-" * 35)
 
@@ -162,13 +165,19 @@ class BoardSetup:
                     return value
                 else:
                     print(
-                        "Please remember to enter a coordinate in the correct"
-                        " range.\n"
-                        f"It must be a number between 0 and {size - 1}."
+                        f"{StyledText.red(
+                            'Please remember to enter a coordinate'
+                            'in the correct range.'
+                            )}\n"
+                        "\n"
+                        f"It must be a number between {StyledText.yellow('0')}"
+                        f" and {StyledText.yellow(size - 1)}."
                         )
             except (ValueError, IndexError):
                 print(
-                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    f"{StyledText.red('Remember: The top left corner is')}\n"
+                    f"row: {StyledText.yellow('0')}\n"
+                    f"col: {StyledText.yellow('0')}.\n"
                     "Please bear that in mind when entering rows and columns."
                     )
 
@@ -181,9 +190,16 @@ class BoardSetup:
         print("-" * 35)
         print(
             "Now you have chosen the size board\n"
-            "you want to play on. Please place your ships.\n"
+            "you want to play on.\n"
+            "\n"
+            "Please place your ships.\n"
+            "\n"
             "Each ship takes up one space.\n"
-            "The top left corner is row: 0, col: 0.\n"
+            "\n"
+            "The top left corner is \n"
+            f"row: {StyledText.yellow('0')}\n"
+            f"col: {StyledText.yellow('0')}.\n"
+            "\n"
             "Please bear that in mind when entering\n"
             "rows and columns.\n"
             f"'{ship_space}' = Ship placement."
@@ -205,19 +221,27 @@ class BoardSetup:
                     self.player_board.grid[row][col] = ship_space
                     self.ships_placed += 1
                     print(
-                        f"Ships Placed: {self.ships_placed} of"
-                        f" {self.player_board.total_ships}"
+                        f"Ships Placed:"
+                        f" {StyledText.magenta(self.ships_placed)} of"
+                        f" {StyledText.magenta(self.player_board.total_ships)}"
                     )
-                    print(f"Ship placed at {row}, {col}")
+                    print(
+                        f"Ship placed at {StyledText.yellow(row)},"
+                        f" {StyledText.yellow(col)}"
+                        )
                     self.player_board.display_board(show_ships=True)
                 elif self.player_board.grid[row][col] == ship_space:
                     print(
-                        "Ship already palced there,"
-                        " please select another place."
+                        StyledText.red(
+                            "Ship already palced there,"
+                            " please select another place."
+                            )
                         )
             except (ValueError, IndexError):
                 print(
-                    "Remember: The top left corner is row: 0, col: 0.\n"
+                    f"{StyledText.red('Remember: The top left corner is')}\n"
+                    f"row: {StyledText.yellow('0')}\n"
+                    f"col: {StyledText.yellow('0')}.\n"
                     "Please bear that in mind when entering rows and columns."
                     )
 
