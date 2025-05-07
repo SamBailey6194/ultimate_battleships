@@ -354,6 +354,7 @@ def main():
 
         if result == "exit game" or result == "game completed":
             if play_again_option(username) == "play again":
+                games_saved, _ = load_games.load_saved_games()
                 continue
             else:
                 exit_game(username)
