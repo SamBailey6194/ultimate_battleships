@@ -45,7 +45,7 @@ def user_login():
     result = login_credentials(username, password)
     if result == "Login successful":
         print(
-            f"Welcome back {username}! \n"
+            f"{StyledText.green('Welcome back')} {username}! \n"
             "Time to play the game."
             )
         return username
@@ -206,6 +206,7 @@ def user_creation():
     save_user(username, password)
     print("-" * 35)
     print(
+        f"{StyledText.green('Success:')}\n"
         f"Login created. Welcome {username}!\n"
         "Time to play the game.\n"
           )

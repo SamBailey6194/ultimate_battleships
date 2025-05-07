@@ -107,6 +107,47 @@ Below are the features for the website and at the end is listed any features tha
 
 ![Leaderboard and PLay Again Option](assets/readmeimgs/leaderboard.png)
 
+### Google Sheets Database
+
+As mentioned in the above features, the user can save they create a username and password and they can save a game state or load a saved game.
+
+Below I outline what the database has as features itself along with some screenshots to illustrate.
+
+In the submission for the project I have shared a link for the assessors to see.
+
+#### User Logins Sheet
+
+- Username is stored as a plain string
+- Password is stored encrypted/encoded using bcrypt
+- bcrypt also decryptes/decodes the password so when a user logs in the password can be read properly as a string
+
+![User Login Example](assets/readmeimgs/user_logins_database.png)
+
+#### Saved Games Sheet
+
+- When a user starts a game it creates a Game ID using the datetime module to help identify the game when someone saves it and loads it, this helps with deleting a loaded game is completed
+- Username is stored on this sheet to help identify if the user has any saved games or not when they log back in
+- Board size for the game saved
+- Number of ships for the game saved
+- User board as a string
+- Computer board as a string with the ship placement revealed so when game is loaded the programme can identify ship placements easily
+- User hits, how many ships the user has hit on the computer's board
+- Computer hits, how many ships the computer has hit on the user's board
+- Available coordinates, what coordinates the computer hasn't shot at yet so when the game is loaded they are put into the tuple for the available coordinates within reset_coordinates function
+  
+![Saved Games Example](assets/readmeimgs/games_saved_database.png)
+
+#### Stored Leaderboard Sheets
+
+- There are three worksheets for leaderboard storage, one for each size and the size selected helps determine which worksheet the game result is stored on for the leaderboard
+- Username is stored so the leaderboard can include that in its list
+- User score, how many ships the user has hit on the computer's board
+- Computer score, how many ships the computer has hit on the user's board
+- Game score, user score minus the computer score, this is the score that determines the position on the leaderboard and is the only one displayed on the leaderboard
+- The user score and computer score is stored in case in the future the leaderboard function wants to show either of those as well as the game score
+
+![Leaderboard Example](assets/readmeimgs/leaderboard_database.png)
+
 ### Features Left to Implement
 
 - Count the shots it took for the game to finish
@@ -173,8 +214,9 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 | Forgotten Password Function | FF | Would require account management and taking email addresses |
 | Leaderboard not updating or showing if user plays a new game | Y | full_game() was setting size as none when playing a new game, amended full_game() to have a size value instead of None |
 | iPhone users report issues with entering inputs | N | Due to how Heroku's CLI works this project without a Frontend won't work on mobile, to enable to work would have to build a frontend part to the game using HTML, CSS and JavaScript |
-| Shorten lines for better display on mobile | Y / N | Added \n at appropriate points to display on a mobile device |
+| Shorten lines for better display on mobile | Y | Added \n at appropriate points to display on a mobile device |
 | Leaderboard layout not properly readable for users | Y | Display only the Game Score and separate out the columns appropriately so they match up |
+| Password creation and when logging in to be blank | Y | Use getpass module to do this |
 
 ### Unfixed Bugs
 
@@ -273,6 +315,7 @@ Below are my credits for where I got inspiration for some of the code.
   - When converting the 2D grids into a string for the Google Sheets file
   - When converting the saved string back into a 2D grid when a user loads a saved game
 - Chatting with my mentor and reading this [Stack Overflow - Maximum Length of Function](https://softwareengineering.stackexchange.com/questions/27798/what-is-proven-as-a-good-maximum-length-of-a-function) I worked out that good practice is to have your functions as small as necessary, e.g. can you read a function top to bottom wihtout scrolling. So using this idea I refactored a lot of my code and using classes and functions as modules in different scripts. There are times where this isn't possibly due to making the parameters of a function readable.
+- Using datetime module to create a Game ID for games I followed these two: [Datetime document](https://docs.python.org/3/library/datetime.html), [Datetime guide](https://www.geeksforgeeks.org/python-datetime-module/)
 - To find out how to delete an individual row I used the below guides for it:
   - [Stack Overflow delete_row()](https://stackoverflow.com/questions/14625617/how-to-delete-remove-row-from-the-google-spreadsheet-using-gspread-lib-in-pytho)
   - [Gspread 5.1 Documentation](https://docs.gspread.org/en/v5.1.1/api.html?highlight=delete_row#gspread.worksheet.Worksheet.delete_row)
@@ -281,3 +324,4 @@ Below are my credits for where I got inspiration for some of the code.
     - So looked at the gspread 5.1 and saw there was delete_row and delete_rows functions
     - After checking my requirements.txt I noticed I was using gspread 6.2
     - So looked at gspread 6 documentation and saw delete_row had been removed, but delete_rows was still available
+- To help understand how to use getpass module I used these two links: [Getpass document](https://docs.python.org/3/library/getpass.html), [Getpass Guide](https://www.geeksforgeeks.org/getpass-and-getuser-in-python-password-without-echo/)
