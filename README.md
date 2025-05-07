@@ -105,6 +105,8 @@ Below are the features for the website and at the end is listed any features tha
 
 ![Game Saved](assets/readmeimgs/save_game.png)
 
+![Play Again](assets/readmeimgs/play_again.png)
+
 ![Exit Game](assets/readmeimgs/exit_game.png)
 
 ![All Ships Destroyed](assets/readmeimgs/all_ships_destroyed.png)
@@ -160,6 +162,7 @@ In the submission for the project I have shared a link for the assessors to see.
 - Only update the leaderboard if the users score is higher than their previous
 - Show the user directly where they ended up on the leaderboard
 - Have a search function on the leaderboard
+- Use a more robust Game ID creation method than datetime
 
 ## Testing
 
@@ -211,6 +214,7 @@ The app was tested in powershell 7 within VS Code and then deployed to Heroku an
 - Loaded in games weren't continuing, required adding if statements adn return statements into main.py load_games_check() and main() so it would continue from where it left off
 - Loaded games led to computer's available coordinates to be reset, added available coordinates to saved games and have them load back in with the data as well by adding available_coordinates or self.available_coordinates variables to the correct functions and return the values properly and stringifying the coordinates. I also had to ensure reset_coordinates was making sure the function was only including water and ship places.
 - After user chooses to play again, the programme declares no saved games available when there are saved games available. Added return statements to play again option function and include an if and else statement in the while true loop in the main function.
+- When clicking play again the game wasn't finding the saved game, had to call load_saved_games function after the play_again_option function is called in main.py
 
 ### Players Feedback and Fixes or Future Features
 | Feedback | Solved (Y = Yes/N = No/FF = Future Feature) | Fix |
