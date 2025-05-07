@@ -84,12 +84,13 @@ def play_again_option(player):
     while True:
         play = StyledText.green("P")
         exit_ = StyledText.red("E")
+        print("-" * 35)
         play_or_exit = input(
-            f"Please enter '{play}' to play again or\n"
-            f"'{exit_}' to exit\n"
-            "\n"
             "If you choose play again, you can either\n"
             "start a new game or load a saved game.\n"
+            "\n"
+            f"Please enter '{play}' to play again or\n"
+            f"'{exit_}' to exit\n"
         ).strip().lower()
         if play_or_exit not in ("p", "e"):
             print(

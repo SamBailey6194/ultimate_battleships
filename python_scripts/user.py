@@ -34,6 +34,7 @@ def user_login():
     or start a new game from scratch or access the leaderbaord.
     """
     username = str(input("Username: "))
+    print("-" * 35)
     print(
         f"{StyledText.red(
             'Note: for security the password is hidden.'
