@@ -38,11 +38,15 @@ Below are the features for the website and at the end is listed any features tha
 
 ![Welcome message and login check](assets/readmeimgs/welcome_login.png)
 
-![Successful login and load games option](assets/readmeimgs/login_games_saved.png)
+![Login Screen](assets/readmeimgs/login_games_saved.png)
+
+![Saved Games Option](assets/readmeimgs/games_saved.png)
 
 ![User creation](assets/readmeimgs/user_creation.png)
 
 ![Successful User Creation](assets/readmeimgs/user_creation_success.png)
+
+![Login Successful No Games](assets/readmeimgs/login_no_games_saved.png)
 
 #### Load Saved Games
 
@@ -57,7 +61,9 @@ Below are the features for the website and at the end is listed any features tha
 
 - When starting a new game they are invited to select a board size which determines the number of ships in the game
 
-![New game created](assets/readmeimgs/game_created.png)
+![Board Generated](assets/readmeimgs/game_created_start.png)
+
+![First Ship Place](assets/readmeimgs/place_ships_1.png)
 
 ##### Place Ships
 
@@ -99,13 +105,13 @@ Below are the features for the website and at the end is listed any features tha
 
 ![Game Saved](assets/readmeimgs/save_game.png)
 
-![Play Again Option](assets/readmeimgs/play_again.png)
-
 ![Exit Game](assets/readmeimgs/exit_game.png)
+
+![All Ships Destroyed](assets/readmeimgs/all_ships_destroyed.png)
 
 ![Game Over and Winner Declared](assets/readmeimgs/game_over.png)
 
-![Leaderboard and PLay Again Option](assets/readmeimgs/leaderboard.png)
+![Leaderboard and Play Again Option](assets/readmeimgs/leaderboard.png)
 
 ### Google Sheets Database
 
